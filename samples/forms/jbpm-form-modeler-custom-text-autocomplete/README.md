@@ -4,6 +4,31 @@
 
 build it and place in the business central lib folder
 
+## Allow access for the remote REST service
+
+In order to allow the remote REST service to be consumed by the browser you have to add the following header information in your REST service response:
+
+    Access-Control-Allow-Origin: *
+
+If your REST service is hosted by a Tomcat WAR, a simple solution is to add the following configuration to your web.xml:
+
+	<filter>
+	  <filter-name>CorsFilter</filter-name>
+	  <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
+	  <init-param>
+	    <param-name>cors.allowed.origins</param-name>
+	    <param-value>*</param-value>
+	  </init-param>
+	</filter>
+	<filter-mapping>
+	  <filter-name>CorsFilter</filter-name>
+	  <url-pattern>/*</url-pattern>
+	</filter-mapping>
+ 
+
+Further information on the topic:
+[Mozilla Cors](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS "CORS")  
+
 ## Usage
 
 1. Insert a field in the form that you want to handle with the autocomplete
