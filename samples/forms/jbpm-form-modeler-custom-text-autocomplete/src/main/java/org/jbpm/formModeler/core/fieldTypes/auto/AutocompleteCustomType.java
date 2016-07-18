@@ -32,100 +32,135 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
- * First parameter: the URL of the rest service
- * Second parameter: the property to lookup in the rest response
+ * First parameter: the URL of the rest service Second parameter: the property
+ * to lookup in the rest response
  */
 public class AutocompleteCustomType implements CustomFieldType {
 
-    private Logger log = LoggerFactory.getLogger(AutocompleteCustomType.class);
+	private Logger log = LoggerFactory.getLogger(AutocompleteCustomType.class);
 
+	@Inject
+	private URLMarkupGenerator urlMarkupGenerator;
 
-    @Inject
-    private URLMarkupGenerator urlMarkupGenerator;
+	protected String dropIcon;
+	protected String iconFolder;
+	protected String defaultFileIcon;
+	protected Map<String, String> icons;
 
-    protected String dropIcon;
-    protected String iconFolder;
-    protected String defaultFileIcon;
-    protected Map<String, String> icons;
+	@PostConstruct
+	public void init() {
+	}
 
-    @PostConstruct
-    public void init() {
-    }
+	@Override
+	public String getDescription(Locale locale) {
+		log.debug(">>> getDescription");
+		ResourceBundle bundle = ResourceBundle.getBundle("org.jbpm.formModeler.core.fieldTypes.auto.messages", locale);
+		return bundle.getString("description");
+	}
 
-    @Override
-    public String getDescription(Locale locale) {
-    	log.debug(">>> getDescription");
-        ResourceBundle bundle = ResourceBundle.getBundle("org.jbpm.formModeler.core.fieldTypes.auto.messages", locale);
-        return bundle.getString("description");
-    }
-
-    @Override
-    public Object getValue(Map requestParameters, Map requestFiles, String fieldName, String namespace, Object previousValue, boolean required, boolean readonly, String... params) {
-        log.debug(">>> getValue");
-    	for (int i = 0; i < params.length; i++) {
-			log.debug(">>>> param: "+params[i]);
+	@Override
+	public Object getValue(Map requestParameters, Map requestFiles, String fieldName, String namespace,
+			Object previousValue, boolean required, boolean readonly, String... params) {
+		log.debug(">>> getValue");
+		for (int i = 0; i < params.length; i++) {
+			log.debug(">>>> param: " + params[i]);
 		}
-    	return previousValue;
-    }
 
-    @Override
-    public String getShowHTML(Object value, String fieldName, String namespace, boolean required, boolean readonly, String... params) {
-    	log.debug(">>> getShowHTML");
-    	for (int i = 0; i < params.length; i++) {
-			log.debug(">>>> param: "+params[i]);
+//		for (Iterator iterator = requestParameters.keySet().iterator(); iterator.hasNext();) {
+//			Object key = iterator.next();
+//			Object value = requestParameters.get(key);
+//			if (value instanceof Object[]) {
+//				Object[] values = (Object[]) value;
+//				for (int i = 0; i < values.length; i++) {
+//					log.info(">>> reqP: " + key + "[" + i + "] = " + values[i]);
+//				}
+//			} else {
+//				log.info(">>> reqP: " + key + " = " + value);
+//			}
+//		}
+//
+//		if (previousValue instanceof Object[]) {
+//			Object[] values = (Object[]) previousValue;
+//			for (int i = 0; i < values.length; i++) {
+//				log.info(">>> prev[" + i + "] = " + values[i]);
+//			}
+//		} else {
+//			log.info(">>> prev = " + previousValue);
+//		}
+//
+		Object newValue = requestParameters.get(fieldName);
+//		log.info(">>> newValue: " + newValue);
+
+		
+		if (newValue instanceof Object[]) {
+			Object[] newValues = (Object[]) newValue;
+			return newValues[0];
 		}
-    	return renderField(fieldName, (String) value, namespace, false, params[0], params[1]);
-    }
+		return previousValue;
+	}
 
-    @Override
-    public String getInputHTML(Object value, String fieldName, String namespace, boolean required, boolean readonly, String... params) {
-    	log.debug(">>> getInputHTML()");
-    	for (int i = 0; i < params.length; i++) {
-			log.debug(">>>> param: "+params[i]);
+	@Override
+	public String getShowHTML(Object value, String fieldName, String namespace, boolean required, boolean readonly,
+			String... params) {
+		log.debug(">>> getShowHTML");
+		for (int i = 0; i < params.length; i++) {
+			log.debug(">>>> param: " + params[i]);
 		}
-    	return renderField(fieldName, (String) value, namespace, true && !readonly, params[0], params[1]);
-    }
+		return renderField(fieldName, value, namespace, false, params);
+	}
 
-    public String renderField(String fieldName, String path, String namespace, boolean showInput, String restURL, String property) {
-        /*
-         * We are using a .ftl template to generate the HTML to show on screen, as it is a sample you can use any other way to do that.
-         * To see the template format look at input.ftl on the resources folder.
-         */
-        String str = null;
-        try {
+	@Override
+	public String getInputHTML(Object value, String fieldName, String namespace, boolean required, boolean readonly,
+			String... params) {
+		log.debug(">>> getInputHTML()");
+		for (int i = 0; i < params.length; i++) {
+			log.debug(">>>> param: " + params[i]);
+		}
+		return renderField(fieldName, value, namespace, true && !readonly, params);
+	}
 
-            Map<String, Object> context = new HashMap<String, Object>();
+	public String renderField(String fieldName, Object value, String namespace, boolean showInput, String... params) {
+		/*
+		 * We are using a .ftl template to generate the HTML to show on screen,
+		 * as it is a sample you can use any other way to do that. To see the
+		 * template format look at input.ftl on the resources folder.
+		 */
+		String str = null;
+		try {
 
-            // if there is a file in the specified path, the input will show a link to download it.
-            context.put("inputId", namespace + "_autocomplete_" + fieldName);
-            // If the field is readonly or we are just showing the field value we will hide the input file.
-            context.put("showInput", showInput);
-            
-            //REST URL
-            context.put("restURL", restURL);
-            //property
-            context.put("property", property);
-            
+			Map<String, Object> context = new HashMap<String, Object>();
 
-            InputStream src = this.getClass().getResourceAsStream("input.ftl");
-            freemarker.template.Configuration cfg = new freemarker.template.Configuration();
-            BeansWrapper defaultInstance = new BeansWrapper();
-            defaultInstance.setSimpleMapWrapper(true);
-            cfg.setObjectWrapper(defaultInstance);
-            cfg.setTemplateUpdateDelay(0);
-            Template temp = new Template(fieldName, new InputStreamReader(src), cfg);
-            StringWriter out = new StringWriter();
-            temp.process(context, out);
-            out.flush();
-            str = out.getBuffer().toString();
-        } catch (Exception e) {
-            log.warn("Failed to process template for field '{}'", fieldName, e);
-        }
-        return str;
-    }
+			context.put("fieldName", fieldName);
+
+			context.put("inputId", namespace + "_autocomplete_" + fieldName);
+			// TODO Not sure how to use:
+			context.put("showInput", showInput);
+
+			// REST URL
+			context.put("restURL", params[0]);
+			// property
+			context.put("property", params[1]);
+
+			InputStream src = this.getClass().getResourceAsStream("input.ftl");
+			freemarker.template.Configuration cfg = new freemarker.template.Configuration();
+			BeansWrapper defaultInstance = new BeansWrapper();
+			defaultInstance.setSimpleMapWrapper(true);
+			cfg.setObjectWrapper(defaultInstance);
+			cfg.setTemplateUpdateDelay(0);
+			Template temp = new Template(fieldName, new InputStreamReader(src), cfg);
+			StringWriter out = new StringWriter();
+			temp.process(context, out);
+			out.flush();
+			str = out.getBuffer().toString();
+		} catch (Exception e) {
+			log.warn("Failed to process template for field '{}'", fieldName, e);
+		}
+		return str;
+	}
 }

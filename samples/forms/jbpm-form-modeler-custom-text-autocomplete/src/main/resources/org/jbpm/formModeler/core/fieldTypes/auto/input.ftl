@@ -37,8 +37,4 @@
     });
     </#if>
   </script>
-<div>
-        <div>
-            <input type="text" class="dynInputStyle skn-input" name="${inputId}" id="${inputId}"  onchange="processFormInputChange(this);" size="25" maxlength="4000"/>
-        </div>
-</div>
+<input type="text" class="dynInputStyle skn-input" name="${fieldName}" id="${inputId}" size="25" maxlength="4000"/>
