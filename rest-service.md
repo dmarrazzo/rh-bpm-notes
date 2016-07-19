@@ -34,5 +34,5 @@ E.g. `Content-Type: application/json;charset=utf-8`
 Unfortunately, the standard REST Workitem handler (WIH) is not able to handle this situation.
 Here you will found a modified version of the WIH that address the problem.
 
-[Improved REST WIH](./wih/rest-wih/README.md)
+[Improved REST WIH](./samples/wih/rest-wih/README.md)
 
