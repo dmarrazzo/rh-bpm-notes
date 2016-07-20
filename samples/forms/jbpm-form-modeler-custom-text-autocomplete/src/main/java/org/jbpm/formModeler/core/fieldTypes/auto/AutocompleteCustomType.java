@@ -137,7 +137,11 @@ public class AutocompleteCustomType implements CustomFieldType {
 			Map<String, Object> context = new HashMap<String, Object>();
 
 			context.put("fieldName", fieldName);
-
+			if (value != null && value instanceof String)
+				context.put("value", value);
+			else
+				context.put("value", "");
+			
 			context.put("inputId", namespace + "_autocomplete_" + fieldName);
 			// TODO Not sure how to use:
 			context.put("showInput", showInput);

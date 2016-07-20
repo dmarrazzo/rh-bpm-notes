@@ -37,4 +37,4 @@
     });
     </#if>
   </script>
-<input type="text" class="dynInputStyle skn-input" name="${fieldName}" id="${inputId}" size="25" maxlength="4000"/>
+<input type="text" class="dynInputStyle skn-input" name="${fieldName}" id="${inputId}" size="25" maxlength="4000" value="${value}" />

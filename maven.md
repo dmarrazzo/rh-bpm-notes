@@ -45,6 +45,20 @@
 		</dependency>
 	</dependencies>
 
+## kie plugin
+
+This is used to build the kjar package
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.kie</groupId>
+				<artifactId>kie-maven-plugin</artifactId>
+				<version>6.4.0.Final-redhat-3</version>
+				<extensions>true</extensions>
+			</plugin>
+		</plugins>
+	</build>
 
 
 ## Dependency Scope
