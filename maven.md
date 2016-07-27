@@ -84,4 +84,14 @@ Command line:
 
 In eclipse, there is a properties in the Run Configuration...
 
+### Problem eclipse cannot find the dependency
+
+Sometime even if the maven builds successfully it raise some warnings about maven resources that has an erroneous header.
+
+E.g.
+
+    [WARNING] error reading /home/donato/.m2/repository/org/jbpm/jbpm-flow/6.3.0.Final-redhat-5/jbpm-flow-6.3.0.Final-redhat-5.jar; invalid LOC header (bad signature)
+
+Eclipse is not able to retrieve the maven dependency, and many compile errors occurs.
+The resolution is manually delete the maven dep from .m2 repository and let maven download it again.
 
