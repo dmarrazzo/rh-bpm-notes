@@ -1,6 +1,10 @@
 package ssa.rest;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -10,14 +14,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
-import org.drools.compiler.kproject.ReleaseIdImpl;
-import org.kie.api.KieBase;
-import org.kie.api.KieServices;
-import org.kie.api.builder.KieRepository;
-import org.kie.api.builder.ReleaseId;
-import org.kie.api.runtime.KieContainer;
-import org.kie.api.runtime.KieSession;
-import org.kie.api.runtime.process.ProcessInstance;
+import org.jbpm.kie.services.impl.KModuleDeploymentUnit;
+import org.jbpm.services.api.DeploymentService;
+import org.jbpm.services.api.ProcessService;
+import org.jbpm.services.api.model.DeployedUnit;
+import org.jbpm.services.api.model.DeploymentUnit;
+import org.kie.api.runtime.manager.RuntimeManager;
 
 /**
  * Business Central URL
@@ -31,17 +33,29 @@ import org.kie.api.runtime.process.ProcessInstance;
 @Consumes({ "application/json" })
 public class OperaEndpoint {
 
+	private static final String GROUP_ID = "SSA";
+	private static final String ARTIFACT_ID = "Versioning";
+	private static final String VERSION = "1.1";
+	private static final String PROCESS_NAME = "Versioning.VersionProc";
+
+	@Inject
+	private DeploymentService deploymentService;
+	
+	@Inject
+	private ProcessService processService;
+	
 	@POST
 	public Response create(final Opera opera) {
 		System.out.println("OperaEndpoint.create() " + opera.getId());
 
-		KieServices kieServices = KieServices.Factory.get();
-		KieRepository repository = kieServices.getRepository();
-		// group:artifact:version
-		ReleaseId releaseId = new ReleaseIdImpl("SSA:Versioning:1.1");
-		KieContainer kieContainer = kieServices.newKieContainer(releaseId);
-		KieSession kieSession = kieContainer.newKieSession();
-		ProcessInstance processInstance = kieSession.startProcess("Versioning.VersionProc");	
+		DeploymentUnit deploymentUnit = new KModuleDeploymentUnit(GROUP_ID, ARTIFACT_ID, VERSION);
+		Collection<DeployedUnit> units = deploymentService.getDeployedUnits();
+		for (Iterator iterator = units.iterator(); iterator.hasNext();) {
+			DeployedUnit deployedUnit = (DeployedUnit) iterator.next();
+			System.out.println("OperaEndpoint.create() "+ deployedUnit.getDeploymentUnit().getIdentifier());
+		}
+
+		processService.startProcess(deploymentUnit.getIdentifier(), PROCESS_NAME);
 		
 		return Response
 				.created(UriBuilder.fromResource(OperaEndpoint.class).path(String.valueOf(opera.getId())).build())
