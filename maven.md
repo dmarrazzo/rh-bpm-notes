@@ -1,3 +1,12 @@
+# BPM Internal Maven repository
+
+In Business Central, you can see and upload new artifacts in the Internal repository:
+
+* Authoring -> Artifact repository
+
+The upload can be authomated
+
+
 # Maven survival guide
 
 ##Setting JDK level
@@ -22,7 +31,7 @@
 
 
 	<properties>
-		<version.bpms>6.4.0.Final-redhat-3</version.bpms>
+		<version.bpms>6.4.0.Final-redhat-6</version.bpms>
 	</properties>
 	<dependencies>
 
@@ -100,6 +109,28 @@ This is the default scope, used if none is specified. Compile dependencies are a
 - **provided**  
 This is much like compile, but indicates you expect the JDK or a container to provide the dependency at runtime. For example, when building a web application for the Java Enterprise Edition, you would set the dependency on the Servlet API and related Java EE APIs to scope provided because the web container provides those classes. This scope is only available on the compilation and test classpath, and is not transitive.
 
+## Configure Maven Repository
+In the installation Guide look at the chapter Maven Repository
+
+Configure the file system
+
+- Download and unzip official maven repo
+- Change the maven `setting.xml` to point that
+
+##EJB client
+
+	<properties>
+		<version.bpms>6.4.0.Final-redhat-6</version.bpms>
+	</properties>
+		<dependency>
+			<groupId>org.jbpm</groupId>
+			<artifactId>jbpm-services-ejb-client</artifactId>
+			<version>${bpm.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+
+
+
 ## How to
 
 ### Force dependency download
@@ -122,4 +153,3 @@ E.g.
 
 Eclipse is not able to retrieve the maven dependency, and many compile errors occurs.
 The resolution is manually delete the maven dep from .m2 repository and let maven download it again.
-

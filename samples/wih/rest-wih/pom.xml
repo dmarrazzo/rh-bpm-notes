@@ -6,7 +6,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>RestWIH</name>
 	<properties>
-		<version.bpms>6.4.0.Final-redhat-3</version.bpms>
+		<version.bpms>6.4.0.Final-redhat-6</version.bpms>
 	</properties>
 	<dependencies>
 

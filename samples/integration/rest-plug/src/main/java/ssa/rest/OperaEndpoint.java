@@ -1,7 +1,6 @@
 package ssa.rest;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -19,11 +18,10 @@ import org.jbpm.services.api.DeploymentService;
 import org.jbpm.services.api.ProcessService;
 import org.jbpm.services.api.model.DeployedUnit;
 import org.jbpm.services.api.model.DeploymentUnit;
-import org.kie.api.runtime.manager.RuntimeManager;
 
 /**
- * Business Central URL
- * http://localhost:8080/business-central/rest/operas
+ * Business Central URL http://localhost:8080/business-central/rest/operas
+ * 
  * @author donato
  *
  */
@@ -40,23 +38,22 @@ public class OperaEndpoint {
 
 	@Inject
 	private DeploymentService deploymentService;
-	
+
 	@Inject
 	private ProcessService processService;
-	
+
 	@POST
 	public Response create(final Opera opera) {
 		System.out.println("OperaEndpoint.create() " + opera.getId());
 
 		DeploymentUnit deploymentUnit = new KModuleDeploymentUnit(GROUP_ID, ARTIFACT_ID, VERSION);
 		Collection<DeployedUnit> units = deploymentService.getDeployedUnits();
-		for (Iterator iterator = units.iterator(); iterator.hasNext();) {
-			DeployedUnit deployedUnit = (DeployedUnit) iterator.next();
-			System.out.println("OperaEndpoint.create() "+ deployedUnit.getDeploymentUnit().getIdentifier());
+		for (DeployedUnit unit : units) {
+			System.out.println("OperaEndpoint.create() " + unit.getDeploymentUnit().getIdentifier());
 		}
 
 		processService.startProcess(deploymentUnit.getIdentifier(), PROCESS_NAME);
-		
+
 		return Response
 				.created(UriBuilder.fromResource(OperaEndpoint.class).path(String.valueOf(opera.getId())).build())
 				.build();
