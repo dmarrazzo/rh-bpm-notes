@@ -1,0 +1,40 @@
+package com.redhat.ssa.rules;
+
+import insurance.cep.model.Customer;
+import insurance.cep.model.QuoteRequest;
+import insurance.cep.model.CustomerLevel;
+import insurance.cep.model.Buy;
+
+rule "Email a Basic Customer with a pending quote after 120m"
+when
+	customer : Customer( level == CustomerLevel.BASIC )
+	aQuote : QuoteRequest (plateId == customer.plateId, value > 1000)
+	not Buy (plateId == customer.plateId, this after[0m,120m] aQuote)
+then
+	System.out.println("Send an email to the customer for pending quote: " + customer.getId() + " quote value: "+ aQuote.getValue());
+end
+
+rule "Call Gold Customer with high value quote"
+dialect "mvel" 
+when
+	customer : Customer( level == CustomerLevel.GOLDEN )
+	aQuote: QuoteRequest (plateId == customer.plateId, value > 1000)
+	not Buy (plateId == customer.plateId, this after[0m,120m] aQuote)
+then
+	System.out.println("Call the customer: " + customer.getId() + " quote value: "+ aQuote.getValue());
+end
+
+rule "Call a Basic Customer with many quotes"
+dialect "mvel" 
+enabled true
+when
+	customer : Customer( level == CustomerLevel.BASIC )
+	accumulate ( anyOtherQuote: QuoteRequest (plateId == customer.plateId) over window:time(3h);
+				 count : count();
+				 count > 2 );
+then
+	System.out.println("Call the customer " + customer.getId() + " because he placed " + count + " quote requests in 3h.");
+end
+
+
+
