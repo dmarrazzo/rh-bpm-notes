@@ -20,6 +20,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,7 +71,10 @@ import org.kie.api.runtime.process.WorkItemManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 
 /**
  * WorkItemHandler that is capable of interacting with REST service. Supports both types of services
@@ -293,7 +297,7 @@ public class RESTWorkItemHandler extends AbstractLogOrThrowWorkItemHandler {
                 Object content = params.get("Content");
                 if (!(content instanceof String)) {
                     
-                    content = transformRequest(content, contentType);
+                    content = Charset.forName("UTF-8").encode(transformRequest(content, contentType)).toString();
                 }
                 StringEntity entity = new StringEntity((String)content);                
                 entity.setContentType(contentType);
@@ -309,7 +313,8 @@ public class RESTWorkItemHandler extends AbstractLogOrThrowWorkItemHandler {
             Object content = params.get("Content");
             if (!(content instanceof String)) {
                 
-                content = transformRequest(content, (String)params.get("ContentType"));
+                content = Charset.forName("UTF-8").encode(transformRequest(content, (String)params.get("ContentType"))).toString();
+                
             }
             ((HttpEntityEnclosingRequestBase)theMethod).setEntity(new StringEntity((String) content, 
                     ContentType.create((String)params.get("ContentType"))));
