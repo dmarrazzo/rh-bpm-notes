@@ -1,0 +1,16 @@
+import org.drools.process.core.datatype.impl.type.ObjectDataType;
+
+[
+  [
+    "name" : "GEMA_MATCH",
+    "parameters" : [
+		 "Work" : new ObjectDataType()
+    ],
+    "results" : [
+        "Result" : new ObjectDataType(),
+    ],
+    "displayName" : "GEMA_MATCHSERVICE",
+    "icon" : "defaultservicenodeicon.png"
+  ]
+   
+]

@@ -68,14 +68,29 @@ stored where eap is launched:
 - h2 database
 
 ## Remote debug
-Edit `<JBOSSS_HOME>/bin/standalone.sh`
-and change:
+**By default debug mode is disabled.**
+Launch:
 
-```
-# By default debug mode is disable.
-DEBUG_MODE=true
-```
+    standalone.sh --debug
+
+or change sh with: `DEBUG_MODE=true`
+
+Check `<JBOSS_HOME>/bin/standalone.sh`
+
 In Eclipse create a new Debug configuration using the template `Remote Java Application`:
 
 - Connection Type: Standard
 - Port: 8787 (standard port of JBoss EAP)
+
+## Database
+
+### H2
+
+TCP config:
+
+java -cp h2*.jar org.h2.tools.Server -tcp
+
+To remotely connect to a database using the TCP server, use the following driver and database URL:
+
+    JDBC driver class: org.h2.Driver
+    Database URL: jdbc:h2:tcp://localhost/~/test 

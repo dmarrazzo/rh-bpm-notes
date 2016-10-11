@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kpis>
+  <dataprovider code="dataprovider_3621473158604650" type="sql">
+    <description language="en">Process Instance Duration</description>
+    <sqlprovider>
+      <datasource>local</datasource>
+      <query type="default">select processname, processinstanceid, duration from ProcessInstanceLog where {sql_condition, optional, processname, processname}  and {sql_condition, optional, user_identity, userid} and {sql_condition, optional, status, status} and {sql_condition, optional, start_date, start_date} and {sql_condition, optional, end_date, end_date} and {sql_condition, optional, processversion, processversion}  </query>
+      <query type="h2">select processname, processinstanceid, duration from ProcessInstanceLog where {sql_condition, optional, processname, processname}  and {sql_condition, optional, user_identity, userid} and {sql_condition, optional, status, status} and {sql_condition, optional, start_date, start_date} and {sql_condition, optional, end_date, end_date} and {sql_condition, optional, processversion, processversion}  and  DURATION is NOT NULL</query>
+    </sqlprovider>
+    <dataproperties>
+      <dataproperty id="processname">
+        <domain>org.jboss.dashboard.domain.label.LabelDomain</domain>
+        <name language="de">processname</name>
+        <name language="es">processname</name>
+        <name language="pt">processname</name>
+        <name language="zh">processname</name>
+        <name language="fr">processname</name>
+        <name language="ru">processname</name>
+        <name language="en">Process Name</name>
+        <name language="ja">processname</name>
+      </dataproperty>
+      <dataproperty id="processinstanceid">
+        <domain>org.jboss.dashboard.domain.numeric.NumericDomain</domain>
+        <name language="de">processinstanceid</name>
+        <name language="es">processinstanceid</name>
+        <name language="pt">processinstanceid</name>
+        <name language="zh">processinstanceid</name>
+        <name language="fr">processinstanceid</name>
+        <name language="en">Process Instance Id</name>
+        <name language="ru">processinstanceid</name>
+        <name language="ja">processinstanceid</name>
+      </dataproperty>
+      <dataproperty id="duration">
+        <domain>org.jboss.dashboard.domain.numeric.NumericDomain</domain>
+        <name language="de">duration</name>
+        <name language="es">duration</name>
+        <name language="pt">duration</name>
+        <name language="zh">duration</name>
+        <name language="fr">duration</name>
+        <name language="en">Duration</name>
+        <name language="ru">duration</name>
+        <name language="ja">duration</name>
+      </dataproperty>
+    </dataproperties>
+  </dataprovider>
+  <dataprovider code="dataprovider_69111473111799671" type="sql">
+    <description language="en">Total Price</description>
+    <sqlprovider>
+      <datasource>local</datasource>
+      <query type="default">SELECT VALUE FROM VARIABLEINSTANCELOG LOG1 WHERE VARIABLEID = &apos;totalPrice&apos; 
+	AND LOG_DATE = (SELECT MAX (LOG_DATE) FROM VARIABLEINSTANCELOG LOG2 where VARIABLEID = &apos;totalPrice&apos; and PROCESSINSTANCEID=LOG1.PROCESSINSTANCEID)
+	GROUP BY PROCESSINSTANCEID</query>
+      <query type="h2">SELECT CAST( VALUE AS INT), PROCESSINSTANCEID, LOG_DATE FROM VARIABLEINSTANCELOG LOG1 WHERE VARIABLEID = &apos;totalPrice&apos; 
+	AND LOG_DATE = (SELECT MAX (LOG_DATE) FROM VARIABLEINSTANCELOG LOG2 where VARIABLEID = &apos;totalPrice&apos; and PROCESSINSTANCEID=LOG1.PROCESSINSTANCEID)
+	GROUP BY PROCESSINSTANCEID</query>
+    </sqlprovider>
+    <dataproperties>
+      <dataproperty id="cast(value as integer)">
+        <domain>org.jboss.dashboard.domain.numeric.NumericDomain</domain>
+        <name language="de">cast(value as integer)</name>
+        <name language="es">cast(value as integer)</name>
+        <name language="pt">cast(value as integer)</name>
+        <name language="zh">cast(value as integer)</name>
+        <name language="fr">cast(value as integer)</name>
+        <name language="ru">cast(value as integer)</name>
+        <name language="en">Total Price</name>
+        <name language="ja">cast(value as integer)</name>
+      </dataproperty>
+      <dataproperty id="processinstanceid">
+        <domain>org.jboss.dashboard.domain.numeric.NumericDomain</domain>
+        <name language="de">processinstanceid</name>
+        <name language="es">processinstanceid</name>
+        <name language="pt">processinstanceid</name>
+        <name language="zh">processinstanceid</name>
+        <name language="fr">processinstanceid</name>
+        <name language="en">Process Instance</name>
+        <name language="ru">processinstanceid</name>
+        <name language="ja">processinstanceid</name>
+      </dataproperty>
+      <dataproperty id="log_date">
+        <domain>org.jboss.dashboard.domain.date.DateDomain</domain>
+        <name language="de">log_date</name>
+        <name language="es">log_date</name>
+        <name language="pt">log_date</name>
+        <name language="zh">log_date</name>
+        <name language="fr">log_date</name>
+        <name language="ru">log_date</name>
+        <name language="en">Date</name>
+        <name language="ja">log_date</name>
+      </dataproperty>
+    </dataproperties>
+  </dataprovider>
+  <dataprovider code="dataprovider_30021473168984326" type="sql">
+    <description language="en">Travel Arrival</description>
+    <sqlprovider>
+      <datasource>local</datasource>
+      <query type="default">SELECT VARIABLEID, VALUE, PROCESSINSTANCEID, LOG_DATE FROM VARIABLEINSTANCELOG WHERE VARIABLEID is&apos;toDestination&apos;</query>
+      <query type="h2">SELECT VALUE, PROCESSINSTANCEID, LOG_DATE FROM VARIABLEINSTANCELOG WHERE VARIABLEID is&apos;toDestination&apos;</query>
+    </sqlprovider>
+    <dataproperties>
+      <dataproperty id="value">
+        <domain>org.jboss.dashboard.domain.label.LabelDomain</domain>
+        <name language="de">value</name>
+        <name language="es">value</name>
+        <name language="pt">value</name>
+        <name language="zh">value</name>
+        <name language="fr">value</name>
+        <name language="ru">value</name>
+        <name language="en">arrival</name>
+        <name language="ja">value</name>
+      </dataproperty>
+      <dataproperty id="processinstanceid">
+        <domain>org.jboss.dashboard.domain.numeric.NumericDomain</domain>
+        <name language="de">processinstanceid</name>
+        <name language="es">processinstanceid</name>
+        <name language="pt">processinstanceid</name>
+        <name language="zh">processinstanceid</name>
+        <name language="fr">processinstanceid</name>
+        <name language="en">process instance id</name>
+        <name language="ru">processinstanceid</name>
+        <name language="ja">processinstanceid</name>
+      </dataproperty>
+      <dataproperty id="log_date">
+        <domain>org.jboss.dashboard.domain.date.DateDomain</domain>
+        <name language="de">log_date</name>
+        <name language="es">log_date</name>
+        <name language="pt">log_date</name>
+        <name language="zh">log_date</name>
+        <name language="fr">log_date</name>
+        <name language="ru">log_date</name>
+        <name language="en">date</name>
+        <name language="ja">log_date</name>
+      </dataproperty>
+    </dataproperties>
+  </dataprovider>
+  <dataprovider code="dataprovider_4121473169086849" type="sql">
+    <description language="en">Travel Departure</description>
+    <sqlprovider>
+      <datasource>local</datasource>
+<query>SELECT VALUE, PROCESSINSTANCEID, LOG_DATE FROM VARIABLEINSTANCELOG WHERE VARIABLEID is&apos;fromDestination&apos;</query>
+    </sqlprovider>
+    <dataproperties>
+      <dataproperty id="value">
+        <domain>org.jboss.dashboard.domain.label.LabelDomain</domain>
+        <name language="de">value</name>
+        <name language="es">value</name>
+        <name language="pt">value</name>
+        <name language="zh">value</name>
+        <name language="fr">value</name>
+        <name language="ru">value</name>
+        <name language="en">departure</name>
+        <name language="ja">value</name>
+      </dataproperty>
+      <dataproperty id="processinstanceid">
+        <domain>org.jboss.dashboard.domain.numeric.NumericDomain</domain>
+        <name language="de">processinstanceid</name>
+        <name language="es">processinstanceid</name>
+        <name language="pt">processinstanceid</name>
+        <name language="zh">processinstanceid</name>
+        <name language="fr">processinstanceid</name>
+        <name language="en">process instance id</name>
+        <name language="ru">processinstanceid</name>
+        <name language="ja">processinstanceid</name>
+      </dataproperty>
+      <dataproperty id="log_date">
+        <domain>org.jboss.dashboard.domain.date.DateDomain</domain>
+        <name language="de">log_date</name>
+        <name language="es">log_date</name>
+        <name language="pt">log_date</name>
+        <name language="zh">log_date</name>
+        <name language="fr">log_date</name>
+        <name language="ru">log_date</name>
+        <name language="en">date</name>
+        <name language="ja">log_date</name>
+      </dataproperty>
+    </dataproperties>
+  </dataprovider>
+  <dataprovider code="dataprovider_9421418639387029" type="sql">
+    <description language="en">jBPM Process Duration</description>
+    <sqlprovider>
+      <datasource>local</datasource>
+<query>select processname, count(processinstanceid) as processcount, min(duration) as pminduration, avg(duration) as pavgduration, max(duration) as pmaxduration from ProcessInstanceLog where {sql_condition, optional, processname, processname}  and {sql_condition, optional, user_identity, userid} and {sql_condition, optional, status, status} and {sql_condition, optional, start_date, start_date} and {sql_condition, optional, end_date, end_date} and {sql_condition, optional, processversion, processversion} group by processname order by processname asc</query>
+    </sqlprovider>
+    <dataproperties>
+      <dataproperty id="processname">
+        <domain>org.jboss.dashboard.domain.label.LabelDomain</domain>
+        <name language="en">Process</name>
+      </dataproperty>
+      <dataproperty id="processcount">
+        <domain>org.jboss.dashboard.domain.numeric.NumericDomain</domain>
+        <name language="en">Instances</name>
+      </dataproperty>
+      <dataproperty id="pminduration">
+        <domain>org.jboss.dashboard.domain.numeric.NumericDomain</domain>
+        <name language="en">Duration min.</name>
+      </dataproperty>
+      <dataproperty id="pavgduration">
+        <domain>org.jboss.dashboard.domain.numeric.NumericDomain</domain>
+        <name language="en">Duration avg.</name>
+      </dataproperty>
+      <dataproperty id="pmaxduration">
+        <domain>org.jboss.dashboard.domain.numeric.NumericDomain</domain>
+        <name language="en">Duration max.</name>
+      </dataproperty>
+    </dataproperties>
+  </dataprovider>
+  <kpi code="kpi_24731473170128050">
+    <description language="en">Arrival</description>
+    <provider code="dataprovider_30021473168984326" />
+    <displayer type="piechart" renderer="ofc2">
+      <domain>
+        <propertyid>value</propertyid>
+        <name language="de">value</name>
+        <name language="es">value</name>
+        <name language="pt">value</name>
+        <name language="zh">value</name>
+        <name language="fr">value</name>
+        <name language="ru">value</name>
+        <name language="en">arrival</name>
+        <name language="ja">value</name>
+        <maxnumberofintervals>10</maxnumberofintervals>
+      </domain>
+      <range>
+        <propertyid>value</propertyid>
+        <name language="de">value</name>
+        <name language="es">value</name>
+        <name language="pt">value</name>
+        <name language="zh">value</name>
+        <name language="fr">value</name>
+        <name language="ru">value</name>
+        <name language="en">arrival</name>
+        <name language="ja">value</name>
+        <scalarfunction>count</scalarfunction>
+      </range>
+      <type>pie</type>
+      <showlabelsxaxis>true</showlabelsxaxis>
+      <color>#FFFFFF</color>
+      <backgroundcolor>#FFFFFF</backgroundcolor>
+      <width>600</width>
+      <height>300</height>
+      <showlegend>false</showlegend>
+      <axisinteger>false</axisinteger>
+      <legendanchor>south</legendanchor>
+      <showtitle>false</showtitle>
+      <align>center</align>
+      <marginleft>30</marginleft>
+      <marginright>30</marginright>
+      <margintop>30</margintop>
+      <marginbottom>30</marginbottom>
+    </displayer>
+  </kpi>
+  <kpi code="kpi_24611473169418455">
+    <description language="en">Departure</description>
+    <provider code="dataprovider_4121473169086849" />
+    <displayer type="piechart" renderer="ofc2">
+      <domain>
+        <propertyid>value</propertyid>
+        <name language="de">value</name>
+        <name language="es">value</name>
+        <name language="pt">value</name>
+        <name language="zh">value</name>
+        <name language="fr">value</name>
+        <name language="ru">value</name>
+        <name language="en">departure</name>
+        <name language="ja">value</name>
+        <maxnumberofintervals>10</maxnumberofintervals>
+      </domain>
+      <range>
+        <propertyid>value</propertyid>
+        <name language="de">value</name>
+        <name language="es">value</name>
+        <name language="pt">value</name>
+        <name language="zh">value</name>
+        <name language="fr">value</name>
+        <name language="ru">value</name>
+        <name language="en">departure</name>
+        <name language="ja">value</name>
+        <scalarfunction>count</scalarfunction>
+      </range>
+      <type>pie</type>
+      <showlabelsxaxis>true</showlabelsxaxis>
+      <color>#FFFFFF</color>
+      <backgroundcolor>#FFFFFF</backgroundcolor>
+      <width>600</width>
+      <height>300</height>
+      <showlegend>false</showlegend>
+      <axisinteger>false</axisinteger>
+      <legendanchor>south</legendanchor>
+      <showtitle>false</showtitle>
+      <align>center</align>
+      <marginleft>30</marginleft>
+      <marginright>30</marginright>
+      <margintop>30</margintop>
+      <marginbottom>30</marginbottom>
+    </displayer>
+  </kpi>
+  <kpi code="kpi_24471473159321296">
+    <description language="en">Process Duration</description>
+    <provider code="dataprovider_9421418639387029" />
+    <displayer type="table" renderer="default">
+      <rowsperpage>10</rowsperpage>
+      <headerposition>top</headerposition>
+      <htmlstyle>border: 1px solid #000000; padding:0; text-align:center;</htmlstyle>
+      <htmlclass>skn-table_border</htmlclass>
+      <rowevenclass>skn-even_row</rowevenclass>
+      <rowoddclass>skn-odd_row</rowoddclass>
+      <rowhoverclass>skn-even_row_alt</rowhoverclass>
+      <column>
+        <modelproperty>processname</modelproperty>
+        <viewindex>0</viewindex>
+        <name language="en">Process</name>
+        <hint language="en">Process</hint>
+        <headerhtmlstyle>text-align:center; width:100px; overflow:hidden; background-color:#C6D8EB; height:20px; color:#465F7D; font-weight:Bold;  white-space:nowrap;</headerhtmlstyle>
+        <cellhtmlstyle>width:100px; height:20px;  white-space:nowrap;</cellhtmlstyle>
+        <htmlvalue>{value}</htmlvalue>
+        <selectable>false</selectable>
+        <sortable>true</sortable>
+      </column>
+      <column>
+        <modelproperty>processcount</modelproperty>
+        <viewindex>1</viewindex>
+        <name language="en">Instances</name>
+        <hint language="en">Instances</hint>
+        <headerhtmlstyle>text-align:center; width:100px; overflow:hidden; background-color:#C6D8EB; height:20px; color:#465F7D; font-weight:Bold;  white-space:nowrap;</headerhtmlstyle>
+        <cellhtmlstyle>width:100px; height:20px;  white-space:nowrap;</cellhtmlstyle>
+        <htmlvalue>{value}</htmlvalue>
+        <selectable>false</selectable>
+        <sortable>true</sortable>
+      </column>
+      <column>
+        <modelproperty>pminduration</modelproperty>
+        <viewindex>2</viewindex>
+        <name language="en">Duration min.</name>
+        <hint language="en">Duration min.</hint>
+        <headerhtmlstyle>text-align:center; width:100px; overflow:hidden; background-color:#C6D8EB; height:20px; color:#465F7D; font-weight:Bold;  white-space:nowrap;</headerhtmlstyle>
+        <cellhtmlstyle>width:100px; height:20px;  white-space:nowrap;</cellhtmlstyle>
+        <htmlvalue>{value}</htmlvalue>
+        <selectable>false</selectable>
+        <sortable>true</sortable>
+      </column>
+      <column>
+        <modelproperty>pavgduration</modelproperty>
+        <viewindex>3</viewindex>
+        <name language="en">Duration avg.</name>
+        <hint language="en">Duration avg.</hint>
+        <headerhtmlstyle>text-align:center; width:100px; overflow:hidden; background-color:#C6D8EB; height:20px; color:#465F7D; font-weight:Bold;  white-space:nowrap;</headerhtmlstyle>
+        <cellhtmlstyle>width:100px; height:20px;  white-space:nowrap;</cellhtmlstyle>
+        <htmlvalue>{value}</htmlvalue>
+        <selectable>false</selectable>
+        <sortable>true</sortable>
+      </column>
+      <column>
+        <modelproperty>pmaxduration</modelproperty>
+        <viewindex>4</viewindex>
+        <name language="en">Duration max.</name>
+        <hint language="en">Duration max.</hint>
+        <headerhtmlstyle>text-align:center; width:100px; overflow:hidden; background-color:#C6D8EB; height:20px; color:#465F7D; font-weight:Bold;  white-space:nowrap;</headerhtmlstyle>
+        <cellhtmlstyle>width:100px; height:20px;  white-space:nowrap;</cellhtmlstyle>
+        <htmlvalue>{value}</htmlvalue>
+        <selectable>false</selectable>
+        <sortable>true</sortable>
+      </column>
+    </displayer>
+  </kpi>
+  <kpi code="kpi_24351473158690384">
+    <description language="en">Process Instance Duration</description>
+    <provider code="dataprovider_3621473158604650" />
+    <displayer type="table" renderer="default">
+      <rowsperpage>10</rowsperpage>
+      <headerposition>top</headerposition>
+      <htmlstyle>border: 1px solid #000000; padding:0; text-align:center;</htmlstyle>
+      <htmlclass>skn-table_border</htmlclass>
+      <rowevenclass>skn-even_row</rowevenclass>
+      <rowoddclass>skn-odd_row</rowoddclass>
+      <rowhoverclass>skn-even_row_alt</rowhoverclass>
+      <column>
+        <modelproperty>processname</modelproperty>
+        <viewindex>0</viewindex>
+        <name language="de">processname</name>
+        <name language="es">processname</name>
+        <name language="pt">processname</name>
+        <name language="zh">processname</name>
+        <name language="fr">processname</name>
+        <name language="ru">processname</name>
+        <name language="en">Process Name</name>
+        <name language="ja">processname</name>
+        <hint language="de">processname</hint>
+        <hint language="es">processname</hint>
+        <hint language="pt">processname</hint>
+        <hint language="zh">processname</hint>
+        <hint language="fr">processname</hint>
+        <hint language="ru">processname</hint>
+        <hint language="en">Process Name</hint>
+        <hint language="ja">processname</hint>
+        <headerhtmlstyle>text-align:center; width:100px; overflow:hidden; background-color:#C6D8EB; height:20px; color:#465F7D; font-weight:Bold;  white-space:nowrap;</headerhtmlstyle>
+        <cellhtmlstyle>width:100px; height:20px;  white-space:nowrap;</cellhtmlstyle>
+        <htmlvalue>{value}</htmlvalue>
+        <selectable>false</selectable>
+        <sortable>true</sortable>
+      </column>
+      <column>
+        <modelproperty>processinstanceid</modelproperty>
+        <viewindex>1</viewindex>
+        <name language="de">processinstanceid</name>
+        <name language="es">processinstanceid</name>
+        <name language="pt">processinstanceid</name>
+        <name language="zh">processinstanceid</name>
+        <name language="fr">processinstanceid</name>
+        <name language="en">Process Instance Id</name>
+        <name language="ru">processinstanceid</name>
+        <name language="ja">processinstanceid</name>
+        <hint language="de">processinstanceid</hint>
+        <hint language="es">processinstanceid</hint>
+        <hint language="pt">processinstanceid</hint>
+        <hint language="zh">processinstanceid</hint>
+        <hint language="fr">processinstanceid</hint>
+        <hint language="en">Process Instance Id</hint>
+        <hint language="ru">processinstanceid</hint>
+        <hint language="ja">processinstanceid</hint>
+        <headerhtmlstyle>text-align:center; width:100px; overflow:hidden; background-color:#C6D8EB; height:20px; color:#465F7D; font-weight:Bold;  white-space:nowrap;</headerhtmlstyle>
+        <cellhtmlstyle>width:100px; height:20px;  white-space:nowrap;</cellhtmlstyle>
+        <htmlvalue>{value}</htmlvalue>
+        <selectable>true</selectable>
+        <sortable>true</sortable>
+      </column>
+      <column>
+        <modelproperty>duration</modelproperty>
+        <viewindex>2</viewindex>
+        <name language="de">duration</name>
+        <name language="es">duration</name>
+        <name language="pt">duration</name>
+        <name language="zh">duration</name>
+        <name language="fr">duration</name>
+        <name language="en">Duration</name>
+        <name language="ru">duration</name>
+        <name language="ja">duration</name>
+        <hint language="de">duration</hint>
+        <hint language="es">duration</hint>
+        <hint language="pt">duration</hint>
+        <hint language="zh">duration</hint>
+        <hint language="fr">duration</hint>
+        <hint language="en">Duration</hint>
+        <hint language="ru">duration</hint>
+        <hint language="ja">duration</hint>
+        <headerhtmlstyle>text-align:center; width:100px; overflow:hidden; background-color:#C6D8EB; height:20px; color:#465F7D; font-weight:Bold;  white-space:nowrap;</headerhtmlstyle>
+        <cellhtmlstyle>width:100px; height:20px;  white-space:nowrap;</cellhtmlstyle>
+        <htmlvalue>{value}</htmlvalue>
+        <selectable>false</selectable>
+        <sortable>true</sortable>
+      </column>
+    </displayer>
+  </kpi>
+  <kpi code="kpi_24121473153364441">
+    <description language="en">Total Price Pie</description>
+    <provider code="dataprovider_69111473111799671" />
+    <displayer type="piechart" renderer="ofc2">
+      <domain>
+        <propertyid>processinstanceid</propertyid>
+        <maxnumberofintervals>10</maxnumberofintervals>
+        <taminterval>-1</taminterval>
+      </domain>
+      <range>
+        <propertyid>cast(value as integer)</propertyid>
+        <name language="de">cast(value as integer)</name>
+        <name language="es">cast(value as integer)</name>
+        <name language="pt">cast(value as integer)</name>
+        <name language="zh">cast(value as integer)</name>
+        <name language="fr">cast(value as integer)</name>
+        <name language="ru">cast(value as integer)</name>
+        <name language="en">cast(value as integer)</name>
+        <name language="ja">cast(value as integer)</name>
+        <scalarfunction>sum</scalarfunction>
+      </range>
+      <type>pie</type>
+      <showlabelsxaxis>true</showlabelsxaxis>
+      <color>#FFFFFF</color>
+      <backgroundcolor>#FFFFFF</backgroundcolor>
+      <width>600</width>
+      <height>300</height>
+      <showlegend>false</showlegend>
+      <axisinteger>true</axisinteger>
+      <legendanchor>south</legendanchor>
+      <showtitle>false</showtitle>
+      <align>center</align>
+      <marginleft>30</marginleft>
+      <marginright>30</marginright>
+      <margintop>30</margintop>
+      <marginbottom>30</marginbottom>
+    </displayer>
+  </kpi>
+  <kpi code="kpi_24011473114001706">
+    <description language="en">Total Price Trend</description>
+    <provider code="dataprovider_69111473111799671" />
+    <displayer type="barchart" renderer="ofc2">
+      <domain>
+        <propertyid>log_date</propertyid>
+        <maxnumberofintervals>10</maxnumberofintervals>
+        <taminterval>-1</taminterval>
+      </domain>
+      <range>
+        <propertyid>cast(value as integer)</propertyid>
+        <name language="de">cast(value as integer)</name>
+        <name language="es">cast(value as integer)</name>
+        <name language="pt">cast(value as integer)</name>
+        <name language="zh">cast(value as integer)</name>
+        <name language="fr">cast(value as integer)</name>
+        <name language="ru">cast(value as integer)</name>
+        <name language="en">Total Price</name>
+        <name language="ja">cast(value as integer)</name>
+        <scalarfunction>sum</scalarfunction>
+      </range>
+      <type>bar</type>
+      <showlabelsxaxis>true</showlabelsxaxis>
+      <labelanglexaxis>-45</labelanglexaxis>
+      <showlinesarea>false</showlinesarea>
+      <color>#FFFFFF</color>
+      <backgroundcolor>#FFFFFF</backgroundcolor>
+      <width>600</width>
+      <height>300</height>
+      <showlegend>false</showlegend>
+      <axisinteger>true</axisinteger>
+      <legendanchor>south</legendanchor>
+      <showtitle>true</showtitle>
+      <align>center</align>
+      <marginleft>30</marginleft>
+      <marginright>30</marginright>
+      <margintop>30</margintop>
+      <marginbottom>30</marginbottom>
+    </displayer>
+  </kpi>
+</kpis>

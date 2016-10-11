@@ -1,13 +1,43 @@
-# BPM Internal Maven repository
+Maven survival guide
+====================
+
+## BPM Internal Maven repository
 
 In Business Central, you can see and upload new artifacts in the Internal repository:
 
 * Authoring -> Artifact repository
 
-The upload can be authomated
+The upload can be automated with following procedure (acknowledgements to Anton Gerli)
+
+- in the project pom.xml add
+
+        <distributionManagement>
+            <repository>
+                <id>guvnor-m2-repo</id>
+                <name>maven repo</name>
+                <url>http://localhost:8080/business-central/maven2/</url>
+                <layout>default</layout>
+            </repository>
+        </distributionManagement>
+
+- Configure server connection in your `~/.m2/settings.xml`
+
+        <server>
+            <id>guvnor-m2-repo</id>
+            <username>user</username>
+            <password>password</password>
+            <privateKey>prdprivatekey</privateKey>
+            <configuration>
+                <wagonProvider>httpclient</wagonProvider>
+                <httpConfiguration>
+                    <all>
+                        <usePreemptive>true</usePreemptive>
+                    </all>
+                </httpConfiguration>
+            </configuration>
+        </server>
 
 
-# Maven survival guide
 
 ##Setting JDK level
 
@@ -108,6 +138,23 @@ There are 6 scopes available:
 This is the default scope, used if none is specified. Compile dependencies are available in all classpaths of a project. Furthermore, those dependencies are propagated to dependent projects.
 - **provided**  
 This is much like compile, but indicates you expect the JDK or a container to provide the dependency at runtime. For example, when building a web application for the Java Enterprise Edition, you would set the dependency on the Servlet API and related Java EE APIs to scope provided because the web container provides those classes. This scope is only available on the compilation and test classpath, and is not transitive.
+
+## Javadoc
+In Eclipse go to Windows-> Preferences-> Maven. Check the box that says "Download Artifact Javadoc." 
+
+## Dependency Version
+
+See the [POM Syntax section of the Maven book][1] for more details. Or see this doc on Dependency Version Ranges, where:
+
+A square bracket ( [ & ] ) means "closed" (inclusive).
+A parenthesis ( ( & ) ) means "open" (exclusive).
+
+Declare an open-ended version range (will resolve to 2.0.0):
+
+    <version>[1.0.0,)</version>
+
+
+[1]: http://www.mojohaus.org/versions-maven-plugin/examples/resolve-ranges.html
 
 ## Configure Maven Repository
 In the installation Guide look at the chapter Maven Repository
