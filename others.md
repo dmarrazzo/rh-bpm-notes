@@ -20,10 +20,12 @@ Change `bin\add-user.properties`:
 
 ## Configuration
 
+EAP configuration is in:
 
     <JBOSSS_HOME>/standalone/configuration/standalone.xml
 
-### System properties
+
+System properties:
 
     <JBOSSS_HOME>/bin/standalone.conf
 

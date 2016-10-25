@@ -112,6 +112,23 @@ Other possible dependencies:
       <artifactId>jbpm-services-ejb-impl</artifactId>
     </dependency>
 
+## Bill of material (BOM)
+To simplify the dependency management you can add this:
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.jboss.bom.brms</groupId>
+				<artifactId>jboss-brms-bpmsuite-platform-bom</artifactId>
+				<version>6.3.3.GA-redhat-2</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+You don't need to configure the dependency version number, because it's centrally handled by the BOM. 
+
 ## kie plugin
 
 This is used to build the kjar package
