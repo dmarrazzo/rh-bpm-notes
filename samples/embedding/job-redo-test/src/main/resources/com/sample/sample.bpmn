@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<definitions id="Definition"
+             targetNamespace="http://www.jboss.org/drools"
+             typeLanguage="http://www.java.com/javaTypes"
+             expressionLanguage="http://www.mvel.org/2.0"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd"
+             xmlns:g="http://www.jboss.org/drools/flow/gpd"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:tns="http://www.jboss.org/drools">
+
+  <process processType="Private" isExecutable="true" id="com.sample.bpmn.hello" tns:packageName="defaultPackage" name="Hello World" >
+
+    <!-- nodes -->
+    <startEvent id="_1" />
+    <endEvent id="_3" >
+        <terminateEventDefinition/>
+    </endEvent>
+    <userTask id="_4" name="Task 1" >
+       <ioSpecification id="InputOutputSpecification_1">
+        <dataInput id="DataInput_1" name="TaskName"/>
+        <dataInput id="DataInput_2" name="Priority"/>
+        <dataInput id="DataInput_3" name="Comment"/>
+        <dataInput id="DataInput_4" name="Description"/>
+        <dataInput id="DataInput_5" name="GroupId"/>
+        <dataInput id="DataInput_6" name="Skippable"/>
+        <dataInput id="DataInput_7" name="Content"/>
+        <dataInput id="DataInput_8" name="Locale"/>
+        <dataInput id="DataInput_9" name="CreatedBy"/>
+        <inputSet id="_InputSet_2">
+          <dataInputRefs>DataInput_1</dataInputRefs>
+          <dataInputRefs>DataInput_2</dataInputRefs>
+          <dataInputRefs>DataInput_3</dataInputRefs>
+          <dataInputRefs>DataInput_4</dataInputRefs>
+          <dataInputRefs>DataInput_5</dataInputRefs>
+          <dataInputRefs>DataInput_6</dataInputRefs>
+          <dataInputRefs>DataInput_7</dataInputRefs>
+          <dataInputRefs>DataInput_8</dataInputRefs>
+          <dataInputRefs>DataInput_9</dataInputRefs>
+        </inputSet>
+        <outputSet id="OutputSet_1" name="Output Set"/>
+      </ioSpecification>
+      <dataInputAssociation id="DataInputAssociation_1">
+        <targetRef>DataInput_1</targetRef>
+        <assignment id="Assignment_1">
+          <from xsi:type="tFormalExpression" id="FormalExpression_1">Task Name</from>
+          <to xsi:type="tFormalExpression" id="FormalExpression_2">DataInput_1</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation id="DataInputAssociation_2">
+        <targetRef>DataInput_2</targetRef>
+        <assignment id="Assignment_2">
+          <from xsi:type="tFormalExpression" id="FormalExpression_3">1</from>
+          <to xsi:type="tFormalExpression" id="FormalExpression_4">DataInput_2</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation id="DataInputAssociation_3">
+        <targetRef>DataInput_3</targetRef>
+      </dataInputAssociation>
+      <dataInputAssociation id="DataInputAssociation_4">
+        <targetRef>DataInput_4</targetRef>
+      </dataInputAssociation>
+      <dataInputAssociation id="DataInputAssociation_5">
+        <targetRef>DataInput_5</targetRef>
+      </dataInputAssociation>
+      <dataInputAssociation id="DataInputAssociation_6">
+        <targetRef>DataInput_6</targetRef>
+        <assignment id="Assignment_6">
+          <from xsi:type="tFormalExpression" id="FormalExpression_11">true</from>
+          <to xsi:type="tFormalExpression" id="FormalExpression_12">DataInput_6</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation id="DataInputAssociation_7">
+        <targetRef>DataInput_7</targetRef>
+      </dataInputAssociation>
+      <dataInputAssociation id="DataInputAssociation_8">
+        <targetRef>DataInput_8</targetRef>
+        <assignment id="Assignment_8">
+          <from xsi:type="tFormalExpression" id="FormalExpression_15">en-UK</from>
+          <to xsi:type="tFormalExpression" id="FormalExpression_16">DataInput_8</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation id="DataInputAssociation_9">
+        <targetRef>DataInput_9</targetRef>
+      </dataInputAssociation>
+      <potentialOwner id="PotentialOwner_1">
+        <resourceAssignmentExpression id="ResourceAssignmentExpression_1">
+          <formalExpression>john</formalExpression>
+        </resourceAssignmentExpression>
+      </potentialOwner>
+    </userTask>
+    <userTask id="_5" name="Task 2" >
+      <ioSpecification id="InputOutputSpecification_2">
+        <dataInput id="DataInput_10" name="TaskName"/>
+        <dataInput id="DataInput_11" name="Priority"/>
+        <dataInput id="DataInput_12" name="Comment"/>
+        <dataInput id="DataInput_13" name="Description"/>
+        <dataInput id="DataInput_14" name="GroupId"/>
+        <dataInput id="DataInput_15" name="Skippable"/>
+        <dataInput id="DataInput_16" name="Content"/>
+        <dataInput id="DataInput_17" name="Locale"/>
+        <dataInput id="DataInput_18" name="CreatedBy"/>
+        <inputSet id="_InputSet_3">
+          <dataInputRefs>DataInput_10</dataInputRefs>
+          <dataInputRefs>DataInput_11</dataInputRefs>
+          <dataInputRefs>DataInput_12</dataInputRefs>
+          <dataInputRefs>DataInput_13</dataInputRefs>
+          <dataInputRefs>DataInput_14</dataInputRefs>
+          <dataInputRefs>DataInput_15</dataInputRefs>
+          <dataInputRefs>DataInput_16</dataInputRefs>
+          <dataInputRefs>DataInput_17</dataInputRefs>
+          <dataInputRefs>DataInput_18</dataInputRefs>
+        </inputSet>
+        <outputSet id="OutputSet_2" name="Output Set"/>
+      </ioSpecification>
+      <dataInputAssociation id="DataInputAssociation_10">
+        <targetRef>DataInput_10</targetRef>
+        <assignment id="Assignment_10">
+          <from xsi:type="tFormalExpression" id="FormalExpression_19">Task Name</from>
+          <to xsi:type="tFormalExpression" id="FormalExpression_20">DataInput_10</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation id="DataInputAssociation_11">
+        <targetRef>DataInput_11</targetRef>
+        <assignment id="Assignment_11">
+          <from xsi:type="tFormalExpression" id="FormalExpression_21">1</from>
+          <to xsi:type="tFormalExpression" id="FormalExpression_22">DataInput_11</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation id="DataInputAssociation_12">
+        <targetRef>DataInput_12</targetRef>
+      </dataInputAssociation>
+      <dataInputAssociation id="DataInputAssociation_13">
+        <targetRef>DataInput_13</targetRef>
+      </dataInputAssociation>
+      <dataInputAssociation id="DataInputAssociation_14">
+        <targetRef>DataInput_14</targetRef>
+      </dataInputAssociation>
+      <dataInputAssociation id="DataInputAssociation_15">
+        <targetRef>DataInput_15</targetRef>
+        <assignment id="Assignment_15">
+          <from xsi:type="tFormalExpression" id="FormalExpression_29">true</from>
+          <to xsi:type="tFormalExpression" id="FormalExpression_30">DataInput_15</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation id="DataInputAssociation_16">
+        <targetRef>DataInput_16</targetRef>
+      </dataInputAssociation>
+      <dataInputAssociation id="DataInputAssociation_17">
+        <targetRef>DataInput_17</targetRef>
+        <assignment id="Assignment_17">
+          <from xsi:type="tFormalExpression" id="FormalExpression_33">en-UK</from>
+          <to xsi:type="tFormalExpression" id="FormalExpression_34">DataInput_17</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation id="DataInputAssociation_18">
+        <targetRef>DataInput_18</targetRef>
+      </dataInputAssociation>
+      <potentialOwner id="PotentialOwner_2">
+        <resourceAssignmentExpression id="ResourceAssignmentExpression_2">
+          <formalExpression>mary</formalExpression>
+        </resourceAssignmentExpression>
+      </potentialOwner>
+    </userTask>
+
+    <!-- connections -->
+    <sequenceFlow id="_5-_3" sourceRef="_5" targetRef="_3" />
+    <sequenceFlow id="_1-_4" sourceRef="_1" targetRef="_4" />
+    <sequenceFlow id="_4-_5" sourceRef="_4" targetRef="_5" />
+
+  </process>
+
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="com.sample.bpmn.hello" >
+      <bpmndi:BPMNShape bpmnElement="_1" >
+        <dc:Bounds height="36.0" width="36.0" x="27.0" y="22.0" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_3" >
+        <dc:Bounds height="36.0" width="36.0" x="360.0" y="22.0" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_4" >
+        <dc:Bounds x="96" y="16" width="100" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_5" >
+        <dc:Bounds x="228" y="16" width="100" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="_5-_3" >
+        <di:waypoint x="328" y="40" />
+        <di:waypoint x="360" y="40" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_1-_4" >
+        <di:waypoint x="63" y="40" />
+        <di:waypoint x="96" y="40" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_4-_5" >
+        <di:waypoint x="196" y="40" />
+        <di:waypoint x="228" y="40" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</definitions>
