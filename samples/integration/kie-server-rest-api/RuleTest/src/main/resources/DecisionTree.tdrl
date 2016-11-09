@@ -1,0 +1,16 @@
+import ssa.Transaction;
+
+rule "DecisionTree_0"
+	when 
+		transaction : Transaction(amount == 0.0)
+	then 
+		retract( transaction );
+end
+rule "DecisionTree_1"
+	when 
+		transaction : Transaction(amount > 3000.0)
+	then 
+		modify( transaction ) {
+			setSuspoicius( true )
+		}
+end
