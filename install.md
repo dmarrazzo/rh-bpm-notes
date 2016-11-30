@@ -66,6 +66,10 @@ Raw
             </drivers>
          </datasources>
 
+
+Persistent H2 store
+    <connection-url>jdbc:h2:h2.filestore;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</connection-url>
+
 ## Updating / Patching BPM Suite
 
 The topic is well covered in the Installation Guide.
