@@ -26,3 +26,8 @@ String
 				System.out.println(">>> "+frag);
 			}
 			caseMgmtService.triggerAdHocFragment(646, "Segreteria Prepara Pubblicazione");
+
+## Ad Hoc Subprocess
+
+In the designer the user has possibility to set 'AdHocOrdering' property for Ad Hoc Sub-Processes: parallel and sequential.
+Nevertheless, core engine only supports parallel execution, property should be hidden in designer.

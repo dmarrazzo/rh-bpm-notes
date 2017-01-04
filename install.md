@@ -25,7 +25,8 @@ Roles are defined in the following file:
 
     ~/EAP-6.4.0/standalone/configuration/application-roles.properties
 
-Example:
+
+### Example Roles
     admin=admin,analyst,user,kie-server,rest-all
 
 
@@ -89,6 +90,11 @@ Lauch the CLI
 In the cli launch the patch command
 
     [standalone@localhost:9999 /] patch apply /path/to/downloaded-patch.zip
+
+# Integrating SSO
+
+[SSO Tison article](https://github.com/jboss-gpe-ref-archs/bpms_rhsso/blob/master/doc/bpms_rhsso.adoc)
+
 
 # Problems 
 ## the workbench does not load

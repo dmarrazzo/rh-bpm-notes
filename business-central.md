@@ -30,3 +30,16 @@ You need to add following configuration in the ~/m2/setting.xml
     </servers>
     
 Make sure this following Maven repo are also in the setting.xml
+
+## REST Services
+
+
+### remote API
+
+If you are creating a data object, make sure that the class has the `@org.kie.api.remote.Remotable` annotation. The `@org.kie.api.remote.Remotable` annotation makes the entity available for use with JBoss BPM Suite remote services such as REST, JMS, and WS.
+
+
+
+
+
+

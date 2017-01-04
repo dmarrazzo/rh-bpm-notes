@@ -2,7 +2,9 @@ package client;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.kie.api.KieServices;
 import org.kie.api.command.BatchExecutionCommand;
@@ -23,40 +25,23 @@ public class Main {
 	private static final String URL = "http://localhost:8080/kie-server/services/rest/server";
 	private static final String user = "donato";
 	private static final String password = "donato";
-	private static final String deploymentId = null;
-	private static final String CONTAINER = "cont";
+	private static final String CONTAINER = "RuleTest";
 
 	public static void main(String[] args) {
 		callKieServer();
-		/*
-		try {
-			URL instanceURL = new URL(URL);
-
-			RuntimeEngine engine = RemoteRuntimeEngineFactory.newRestBuilder().addUrl(instanceURL).addUserName(user)
-					.addPassword(password).addDeploymentId(deploymentId).build();
-
-			KieSession kieSession = engine.getKieSession();
-
-			Transaction transaction = new Transaction();
-			transaction.setAmount(101.0);
-			kieSession.insert(transaction);
-
-			int rulesfired = kieSession.fireAllRules();
-
-			System.out.println(rulesfired + "\n" + transaction);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-*/
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static void callKieServer() {
 		try {
 			
 			KieServicesConfiguration config = KieServicesFactory.newRestConfiguration(URL, user, password);
 			// Marshalling
+			Set<Class<?>> extraClasses = new HashSet<Class<?>>();
+			extraClasses.add(Transaction.class);
+			config.addExtraClasses(extraClasses);
 			config.setMarshallingFormat(MarshallingFormat.JSON);
+			
 			
 			KieServicesClient client = KieServicesFactory.newKieServicesClient(config);
 			RuleServicesClient ruleClient = client.getServicesClient(RuleServicesClient.class);
@@ -75,8 +60,8 @@ public class Main {
 			ExecutionResults results = response.getResult();
 			Collection<String> identifiers = results.getIdentifiers();
 			for (String identifier : identifiers) {
-				Object factHandle = results.getValue(identifier);
-				System.out.println(factHandle);
+				Object fact = results.getValue(identifier);
+				System.out.println(fact);
 			}
 			
 			//System.out.println(">"+transactionOut);

@@ -50,7 +50,6 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -61,7 +60,7 @@
 			<dependency>
 				<groupId>org.jboss.bom.brms</groupId>
 				<artifactId>jboss-brms-bpmsuite-platform-bom</artifactId>
-				<version>6.3.3.GA-redhat-2</version>
+				<version>6.4.0.GA-redhat-2</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>

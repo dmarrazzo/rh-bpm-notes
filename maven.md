@@ -217,3 +217,63 @@ E.g.
 
 Eclipse is not able to retrieve the maven dependency, and many compile errors occurs.
 The resolution is manually delete the maven dep from .m2 repository and let maven download it again.
+
+
+### Deploy a project from command line (maven)
+
+In your **pom.xml**
+
+    <distributionManagement>
+        <repository>
+            <id>guvnor-m2-repo</id>
+            <name>maven repo</name>
+            <url>http://localhost:8080/business-central/maven2/</url>
+            <layout>default</layout>
+        </repository>
+    </distributionManagement>
+
+In your **`~/.m2/settings.xml`**, add this <server> element:
+
+    <server>
+        <id>guvnor-m2-repo</id>
+        <username>bpmsAdmin</username>
+        <password>abcd1234!</password>
+        <configuration>
+        <wagonProvider>httpclient</wagonProvider>
+        <httpConfiguration>
+        <all>
+        <usePreemptive>true</usePreemptive>
+        </all>
+        </httpConfiguration>
+        </configuration>
+    </server>
+
+Now you can deploy with maven command line:
+
+    $ mvn deploy
+
+### Execute the program
+
+Add to the `pom.xml`
+
+    <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.6</version>
+        <extensions>false</extensions>
+        <inherited>true</inherited>
+        <configuration>
+          <classifier>test</classifier>
+        </configuration>
+        <dependencies>...</dependencies>
+        <executions>...</executions>
+      </plugin>
+    </plugins>
+    </build>
+
+then issue the following command:
+
+    mvn exec:java
+

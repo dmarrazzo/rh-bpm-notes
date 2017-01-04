@@ -1,3 +1,11 @@
+# Kie Server config
+
+
+        <property name="org.kie.server.id" value="local-server-123"/>
+        <property name="org.kie.server.repo" value="${jboss.server.data.dir}"/>
+        <property name="org.kie.example" value="true"/>
+
+
 # Kie Server REST API
 
 ## List of deployed processes
@@ -133,6 +141,40 @@ object	KieServerRegistryImpl  (id=14262)
 - if the process definition is not in the root folder, the property package of the Process must reflect the actual process location
 
 
+
+## Kie Server API
+
+Important articles:
+
+http://mswiderski.blogspot.it/2015/09/unified-kie-execution-server-part-1.html
+http://mswiderski.blogspot.it/2015/09/unified-kie-execution-server-part-2.html
+http://mswiderski.blogspot.it/2015/09/unified-kie-execution-server-part-3.html
+http://mswiderski.blogspot.it/2015/09/unified-kie-execution-server-part-4.html
+
+Initial variables:
+
+
+        private static final String URL = "http://localhost:8080/kie-server/services/rest/server";
+        private static final String user = "";
+        private static final String password = "";
+        private static final String CONTAINER = "atti";
+        
+
+List tasks of a process instance:
+
+        	KieServicesConfiguration config = KieServicesFactory.newRestConfiguration(URL, user, password);
+        	
+        	// Marshalling
+        	config.setMarshallingFormat(MarshallingFormat.JSON);
+        	
+        	KieServicesClient client = KieServicesFactory.newKieServicesClient(config);
+        	
+        	UserTaskServicesClient taskServicesClient = client.getServicesClient(UserTaskServicesClient.class);
+        	List<String> status = new ArrayList<String>();
+        	status.add(Status.Ready.toString());
+        	List<TaskSummary> tasksSummaries = taskServicesClient.findTasksAssignedAsPotentialOwner("donato", status, 0, 10);
+        	tasksSummaries.forEach((ts)->System.out.println(ts.getDescription()));
+    
 
 
 

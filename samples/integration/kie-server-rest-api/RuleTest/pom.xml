@@ -7,13 +7,6 @@
   <version>1.1-SNAPSHOT</version>
   <packaging>kjar</packaging>
   <name>RuleTest</name>
-  <dependencies>
-    <dependency>
-      <groupId>com.thoughtworks.xstream</groupId>
-      <artifactId>xstream</artifactId>
-      <version>1.4.7.redhat-2</version>
-    </dependency>
-  </dependencies>
   <repositories>
     <repository>
       <id>guvnor-m2-repo</id>
@@ -26,7 +19,7 @@
       <plugin>
         <groupId>org.kie</groupId>
         <artifactId>kie-maven-plugin</artifactId>
-        <version>6.4.0.Final-redhat-8</version>
+        <version>6.5.0.Final-redhat-2</version>
         <extensions>true</extensions>
         <executions>
           <execution>
