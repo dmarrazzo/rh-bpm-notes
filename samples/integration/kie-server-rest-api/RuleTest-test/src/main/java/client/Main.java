@@ -17,11 +17,14 @@ import org.kie.server.client.KieServicesClient;
 import org.kie.server.client.KieServicesConfiguration;
 import org.kie.server.client.KieServicesFactory;
 import org.kie.server.client.RuleServicesClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ssa.Transaction;
 
 public class Main {
-
+	final static Logger log =  LoggerFactory.getLogger(Main.class);
+	
 	private static final String URL = "http://localhost:8080/kie-server/services/rest/server";
 	private static final String user = "donato";
 	private static final String password = "donato";
@@ -58,13 +61,17 @@ public class Main {
 
 			ServiceResponse<ExecutionResults> response = ruleClient.executeCommandsWithResults(CONTAINER, command);
 			ExecutionResults results = response.getResult();
+			if (results==null)
+				throw new Exception(response.toString());
+			
 			Collection<String> identifiers = results.getIdentifiers();
 			for (String identifier : identifiers) {
 				Object fact = results.getValue(identifier);
-				System.out.println(fact);
+				
+				log.info("fact: {}", fact);
 			}
 			
-			//System.out.println(">"+transactionOut);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
