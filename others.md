@@ -1,5 +1,8 @@
 Other useful information
 ========================
+## Developing
+
+- eclipse UML visualizer: ObjectAid UML Explorer
 
 ## JBoss EAP 6.4
 
@@ -67,6 +70,7 @@ stored where eap is launched:
 
 - git repo `.niogit`
 - maven `repositories/kie`
+- index `.index`
 - h2 database
 
 ## Remote debug

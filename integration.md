@@ -1,3 +1,8 @@
+# Task Service
+
+Implementation: **Java**
+...
+
 # EJB
 
 https://access.redhat.com/solutions/396853#eap6client

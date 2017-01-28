@@ -1,7 +1,21 @@
-# Project setup
+# Business Central
+
+## Artefacts
+
+The BC relies on 3 files system:
+
+- git internal repository, which directory is `.niogit`
+- maven internal deployment `repositories`
+- artefact index, which directory is `.index`
+
+In order to get a fresh BC environment, delete the previous directories.
+
+## Project setup
 During development phase, your version SHOULD keep the SNAPSHOT extension, when you need to freeze the code before a release you can remove it, export the code and move your development version to next SNAPSHOT version. In a normal lifecycle, the development environment is setup always on version x.x-SNAPSHOT. SNAPSHOT naming convention has the following benefits on the build process....
 
 - Add **SNAPSHOT** to artifact version. E.g. 1.0-SNAPSHOT
+
+
 
 ## Internal Maven repository set up
 

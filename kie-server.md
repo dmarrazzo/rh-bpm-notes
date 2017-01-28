@@ -1,9 +1,42 @@
 # Kie Server config
 
+**controller** is the BC
 
-        <property name="org.kie.server.id" value="local-server-123"/>
-        <property name="org.kie.server.repo" value="${jboss.server.data.dir}"/>
-        <property name="org.kie.example" value="true"/>
+## Bootstrap Switches
+
+
+### kie-server configuration
+
+    <property name="org.kie.server.id" value="default-kieserver"/>
+    <property name="org.kie.server.repo" value="${jboss.server.data.dir}"/>
+    
+A user name used to connect to the controller REST API
+
+    <property name="org.kie.server.controller.user" value="..."/>
+    <property name="org.kie.server.controller.pwd" value="..."/>
+
+a comma-separated list of URLs to controller REST endpoints
+
+    <property name="org.kie.server.controller" value="http://localhost:8080/business-central/rest/controller"/>
+
+URL of Intelligent Process Server instance used by the controller to call back on this 
+
+    <property name="org.kie.server.location" value="http://localhost:8080/kie-server/services/rest/server"/>
+
+
+Others:
+
+    <property name="org.kie.server.persistence.dialect" value="org.hibernate.dialect.H2Dialect"/>
+    <property name="org.kie.executor.jms.queue" value="queue/KIE.SERVER.EXECUTOR"/>
+    <property name="org.kie.server.persistence.ds" value="java:jboss/datasources/ExampleDS"/>
+
+
+### controller side configuration
+
+a user name used to connect with the KIE server:
+
+    <property name="org.kie.server.controller.user" value="..."/>
+    <property name="org.kie.server.controller.pwd" value="..."/>
 
 
 # Kie Server REST API

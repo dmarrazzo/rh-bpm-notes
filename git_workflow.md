@@ -14,6 +14,23 @@ In this simple model each developer can push changes in the team repository.
 
 ** WARNING ** Except for really simple cases, the graphical assets cannot be merged (BPMN diagram, forms, etc). So it's VITAL to ensure that developers adhere to a strict discipline avoiding to modify the same artifact in parallel.
 
+## SSH set up
+
+To use git with the ssh protocol against *Business Central* you have to tweak your ssh config.
+Add the following lines to `~/.ssh/config`
+
+    Host *
+            VerifyHostKeyDNS no
+            StrictHostKeyChecking no
+            HostKeyAlgorithms +ssh-dss
+            PubkeyAcceptedKeyTypes +ssh-dss
+            UserKnownHostsFile /dev/null
+
+Ensure that `~/.ssh/config` has this access rights: `-rw-------`
+
+    chmod 600 ~/.ssh/config
+
+
 ## Gitlab set up
 Gitlab repository `http://gitlab.consulting.redhat.com`
 
