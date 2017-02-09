@@ -1,30 +1,38 @@
-# Kie Server config
+# Kie Server 
+
+# Configuration
 
 **controller** is the BC
+Each kie server can managed by more than a controller.
+The kie server (aka Intelligent Process Server) initiate the conversation with the controller that enlist it in its configuration.
+
+## Adding users
+
+Change into CONTROLLER_HOME/bin.
+
+    ./add-user.sh -a --user kieserver --password kieserver1! --role kie-server
 
 ## Bootstrap Switches
 
-
-### kie-server configuration
+### kie-server configuration 
 
     <property name="org.kie.server.id" value="default-kieserver"/>
     <property name="org.kie.server.repo" value="${jboss.server.data.dir}"/>
+
+The kie server initiate the conversation with the controller that enlist it in its configuration. The following URL is passed back to the controller:
+
+    <property name="org.kie.server.location" value="http://localhost:8080/kie-server/services/rest/server"/>
     
 A user name used to connect to the controller REST API
 
     <property name="org.kie.server.controller.user" value="..."/>
     <property name="org.kie.server.controller.pwd" value="..."/>
 
-a comma-separated list of URLs to controller REST endpoints
+Each kie server can managed by more than a controller. The following properties is a comma-separated list of URLs to controller REST endpoints
 
     <property name="org.kie.server.controller" value="http://localhost:8080/business-central/rest/controller"/>
 
-URL of Intelligent Process Server instance used by the controller to call back on this 
-
-    <property name="org.kie.server.location" value="http://localhost:8080/kie-server/services/rest/server"/>
-
-
-Others:
+Other configurations:
 
     <property name="org.kie.server.persistence.dialect" value="org.hibernate.dialect.H2Dialect"/>
     <property name="org.kie.executor.jms.queue" value="queue/KIE.SERVER.EXECUTOR"/>
@@ -33,11 +41,25 @@ Others:
 
 ### controller side configuration
 
-a user name used to connect with the KIE server:
+The controller use the same credentials for all the kie-servers, they are defined by the following properties:
 
-    <property name="org.kie.server.controller.user" value="..."/>
-    <property name="org.kie.server.controller.pwd" value="..."/>
+    <property name="org.kie.server.user" value="donato"/>
+    <property name="org.kie.server.pwd" value="donato"/>
 
+## Execute multiple instances of kie server
+
+- copy the standalone folder
+- run the the kieserver
+
+Node 1:
+    export JBOSS_HOME=/home/donato/bin/EAP-7
+    ./standalone.sh -Djboss.node.name=kie-node1 -Djboss.server.base.dir=$JBOSS_HOME/kie-node1 -c standalone.xml -Djboss.socket.binding.port-offset=1
+
+
+Node 2:
+
+    export JBOSS_HOME=/home/donato/bin/EAP-7
+    ./standalone.sh -Djboss.node.name=kie-node2 -Djboss.server.base.dir=$JBOSS_HOME/kie-node2 -c standalone.xml -Djboss.socket.binding.port-offset=2
 
 # Kie Server REST API
 
@@ -195,13 +217,16 @@ Initial variables:
 
 List tasks of a process instance:
 
+        
         	KieServicesConfiguration config = KieServicesFactory.newRestConfiguration(URL, user, password);
         	
-        	// Marshalling
+        	// Marshalling configuration
         	config.setMarshallingFormat(MarshallingFormat.JSON);
-        	
+		extraClasses.add(Transaction.class);
+		config.addExtraClasses(extraClasses);
         	KieServicesClient client = KieServicesFactory.newKieServicesClient(config);
-        	
+
+        // client facade
         	UserTaskServicesClient taskServicesClient = client.getServicesClient(UserTaskServicesClient.class);
         	List<String> status = new ArrayList<String>();
         	status.add(Status.Ready.toString());

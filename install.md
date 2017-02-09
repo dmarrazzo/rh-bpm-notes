@@ -91,6 +91,31 @@ In the cli launch the patch command
 
     [standalone@localhost:9999 /] patch apply /path/to/downloaded-patch.zip
 
+# Clustering
+
+For the Business Central clustering look at Installation Guide.
+
+Here some basic information to cluster the kie-server:
+
+- same database
+- setting Quartz
+
+## Clustering JMS Active MQ on EAP 7
+
+???
+
+
+<!--cluster jms-->
+
+<pooled-connection-factory name="activemq-ra" transaction="xa" entries="java:/JmsXA java:jboss/DefaultJMSConnectionFactory" connectors="http-connector"/>
+                <broadcast-group name="my-broadcast-group" connectors="http-connector" socket-binding="messaging-group"/>
+                <discovery-group name="my-discovery-group" refresh-timeout="10000" socket-binding="messaging-group"/>
+
+
+# Configuration for High Performances
+
+- DisabledFollowOnLockOracle10gDialect
+
 # Integrating SSO
 
 [SSO Tison article](https://github.com/jboss-gpe-ref-archs/bpms_rhsso/blob/master/doc/bpms_rhsso.adoc)

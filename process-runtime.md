@@ -22,6 +22,16 @@ A process can have two kinds of asynchronous tasks:
 Task with the "Is Async" property set to true - this generates a proxy called "AsyncSignalEventCommand" (an asynchronous job) that is charge to execute the task. In this case, when the job is executed the actual process instance variables are retrieved and passed to the synchronous WorkItemHandler implementation.
 Task with an [AsyncWorkItemHandler][1] Implementation (or the command pattern) - in this case an asynchronous job is generated with the input payload serialized at creation time. When the job is executed the payload is always the same regardless the actual values of process variables.
 
+# Executor configuration
+Executor can work with or without JMS.
+JMS is the preferred option but executor can work without it and it does for instance on Tomcat where there is no JMS provider out of the box.
+you can disable JMS executor by system property `org.kie.executor.jms=false`
 
+# Task does not allow multiple incoming sequence flow (uncontrolled flow)
+
+According to BPMN 2.0 specification allows on page 153 multiple incoming flow sequences for activities (i.e. also for tasks). jBPM fails to validate such an BPMN file. It throws an IllegalArgumentException with the message This type of node cannot have more than one incoming connection!.
+Multiple incoming and outgoing sequence flows will be accepted in the jBPM Web Designer and by the jBPM6 Engine after adding the system property jbpm.enable.multi.con=true while starting BPMS/BRMS server.
+
+https://access.redhat.com/solutions/779893
 
 [1]: https://github.com/droolsjbpm/jbpm/blob/master/jbpm-services/jbpm-executor/src/main/java/org/jbpm/executor/impl/wih/AsyncWorkItemHandler.java

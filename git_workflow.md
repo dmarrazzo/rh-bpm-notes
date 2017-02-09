@@ -1,18 +1,23 @@
-# Tentative Git workflow for RH BPMS
+# Advanced Git workflow for Red Hat JBoss BPM Suite
+
 ## Introduction
+
 The following document aims to provide an isolated development environment for each BPM developer.
 
-Each developer has:
+There are two options:
 
- - its own Business Central instance
- - a local git repository that should synchronized with the local BC
+1. each developers has his own instance of Business Central in his/her own workstation;
+2. the Business Central is shared on a development server, but each developer has to work on his/her own branch. In this case, developers have to pay attention to stay on their own branch, when they perform any change.
 
-The team shares the consolidated work in a shared git repository, let's call it "team".
-In this simple model each developer can push changes in the team repository.
+The Business Central (BC) repository has the role of a sandbox, where many commits are meaningless. It's worth mentioning that the BC performs a git commit every time a developer saves an artefact.
+
+The team shares the consolidated work in a shared git repository, let's call it "team" (_blessed repository_ Ref. [Distributed Git - Distributed Workflows](https://git-scm.com/book/en/v2/Distributed-Git-Distributed-Workflows)).
+
+In this simple model each developer has his/her private git repository, where he/she pull from BC repository and push the team repository. It's highly recommended that the developer squash the BC commits, in order to pour in the team repository only consistent commits.
 
 ![repositories schema](./imgs/git_workflow_01.png)
 
-** WARNING ** Except for really simple cases, the graphical assets cannot be merged (BPMN diagram, forms, etc). So it's VITAL to ensure that developers adhere to a strict discipline avoiding to modify the same artifact in parallel.
+** WARNING ** Except for really simple cases, the graphical assets cannot be merged (BPMN diagram, forms, etc). So it's crucial that developers adhere to a strict discipline to avoid that the same artefact is modified in parallel (Only one developer is responsible for a BPMN diagram).
 
 ## SSH set up
 
@@ -26,22 +31,30 @@ Add the following lines to `~/.ssh/config`
             PubkeyAcceptedKeyTypes +ssh-dss
             UserKnownHostsFile /dev/null
 
-Ensure that `~/.ssh/config` has this access rights: `-rw-------`
+Ensure that `~/.ssh/config` has these access rights: `-rw-------`
 
     chmod 600 ~/.ssh/config
 
 
-## Gitlab set up
-Gitlab repository `http://gitlab.consulting.redhat.com`
+## Central Git repository set up
+There are many public available git repository that can host your project.
+(e.g. `github.com` or `http://gitlab.com`)
 
-Create your username and password
+Each developer must to create and set up his/her account:
 
-Git globals to use the gitlab
+- username and password on the remote system 
+- ssh certificate
 
-    git config --global user.name "Donato Marrazzo"
-    git config --global user.email "dmarrazzo@redhat.com"
+Remember to configure your identity for the shared env:
+
+    git config --global user.name "Your Name"
+    git config --global user.email "yourmail@example.com"
 
 ## Project set up for first developer (the repository creator)
+
+The first developer create a repository in his/her BC then clone it locally and push it to the central git repository.
+Each developer create and work only in his/her own branch.
+
 1. Create a repository in BC
 2. Clone it locally 
 
@@ -72,7 +85,9 @@ Git globals to use the gitlab
 
     *Note: if you cannot see the new branch in the Project Explorer, try to select again tree structure (from org unit)* 
     
-7. Add the centralized git repository (`https://gitlab.consulting.redhat.com/dmarrazz/elsevier.git`)
+    **Warning** The Business Central in the authoring perspective remember the last branch selected. Avoid as much as possible switching branch, since it's likely that you forget the branch switch and commit on the wrong branch. if it happens later it is described an emergency procedure to remove wrong commits from master branch.
+    
+7. Add the centralized git repository (e.g. `https://gitlab.com/<user>/<project>.git`)
 
     ```
     $ git remote add team <team_repo_url>
@@ -80,11 +95,18 @@ Git globals to use the gitlab
     
 8. Push the master branch to the centralized structure
 
-    ```
-    $ git push -u team master
-    ```
+        $ git push -u team master
+        Warning: Permanently added 'gitlab.com,x.x.x.x' (ECDSA) to the list of known hosts.
+        Counting objects: 38, done.
+        Delta compression using up to 4 threads.
+        Compressing objects: 100% (26/26), done.
+        Writing objects: 100% (38/38), 7.84 KiB | 0 bytes/s, done.
+        Total 38 (delta 9), reused 38 (delta 9)
+        To gitlab.com:<user>/<repo-name>.git
+         * [new branch]      master -> master
+        Branch master set up to track remote branch master from team.
 
-    *Note: your working branch <dev_branch> is not replicated in the centralized repository. This should be fine, because your local branch is full of useless commits.*
+    *Note: your working branch <dev_branch> is not replicated in the centralized repository. This is fine, because your local branch is full of useless commits.*
     
 ## Project set up for other developer
 
@@ -142,23 +164,89 @@ Other developer should create the repository in their Business Central environme
 
 ## Usual workflow
 Let's use `master` branch for consolidated commits.
-When your work worths to be shared (at least you are able to get a clean built), 
+When your work needs to be shared (at least you are able to get a clean built):
 
-    git fetch --all # get changes from internal git server and from team git server
-    git checkout master # switch to the master branch
-    git merge team/master # merge updates coming from the team
-    git merge <dev1_branch> # merge your personal changes
+
+1. Switch to master in order to merge there your work on the development branch
     
-If you find conflict use usual git procedure to manual merge the code.
+        git checkout master # switch to the master branch
 
-Push the merged work:
+2. Get changes from internal git server and remote server
 
-    git push -u team master# update the team repository
-    git push -u origin # update the internal repository
+        git fetch --all 
+
+    **Warning:** be sure that no updates come from central repository otherwise, merge those updates in your development branch than continue with this flow.
+    
+3. Merge all your personal changes adding just 1 commit to master (squashing all useless commit from dev's branch)
+
+        git merge --squash <dev1_branch>
+    
+4. If you find conflict use usual git procedure to manual merge the code.
+5. Commit your work with a comment
+
+        git commit -m "comment about latest update"
+
+6. Send the merged work to the central repository
+
+        git push team master
+
+At this point, your dev branch will be completely separated from the master. E.g.
+
+        ------------ X (master)
+      /
+     /
+    a --- b --- c (devN_branch)
+
+If you prefer to continue on top of the master commit, you have to merge it in your dev branch.
+This operation will remove from the development branch all the intermediate commit.
+
+1. Switch to dev branch
+
+        git checkout <devN>
+
+2. Merge the master
+
+        git merge master
+
+3. Push to your local BC
+
+        git push -f --all origin
+
+This is the result:
+
+    a------------ X (master, devN_branch)
+
+
 
 **Pay Attention:** BPMN diagram are almost impossible to merge, so **BE SURE** that just one person per time works on a specific process diagram.
 
 ## Git tips
+
+### Emergency procedure to remove unwanted commit
+
+If a developer performed some unwanted updates on the master branch, he can recover a clean situation with the following procedure:
+
+    git fetch origin
+
+The log should appear as in the following diagram, where X,Y and Z are the unwanted commits:
+
+    a --- b --- c (master) --- X --- Y --- Z (origin/master)
+
+Optionally, if you want to save this work, move the change to the development branch:
+
+    git checkout <devN>
+    git merge origin/master
+    git push origin <devN>
+
+Force the override of local master to BC:
+
+    git push -f origin master
+
+Now, your git log should look so:
+
+    a --- b --- c (master, origin/master) --- X --- Y --- Z (devN, origin/devN)
+
+
 
 ### Don't type your password every time
 

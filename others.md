@@ -1,5 +1,6 @@
 Other useful information
 ========================
+
 ## Developing
 
 - eclipse UML visualizer: ObjectAid UML Explorer
@@ -17,11 +18,11 @@ Change `bin\add-user.properties`:
 
     password.restriction=RELAX
 
-## stop EAP
+### stop EAP
 
     ./jboss-cli.sh -c --command=":shutdown()"
 
-## Configuration
+### Configuration
 
 EAP configuration is in:
 
@@ -34,9 +35,27 @@ System properties:
 
 e.g.
 
-    JAVA_OPTS="$JAVA_OPTS -Dmysql.host.ip=127.0.0.1 "
-    JAVA_OPTS="$JAVA_OPTS -Dmysql.host.port=3306 "
-    JAVA_OPTS="$JAVA_OPTS -Dmysql.bpms.schema=bpms "
+    JAVA_OPTS="$JAVA_OPTS -Dmysql.host.ip=127.0.0.1"
+    JAVA_OPTS="$JAVA_OPTS -Dmysql.host.port=3306"
+    JAVA_OPTS="$JAVA_OPTS -Dmysql.bpms.schema=bpms"
+
+### Multiple instances of EAP
+
+Guidelines on how to run multiple instances by copying standalone directory in JBoss EAP.
+
+Copy standalone directory. For example, to node1 and node2 like:
+
+    cp  -a  $JBOSS_HOME/standalone $JBOSS_HOME/node1
+    cp  -a  $JBOSS_HOME/standalone $JBOSS_HOME/node2
+    
+Start each instance, using the start up scripts in $JBOSS_HOME/bin, by specifying the node name, ip address (or a port shift) and server directory:
+
+    ./standalone.sh -Djboss.node.name=node1 -Djboss.server.base.dir=$JBOSS_HOME/node1 -c standalone.xml -b 10.20.30.40 -bmanagement 10.20.30.4
+
+with the same IP:
+
+    ./standalone.sh -Djboss.node.name=kie-node1 -Djboss.server.base.dir=$JBOSS_HOME/kie-node1 -c standalone.xml -Djboss.socket.binding.port-offset=1
+
 
 ### Mysql DB Driver
 

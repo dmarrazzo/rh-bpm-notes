@@ -15,3 +15,14 @@ Roles are defined in the following file:
 
 Roles = groups?
 
+
+## 4 eye principle
+
+And why not to rely on potential owners and excluded owners that come with WS-HT spec that we do have support for? 
+
+the first task that is completed returns ActorId data output that represents the actual onwer who completed the task, then map this to variable and use on next task as excluded owner (via data input mapping) so when you query for tasks (via task service queries that take into consideration excluded owners) you won’t see that task and thus won’t be able to work on it.
+
+[https://github.com/droolsjbpm/jbpm/blob/6.5.x/jbpm-human-task/jbpm-human-task-workitems/src/main/java/org/jbpm/services/task/wih/util/PeopleAssignmentHelper.java]()
+
+[https://github.com/droolsjbpm/jbpm/blob/6.5.x/jbpm-human-task/jbpm-human-task-workitems/src/main/java/org/jbpm/services/task/wih/AbstractHTWorkItemHandler.java]()
+
