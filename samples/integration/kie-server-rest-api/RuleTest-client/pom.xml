@@ -2,13 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<artifactId>rule-test</artifactId>
-		<groupId>SSA</groupId>
-		<version>1.0-SNAPSHOT</version>
-	</parent>
-
-	<artifactId>RuleTest-test</artifactId>
+	<artifactId>RuleTest-client</artifactId>
+	<groupId>SSA</groupId>
+	<version>1.1-SNAPSHOT</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -16,6 +12,12 @@
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>SSA</groupId>
+			<artifactId>RuleTest</artifactId>
+			<version>1.1-SNAPSHOT</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.kie</groupId>
 			<artifactId>kie-api</artifactId>
@@ -63,7 +65,6 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 
 	<dependencyManagement>
@@ -71,7 +72,7 @@
 			<dependency>
 				<groupId>org.jboss.bom.brms</groupId>
 				<artifactId>jboss-brms-bpmsuite-platform-bom</artifactId>
-				<version>6.4.0.GA-redhat-2</version>
+				<version>6.4.1.GA-redhat-3</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>

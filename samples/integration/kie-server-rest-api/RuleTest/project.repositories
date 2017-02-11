@@ -3,14 +3,6 @@
     <repository>
       <include>true</include>
       <metadata>
-        <id>local</id>
-        <url>/home/donato/.m2/repository</url>
-        <source>LOCAL</source>
-      </metadata>
-    </repository>
-    <repository>
-      <include>true</include>
-      <metadata>
         <id>central</id>
         <url>https://repo.maven.apache.org/maven2</url>
         <source>PROJECT</source>
@@ -27,17 +19,33 @@
     <repository>
       <include>true</include>
       <metadata>
-        <id>guvnor-m2-repo</id>
-        <url>http://localhost:8080/business-central/maven2/</url>
-        <source>PROJECT</source>
+        <id>jboss-brms-bpmsuite-plugin-repository-64</id>
+        <url>file:///home/donato/Downloads/RH/bpm/64/maven-repository</url>
+        <source>SETTINGS</source>
       </metadata>
     </repository>
     <repository>
       <include>true</include>
       <metadata>
-        <id>jboss-ga-plugin-repository</id>
-        <url>http://maven.repository.redhat.com/techpreview/all</url>
+        <id>local</id>
+        <url>/home/donato/.m2/repository</url>
+        <source>LOCAL</source>
+      </metadata>
+    </repository>
+    <repository>
+      <include>true</include>
+      <metadata>
+        <id>redhat-techpreview-all-repository</id>
+        <url>http://maven.repository.redhat.com/techpreview/all/</url>
         <source>SETTINGS</source>
+      </metadata>
+    </repository>
+    <repository>
+      <include>true</include>
+      <metadata>
+        <id>guvnor-m2-repo</id>
+        <url>http://localhost:8080/business-central/maven2/</url>
+        <source>PROJECT</source>
       </metadata>
     </repository>
     <repository>
@@ -51,8 +59,8 @@
     <repository>
       <include>true</include>
       <metadata>
-        <id>jboss-ga-repository</id>
-        <url>http://maven.repository.redhat.com/techpreview/all</url>
+        <id>jboss-brms-bpmsuite-repository-64</id>
+        <url>file:///home/donato/Downloads/RH/bpm/64/maven-repository</url>
         <source>SETTINGS</source>
       </metadata>
     </repository>

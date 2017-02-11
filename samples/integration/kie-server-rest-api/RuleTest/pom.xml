@@ -19,7 +19,7 @@
       <plugin>
         <groupId>org.kie</groupId>
         <artifactId>kie-maven-plugin</artifactId>
-        <version>6.5.0.Final-redhat-2</version>
+        <version>6.5.0.Final-redhat-5</version>
         <extensions>true</extensions>
         <executions>
           <execution>

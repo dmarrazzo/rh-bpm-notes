@@ -28,14 +28,18 @@ public class Main {
 	private static final String URL = "http://localhost:8080/kie-server/services/rest/server";
 	private static final String user = "donato";
 	private static final String password = "donato";
-	private static final String CONTAINER = "RuleTest";
+	private static final String CONTAINER = "SSA:RuleTest:1.1-SNAPSHOT";
 
 	public static void main(String[] args) {
-		callKieServer();
+		long start = System.currentTimeMillis();
+		//ksFireAllRule();
+		ksStartRuleFlow();
+		long end = System.currentTimeMillis();
+		System.out.println("time elapsed: "+ (end-start));
 	}
 
 	@SuppressWarnings("rawtypes")
-	public static void callKieServer() {
+	public static void ksFireAllRule() {
 		try {
 			
 			KieServicesConfiguration config = KieServicesFactory.newRestConfiguration(URL, user, password);
@@ -56,7 +60,51 @@ public class Main {
 			transaction.setAmount(102.0);
 
 			commands.add(cmdFactory.newInsert(transaction, "transaction"));
+			commands.add(cmdFactory.newAgendaGroupSetFocus("test"));
 			commands.add(cmdFactory.newFireAllRules());
+			BatchExecutionCommand command = cmdFactory.newBatchExecution(commands, "ksessionDrlRules");
+
+			ServiceResponse<ExecutionResults> response = ruleClient.executeCommandsWithResults(CONTAINER, command);
+			ExecutionResults results = response.getResult();
+			if (results==null)
+				throw new Exception(response.toString());
+			
+			Collection<String> identifiers = results.getIdentifiers();
+			for (String identifier : identifiers) {
+				Object fact = results.getValue(identifier);
+				
+				log.info("fact: {}", fact);
+			}
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static void ksStartRuleFlow() {
+		try {
+			
+			KieServicesConfiguration config = KieServicesFactory.newRestConfiguration(URL, user, password);
+			// Marshalling
+			Set<Class<?>> extraClasses = new HashSet<Class<?>>();
+			extraClasses.add(Transaction.class);
+			config.addExtraClasses(extraClasses);
+			config.setMarshallingFormat(MarshallingFormat.JSON);
+			
+			
+			KieServicesClient client = KieServicesFactory.newKieServicesClient(config);
+			RuleServicesClient ruleClient = client.getServicesClient(RuleServicesClient.class);
+
+			KieCommands cmdFactory = KieServices.Factory.get().getCommands();
+			List<Command> commands = new ArrayList<Command>();
+
+			Transaction transaction = new Transaction();
+			transaction.setAmount(102.0);
+
+			commands.add(cmdFactory.newInsert(transaction, "transaction"));
+			commands.add(cmdFactory.newStartProcess("RuleTest.rule-flow"));
 			BatchExecutionCommand command = cmdFactory.newBatchExecution(commands, "ksessionDrlRules");
 
 			ServiceResponse<ExecutionResults> response = ruleClient.executeCommandsWithResults(CONTAINER, command);
