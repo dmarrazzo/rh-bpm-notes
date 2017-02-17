@@ -29,6 +29,10 @@ Roles are defined in the following file:
 ### Example Roles
     admin=admin,analyst,user,kie-server,rest-all
 
+### Assigning role to projects
+
+
+https://github.com/jboss-gpe-ref-archs/bpm_deployments/blob/master/doc/multi-tenant-bpm.adoc
 
 
 ## Database / datasource
@@ -68,8 +72,15 @@ Raw
          </datasources>
 
 
-Persistent H2 store
+### Persistent H2 store
+
     <connection-url>jdbc:h2:h2.filestore;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</connection-url>
+
+**TCP variant**
+
+    <connection-url>jdbc:h2:tcp://localhost/~/h2tcp-filestore;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</connection-url>
+
+
 
 ## Updating / Patching BPM Suite
 
@@ -138,7 +149,7 @@ Look for the <system-properties> tag and add the following:
     <property name="org.uberfire.nio.git.daemon.host" value="yourserverdomain"/>
     <property name="org.uberfire.nio.git.ssh.host" value="yourserverdomain"/>
 
-##Internal git offer ssh-dss
+## Internal git offer ssh-dss
 Issue https://issues.jboss.org/browse/RHBRMS-243
 
 ####workaround: 

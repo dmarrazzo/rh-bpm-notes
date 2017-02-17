@@ -13,7 +13,9 @@ Roles are defined in the following file:
 
     ~/EAP-6.4.0/standalone/configuration/application-roles.properties
 
-Roles = groups?
+
+**TODO**
+userinfo.conf ....
 
 
 ## 4 eye principle
@@ -25,4 +27,6 @@ the first task that is completed returns ActorId data output that represents the
 [https://github.com/droolsjbpm/jbpm/blob/6.5.x/jbpm-human-task/jbpm-human-task-workitems/src/main/java/org/jbpm/services/task/wih/util/PeopleAssignmentHelper.java]()
 
 [https://github.com/droolsjbpm/jbpm/blob/6.5.x/jbpm-human-task/jbpm-human-task-workitems/src/main/java/org/jbpm/services/task/wih/AbstractHTWorkItemHandler.java]()
+
+It cannot implemented to a couple of issues.
 

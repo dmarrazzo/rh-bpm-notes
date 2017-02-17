@@ -3,7 +3,8 @@ Maven survival guide
 
 ## BPM Internal Maven repository
 
-In Business Central, you can see and upload new artifacts in the Internal repository:
+Business Central hosts an internal maven repository. 
+You can see and upload new artifacts of the Internal repository from the UI:
 
 * Authoring -> Artifact repository
 
@@ -39,7 +40,7 @@ The upload can be automated with following procedure (acknowledgements to Anton 
 
 
 
-##Setting JDK level
+## Setting JDK level
 
       <build>
         [...]
@@ -57,44 +58,64 @@ The upload can be automated with following procedure (acknowledgements to Anton 
         [...]
       </build>
 
-##BPM libraries
+## BPM libraries
+
+### Bill of material (BOM)
+
+To simplify the dependency management you can add this:
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.jboss.bom.brms</groupId>
+				<artifactId>jboss-brms-bpmsuite-platform-bom</artifactId>
+				<version>6.4.1.GA-redhat-3</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+You don't need to configure the dependency version number, because it's centrally handled by the BOM. 
 
 
-	<properties>
-		<version.bpms>6.4.0.Final-redhat-6</version.bpms>
-	</properties>
-	<dependencies>
+Basic lib:
 
-		<dependency>
-			<groupId>org.kie</groupId>
-			<artifactId>kie-api</artifactId>
-			<version>${version.bpms}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.drools</groupId>
-			<artifactId>drools-compiler</artifactId>
-			<version>${version.bpms}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jbpm</groupId>
-			<artifactId>jbpm-test</artifactId>
-			<version>${version.bpms}</version>
-		</dependency>
-	</dependencies>
+    	<dependency>
+    		<groupId>org.kie</groupId>
+    		<artifactId>kie-api</artifactId>
+    		<scope>provided</scope>
+    	</dependency>
+    	<dependency>
+    		<groupId>org.drools</groupId>
+    		<artifactId>drools-compiler</artifactId>
+    		<scope>provided</scope>
+    	</dependency>
+    
+JPA:
 
-Other possible dependencies:
+    	<dependency>
+    		<groupId>org.jbpm</groupId>
+    		<artifactId>jbpm-persistence-jpa</artifactId>
+    		<scope>provided</scope>
+    	</dependency>
+    
+Testing:
 
-    <!-- jBPM 6 dependencies -->
     <dependency>
-      <groupId>org.kie</groupId>
-      <artifactId>kie-api</artifactId>
+        	<groupId>org.jbpm</groupId>
+        	<artifactId>jbpm-test</artifactId>
     </dependency>
+
+Human Task:
+    
     <dependency>
       <groupId>org.jbpm</groupId>
       <artifactId>jbpm-human-task-core</artifactId>
     </dependency>
+
+Kie runtime services
+
     <dependency>
       <groupId>org.jbpm</groupId>
       <artifactId>jbpm-kie-services</artifactId>
@@ -112,22 +133,6 @@ Other possible dependencies:
       <artifactId>jbpm-services-ejb-impl</artifactId>
     </dependency>
 
-## Bill of material (BOM)
-To simplify the dependency management you can add this:
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.jboss.bom.brms</groupId>
-				<artifactId>jboss-brms-bpmsuite-platform-bom</artifactId>
-				<version>6.3.3.GA-redhat-2</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
-You don't need to configure the dependency version number, because it's centrally handled by the BOM. 
 
 ## kie plugin
 
@@ -174,25 +179,22 @@ Declare an open-ended version range (will resolve to 2.0.0):
 [1]: http://www.mojohaus.org/versions-maven-plugin/examples/resolve-ranges.html
 
 ## Configure Maven Repository
-In the installation Guide look at the chapter Maven Repository
+
+### Off line repositories
 
 Configure the file system
 
 - Download and unzip official maven repo
 - Change the maven `setting.xml` to point that
 
-##EJB client
+### On line repositories
 
-	<properties>
-		<version.bpms>6.4.0.Final-redhat-6</version.bpms>
-	</properties>
-		<dependency>
-			<groupId>org.jbpm</groupId>
-			<artifactId>jbpm-services-ejb-client</artifactId>
-			<version>${bpm.version}</version>
-			<scope>runtime</scope>
-		</dependency>
+There are 2 online repositories:
 
+ - [https://maven.repository.redhat.com/ga]()
+ - [https://maven.repository.redhat.com/earlyaccess/all/]()
+
+**Further information:** in the chapter *Maven Repository* of the *Installation Guide*.
 
 
 ## How to

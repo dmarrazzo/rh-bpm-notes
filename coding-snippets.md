@@ -16,6 +16,21 @@ String
 		return xStream.toXML(this);
 	}
 
+# EJB client
+
+	<properties>
+		<version.bpms>6.4.0.Final-redhat-6</version.bpms>
+	</properties>
+
+(...)
+	
+		<dependency>
+			<groupId>org.jbpm</groupId>
+			<artifactId>jbpm-services-ejb-client</artifactId>
+			<version>${bpm.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+
 # Case Management
 
 ## Trigger adhoc fragment
