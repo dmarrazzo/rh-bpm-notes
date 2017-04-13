@@ -63,6 +63,9 @@ Node 2:
 
 # Kie Server REST API
 
+## docs
+http://localhost:8080/kie-server/docs/
+
 ## List of deployed processes
 
     GET
@@ -122,8 +125,31 @@ Sample payload:
     POST
     <hostname>:<port>/kie-server/services/rest/server/containers/<container-id>/processes/instances/<process-instance-id>/variables
 
+## Container ALIAS
+
+IPS has an alias feature
+[https://access.redhat.com/documentation/en-us/red_hat_jboss_middleware_for_openshift/3/html-single/red_hat_jboss_bpm_suite_intelligent_process_server_for_openshift/#Alias-Redirection]()
+
+Ally>
+
+For new processes your REST call might look something like below, which you'd then rewrite at the routing level: 
+http://localhost:8080/kie-server/services/rest/server/containers/{container-name}/LATEST
+
+if the container-name has a version then the routing layer acts as a pass-through. 
+
+## Retrieve all the facts
+
+http://stackoverflow.com/questions/34339791/kie-execution-server-guided-rule-inserted-fact-how-to-get-it-in-java
+solo XSTREAM !!!
+
+	commands.add(cmdFactory.newGetObjects("objects"));
+
+
 # KieServer Extensions
 
+Extending REST interface
+
+[http://mswiderski.blogspot.it/2015/12/kie-server-extend-existing-server.html]()
 
 ## jBPM Services
 
@@ -191,7 +217,7 @@ object	KieServerRegistryImpl  (id=14262)
 
 ## Kie Server image
 
-- enable the SVG saving
+- In the Business Central enable the SVG saving
 - the kjar has to define a kie base "defaultKieBase"
 - if the process definition is not in the root folder, the property package of the Process must reflect the actual process location
 

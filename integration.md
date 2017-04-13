@@ -18,6 +18,15 @@ Test:
 
 [Fake SMTP server/client](https://nilhcem.github.io/FakeSMTP/)
 
+Configure at project level the WorkitemHandler:
+
+1. Open Project Editor > Deployment Descriptor
+
+
+    new org.jbpm.process.workitem.email.EmailWorkItemHandler("localhost", "8086","me@localhost","password")
+
+
+
 # Call REST service
 
 Use the REST Workitem

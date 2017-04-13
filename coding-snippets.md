@@ -1,8 +1,20 @@
-# Variable
+# Coding tips
+
+
+## Variable
 
     kcontext.setVariable("list",list);
 
-# XStream utility
+## On exit
+
+    System.out.println(">>> exit: " + kcontext.getNodeInstance().getNodeName());
+
+## Debugging process
+
+Add this event Listener:
+org.drools.core.event.DebugProcessEventListener
+
+## XStream utility
 
 Constructor
 
@@ -16,7 +28,7 @@ String
 		return xStream.toXML(this);
 	}
 
-# EJB client
+## EJB client
 
 	<properties>
 		<version.bpms>6.4.0.Final-redhat-6</version.bpms>

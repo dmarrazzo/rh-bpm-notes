@@ -40,7 +40,8 @@ The upload can be automated with following procedure (acknowledgements to Anton 
 
 
 
-## Setting JDK level
+## Compilation setting (build)
+The following configuration set the **JDK level** and **exclude** unwanted files
 
       <build>
         [...]
@@ -52,11 +53,16 @@ The upload can be automated with following procedure (acknowledgements to Anton 
             <configuration>
               <source>1.8</source>
               <target>1.8</target>
+       		  <excludes>
+			    <exclude>**/.*.java</exclude>
+			  </excludes>
             </configuration>
           </plugin>
         </plugins>
         [...]
       </build>
+
+
 
 ## BPM libraries
 
@@ -76,6 +82,13 @@ To simplify the dependency management you can add this:
 		</dependencies>
 	</dependencyManagement>
 
+Versions:
+
+- 6.4.2.GA-redhat-2
+- 6.4.1.GA-redhat-3
+- 6.4.0.GA-redhat-2
+
+
 You don't need to configure the dependency version number, because it's centrally handled by the BOM. 
 
 
@@ -91,6 +104,7 @@ Basic lib:
     		<artifactId>drools-compiler</artifactId>
     		<scope>provided</scope>
     	</dependency>
+
     
 JPA:
 
@@ -133,6 +147,13 @@ Kie runtime services
       <artifactId>jbpm-services-ejb-impl</artifactId>
     </dependency>
 
+Java EE (do not use in bpm project): 
+
+    <dependency>
+      <groupId>javax</groupId>
+      <artifactId>javaee-api</artifactId>
+      <version>6.0</version>
+    </dependency>
 
 ## kie plugin
 

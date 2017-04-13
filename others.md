@@ -74,6 +74,44 @@ usage in the code (it's possible to inject it):
     (...)
     private Logger log = LoggerFactory.getLogger(getClass());
 
+#### Configure in a project
+
+In the POM file add:
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.2</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.0.9</version>
+		</dependency>
+
+Add in the classpath `logback.xml` (or `logback-test.xml`):
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <configuration>
+    
+      <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+          <pattern>%date{HH:mm:ss.SSS} [%thread] %-5level %class{36}.%method:%line - %msg%n</pattern>
+        </encoder>
+      </appender>
+    
+      <logger name="org.kie" level="info"/>
+      <logger name="org.drools" level="info"/>
+      <logger name="org.jbpm" level="info"/>
+    
+    
+      <root level="debug">
+        <appender-ref ref="consoleAppender" />
+      </root>
+    
+    </configuration>
+
 ### How to increase heap size
 
 Edit `bin/standalone.sh` add:
