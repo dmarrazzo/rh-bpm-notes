@@ -2,8 +2,8 @@ Business Rule Task
 ==================
 
 ## Input and Output parameters
-Input are placed in working memory
-Output are deleted by the working memory
+Input are placed in working memory and then remove
+Output are disregarded
 [code][1]
 
 ## Runtime Strategies

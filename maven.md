@@ -217,6 +217,9 @@ There are 2 online repositories:
 
 **Further information:** in the chapter *Maven Repository* of the *Installation Guide*.
 
+The following command pull all the dependencies in local repository:
+
+    mvn dependency:go-offline
 
 ## How to
 

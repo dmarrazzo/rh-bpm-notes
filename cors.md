@@ -21,3 +21,10 @@ https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
 	  <filter-name>CorsFilter</filter-name>
 	  <url-pattern>/*</url-pattern>
 	</filter-mapping>
+
+## Interesting articles
+
+[https://access.redhat.com/solutions/2839031]()
+
+[http://toptenstartups.com/question/access-control-allow-origin-to-wildfly-8-1-0-configuration/]()
+
