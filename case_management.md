@@ -24,30 +24,10 @@ Nevertheless, core engine only supports parallel execution, property should be h
 
 ## Dependencies
 
-Exclusion to avoid dependency check in Business Central
-
-		<dependency>
-			<groupId>org.jbpm</groupId>
-			<artifactId>jbpm-case-mgmt</artifactId>
-			<version>6.5.0.Final-redhat-7</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.kie</groupId>
-					<artifactId>kie-internal</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.drools</groupId>
-					<artifactId>drools-core</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-Without exclusion you get the following warning:
-
-    WARN  [org.kie.workbench.common.services.backend.builder.ClassVerifier] (EJB default - 6) Verification of class org.drools.core.builder.conf.impl.JaxbConfigurationImpl failed and will not be available for authoring.
-    Underlying system error is: com/sun/tools/xjc/Options. Please check the necessary external dependencies for this project are configured correctly.
+DO NOT import jbpm-case-mgmt in the pom but copy it in WEB-INF/lib!
 
 ## Coding
+
 ### Trigger adhoc fragment
 
 			CaseMgmtService caseMgmtService = new CaseMgmtUtil(engine);

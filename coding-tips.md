@@ -1,4 +1,9 @@
-# Coding tips
+Coding Tips
+===========
+
+## MVEL
+http://mvel.documentnode.com/
+
 
 ## Variable substitution
 
@@ -11,6 +16,27 @@
 ## On exit
 
     System.out.println(">>> exit: " + kcontext.getNodeInstance().getNodeName());
+
+## Variable Mapping at assignment level
+
+The task assignments are able to perform variable mapping using the MVEL notation.
+
+E.g.:
+
+![mapping](imgs/coding-tips-01.png)
+ 
+## Get/Set variable by code
+
+The following interface provides the full access to the variable:
+
+    org.kie.api.runtime.process.WorkflowProcessInstance
+
+This is a code sample:
+
+	WorkflowProcessInstance processInstance = (WorkflowProcessInstance) runtimeEngine.getKieSession().getProcessInstance(processInstanceId);
+	processInstance.getVariable(name);
+	processInstance.setVariable(name, value);
+
 
 ## Debugging process
 

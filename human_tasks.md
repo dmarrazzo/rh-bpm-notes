@@ -1,4 +1,5 @@
-# Human Tasks
+Human Tasks
+===========
 
 Syntax to add variables in **subject** or **description**
 
@@ -17,6 +18,8 @@ Roles are defined in the following file:
 
 **TODO**
 userinfo.conf ....
+
+
 
 ## Special Roles
 
@@ -37,4 +40,6 @@ the first task that is completed returns `ActorId` data output that represents t
 [https://github.com/droolsjbpm/jbpm/blob/6.5.x/jbpm-human-task/jbpm-human-task-workitems/src/main/java/org/jbpm/services/task/wih/AbstractHTWorkItemHandler.java]()
 
 It cannot implemented to a couple of issues.
+
+
 

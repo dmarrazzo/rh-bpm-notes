@@ -114,9 +114,9 @@ Add in the classpath `logback.xml` (or `logback-test.xml`):
 
 ### How to increase heap size
 
-Edit `bin/standalone.sh` add:
+Edit `bin/standalone.conf` and change:
 
-    JAVA_OPTS="-Xmx2048m"
+    JAVA_OPTS="-Xms2303m -Xmx4303m -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=1024m -Djava.net.preferIPv4Stack=true"
 
 
 ## Internal repositories
@@ -125,7 +125,7 @@ stored where eap is launched:
 
     $EAP_HOME/bin/
 
-- git repo `.niogit`
+- git repo `. `
 - maven `repositories/kie`
 - index `.index`
 - h2 database

@@ -9,7 +9,7 @@ There are two options:
 1. each developers has his own instance of Business Central in his/her own workstation;
 2. the Business Central is shared on a development server, but each developer has to work on his/her own branch. In this case, developers have to pay attention to stay on their own branch, when they perform any change.
 
-The Business Central (BC) repository has the role of a sandbox, where many commits are meaningless. It's worth mentioning that the BC performs a git commit every time a developer saves an artefact.
+The Business Central (BC) repository has the role of a sandbox, where many commits are meaningless. It's worth mentioning that the BC performs a git commit every time a developer saves an artefact. Conversely, a developer should __commit__ a group of artefacts when they are consistent, usually when he implement a new feature, he can build the code and has performed a first test.
 
 The team shares the consolidated work in a shared git repository, let's call it "team" (_blessed repository_ Ref. [Distributed Git - Distributed Workflows](https://git-scm.com/book/en/v2/Distributed-Git-Distributed-Workflows)).
 
@@ -134,11 +134,11 @@ Other developer should create the repository in their Business Central environme
     $ git push origin <dev2_branch>
     ```
 
-    If you find problem pushing, you can try the *force* option: `git push --all -f`
+    If you find problem pushing, you can try the *force* option: `git push -f origin <dev2_branch>`
 
 5. Restart the BPMS in order to reload the new repository structure
 
-6. In the BC select your own branch ("donato" in the picture), this operation will ensure that your next changes will stored on the your branch.
+6. In the BC select your own branch ("devel" in the picture), this operation will ensure that your next changes will stored on the your branch.
 
     ![Repository Editor](./imgs/git_workflow_02.png)
 

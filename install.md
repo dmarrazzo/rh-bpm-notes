@@ -8,10 +8,36 @@ Launch:
 
     $ java -jar jboss-brms-6.3.0.GA-installer.jar
     
+### Installing on EAP 7
+
+- Download the deployable for EAP7
+- extract it
+- copy the content to the EAP7 home
+- add the users
+
+        ./add-user.sh -a -u bpmsAdmin -p password
+    
+- add the roles
+- listen all interface:
+
+    - add the interface:
+
+            <interfaces>  
+          
+               <!-- Equivalent of -b 0.0.0.0 -->  
+          
+                  <interface name="any">  
+                       <any-address/>  
+                  </interface>  
+            </interfaces>  
+
+    - add the binding
+        <socket-binding-group name="standard-sockets" default-interface="any" ...
+
+
+
 
 ## Users
-jbpm
-Admin123$
 
 To add a user use the EAP command line:
 
@@ -26,8 +52,10 @@ Roles are defined in the following file:
     ~/EAP-6.4.0/standalone/configuration/application-roles.properties
 
 
-### Example Roles
-    admin=admin,analyst,user,kie-server,rest-all
+### Roles
+
+    bpmsAdmin=admin,developer,analyst,user,manager,kie-server,rest-all,Administrators
+
 
 ### Assigning role to projects
 
@@ -133,21 +161,69 @@ Here some basic information to cluster the kie-server:
 
 
 # Problems 
-## the workbench does not load
+## Cannot login in Business Central (workbench)
 
-http://stackoverflow.com/questions/137212/how-to-solve-performance-problem-with-java-securerandom
+Create a new file `/standalone/deployments/business-central.war/WEB-INF/classes/ErraiService.properties` with the following content:
+
+    errai.bus.enable_sse_support=false
 
 add in `standalone.conf` the following line:
 
     JAVA_OPTS="$JAVA_OPTS -Djava.security.egd=file:/dev/./urandom"
 
+If the problem persist, try to disable the workstation antivirus.
+
+Reference:
+
+[https://access.redhat.com/solutions/1183473]()
+
+## How to access maven repository?
+
+Add username/password in `~/.m2/settings.xml`
+
+    <server>
+      <id>guvnor-m2-repo</id>
+      <username>admin</username>
+      <password>admin</password>
+      <configuration>
+        <wagonProvider>httpclient</wagonProvider>
+        <httpConfiguration>
+          <all>
+            <usePreemptive>true</usePreemptive>
+          </all>
+        </httpConfiguration>
+      </configuration>
+    </server>
+    
+Reference:
+[https://access.redhat.com/solutions/703423]()
+
+## Internal git ssh
+
+to connect to an external ssh?
+
+    org.uberfire.nio.git.ssh.cert.dir 
+
+default working dir 
+
+then .security
+
+there sha_id?
+
+Configure the passphrase
+
+    org.uberfire.nio.git.ssh.passphrase
 
 ## Internal git is not accessible
 
 Look for the <system-properties> tag and add the following:
 
-    <property name="org.uberfire.nio.git.daemon.host" value="yourserverdomain"/>
     <property name="org.uberfire.nio.git.ssh.host" value="yourserverdomain"/>
+
+Not sure if the following is useful:
+
+    <property name="org.uberfire.nio.git.daemon.host" value="yourserverdomain"/>
+
 
 ## Internal git offer ssh-dss
 Issue https://issues.jboss.org/browse/RHBRMS-243
