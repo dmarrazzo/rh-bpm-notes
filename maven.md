@@ -75,7 +75,7 @@ To simplify the dependency management you can add this:
 			<dependency>
 				<groupId>org.jboss.bom.brms</groupId>
 				<artifactId>jboss-brms-bpmsuite-platform-bom</artifactId>
-				<version>6.4.1.GA-redhat-3</version>
+				<version>6.4.3.GA-redhat-2</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -84,9 +84,10 @@ To simplify the dependency management you can add this:
 
 Versions:
 
-- 6.4.2.GA-redhat-2
-- 6.4.1.GA-redhat-3
-- 6.4.0.GA-redhat-2
+ - 6.4.3.GA-redhat-2
+ - 6.4.2.GA-redhat-2
+ - 6.4.1.GA-redhat-3
+ - 6.4.0.GA-redhat-2
 
 
 You don't need to configure the dependency version number, because it's centrally handled by the BOM. 
@@ -291,25 +292,27 @@ Now you can deploy with maven command line:
 
     $ mvn deploy
 
+Here a complete example of maven [settings.xml](config/settings.xml)
+
 ### Execute the program
 
 Add to the `pom.xml`
 
     <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>2.6</version>
-        <extensions>false</extensions>
-        <inherited>true</inherited>
-        <configuration>
-          <classifier>test</classifier>
-        </configuration>
-        <dependencies>...</dependencies>
-        <executions>...</executions>
-      </plugin>
-    </plugins>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>2.6</version>
+            <extensions>false</extensions>
+            <inherited>true</inherited>
+            <configuration>
+              <classifier>test</classifier>
+            </configuration>
+            <dependencies>...</dependencies>
+            <executions>...</executions>
+          </plugin>
+        </plugins>
     </build>
 
 then issue the following command:
