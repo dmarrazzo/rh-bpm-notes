@@ -5,13 +5,41 @@ To get the icon place the png in the `global` folder of the process project.
 # Task Service
 
 Implementation: **Java**
-...
 
-# EJB
+# Web Services
 
-https://access.redhat.com/solutions/396853#eap6client
+create a maven project
 
-https://github.com/selrahal/jbpm-rest
+copy the WSDL in the `resources` folder
+
+create in the project root the `jaxb-bindings.xml` with the following content:
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+    	elementFormDefault="qualified" attributeFormDefault="unqualified"
+    	jaxb:extensionBindingPrefixes="xjc" jaxb:version="1.0">
+    	<xs:annotation>
+    		<xs:appinfo>
+    			<jaxb:globalBindings>
+    				<xjc:serializable />
+    			</jaxb:globalBindings>
+    		</xs:appinfo>
+    	</xs:annotation>
+    </xs:schema>
+
+launch wsconsume.sh
+
+    <EAP_HOME>/bin/wsconsume.sh -b jaxb-bindings.xml -k -n -s src/main/java/ src/main/resources/POCJBSS.WSDL 
+
+Recent webservices uses bare type (not wrapped), so in order to match the service signature you have to transform the wrapper class in an object's array.
+
+    requestArray = new Object[] {
+    	request.getField1(),
+    	request.getField2(),
+    	request.getField3()
+    };
+
 
 # Email 
 Test:
@@ -77,3 +105,8 @@ Here you will found a modified version of the WIH that address the problem.
 
 [Improved REST WIH](./samples/wih/rest-wih/README.md)
 
+# EJB
+
+https://access.redhat.com/solutions/396853#eap6client
+
+https://github.com/selrahal/jbpm-rest

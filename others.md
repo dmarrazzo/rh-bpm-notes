@@ -7,6 +7,22 @@ Other useful information
 
 ## JBoss EAP 6.4
 
+### Install
+
+    java -jar <eap_jar> -console
+
+### Updating JBoss EAP
+
+Downlaod the EAP patched and unzip the bundle to get the incremental fix.
+E.g. jboss-eap-6.4.8.CP.zip
+Lauch the CLI
+
+    $ ./jboss-cli.sh 
+
+In the cli launch the patch command
+
+    [standalone@localhost:9999 /] patch apply /path/to/downloaded-patch.zip
+    
 ### Password
 to add user adn change password use
 

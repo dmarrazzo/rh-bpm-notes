@@ -244,6 +244,19 @@ E.g.
 Eclipse is not able to retrieve the maven dependency, and many compile errors occurs.
 The resolution is manually delete the maven dep from .m2 repository and let maven download it again.
 
+### Embed external libraries
+
+ - copy the jar in the resources
+ - add dependencies
+
+        <dependency>
+            <groupId>example</groupId>
+            <artifactId>indennizzo-wsgen</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/poc.jar</systemPath>
+        </dependency>
+
 
 ### Deploy a project from command line (maven)
 

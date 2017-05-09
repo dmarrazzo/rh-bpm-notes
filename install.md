@@ -32,7 +32,10 @@ Launch:
             </interfaces>  
 
     - add the binding
-        <socket-binding-group name="standard-sockets" default-interface="any" ...
+        <socket-binding-group name="standard-sockets" default-interface="any" ...>
+
+
+    - configure maven
 
 
 
@@ -45,11 +48,11 @@ To add a user use the EAP command line:
 
 Users are listed in the following file:
 
-    ~/EAP-6.4.0/standalone/configuration/application-users.properties
+    ~/<EAP_HOME>/standalone/configuration/application-users.properties
 
 Roles are defined in the following file:
 
-    ~/EAP-6.4.0/standalone/configuration/application-roles.properties
+    ~/<EAP_HOME>/standalone/configuration/application-roles.properties
 
 
 ### Roles
@@ -102,7 +105,7 @@ Raw
 
 ### Persistent H2 store
 
-    <connection-url>jdbc:h2:h2.filestore;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</connection-url>
+    <connection-url>jdbc:h2:h2-filestore;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</connection-url>
 
 **TCP variant**
 
@@ -115,7 +118,7 @@ Raw
 The topic is well covered in the Installation Guide.
 
 1. Unzip `jboss-bpmsuite-6.3.2-patch.zip`
-2. Issue `./apply-updates.sh ~/EAP-6.4.0/ eap6.x`
+2. Issue `./apply-updates.sh <EAP_HOME> eap6.x`
 3. Extract the maven repo update in the previous repo directory
 
 ### Updating JBoss EAP
@@ -231,8 +234,14 @@ Issue https://issues.jboss.org/browse/RHBRMS-243
 ####workaround: 
 
 Add to ~/.ssh/config the followings:
-Host *
-VerifyHostKeyDNS no
-StrictHostKeyChecking no
-HostKeyAlgorithms +ssh-dss
-UserKnownHostsFile /dev/null
+
+    Host *
+        VerifyHostKeyDNS no
+        StrictHostKeyChecking no
+        HostKeyAlgorithms +ssh-dss
+        UserKnownHostsFile /dev/null
+
+
+Old ssh does not accept `+`, so change with:
+
+    HostKeyAlgorithms ssh-dss

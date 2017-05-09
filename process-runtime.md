@@ -1,7 +1,3 @@
-# PerProcessInstanceRuntimeManager
-
-https://access.redhat.com/solutions/1183403
-
 # Asynchronous Jobs
 
 Some findings:
@@ -17,7 +13,6 @@ Some findings:
 
 http://mswiderski.blogspot.it/2013/08/make-your-work-asynchronous.html
 
-Let me recap just to be sure that I haven't missed something.
 A process can have two kinds of asynchronous tasks:
 Task with the "Is Async" property set to true - this generates a proxy called "AsyncSignalEventCommand" (an asynchronous job) that is charge to execute the task. In this case, when the job is executed the actual process instance variables are retrieved and passed to the synchronous WorkItemHandler implementation.
 Task with an [AsyncWorkItemHandler][1] Implementation (or the command pattern) - in this case an asynchronous job is generated with the input payload serialized at creation time. When the job is executed the payload is always the same regardless the actual values of process variables.
@@ -26,6 +21,29 @@ Task with an [AsyncWorkItemHandler][1] Implementation (or the command pattern) -
 Executor can work with or without JMS.
 JMS is the preferred option but executor can work without it and it does for instance on Tomcat where there is no JMS provider out of the box.
 you can disable JMS executor by system property `org.kie.executor.jms=false`
+
+# Deployment Descriptor
+
+While kmodule is mainly targeting on knowledge base and knowledge session basic configuration, deployment descriptors are considered more technical configuration. Following are the items available for configuration via deployment descriptors:
+
+
+  * persistence unit name for runtime data
+  * persistence unit for audit data
+  * persistence mode (JPA or NONE)
+  * audit mode (JPA, JMS, NONE)
+  * runtime strategy (SINGLETON, PER_REQUEST, PER_PROCESS_INSTANCE)
+  * list of event listeners to be registered
+  * list of task event listeners to be registered
+  * list of work item handlers to be registered
+  * list of globals to be registered
+  * marshalling strategies to be registered (for pluggable variable persistence)
+  * required roles to be granted access to resources of the kjar
+  * additional configuration options of knowledge session
+  * additional environment entries for knowledge session
+  * list of fully qualified class names that shall be added to the classes used for serialization by remote services
+  * whether or not to limit the classes from the deployment used for serialization by the remote services
+
+[https://docs.jboss.org/jbpm/release/6.5.0.Final/jbpm-docs/html/ch14.html#d0e15405]()
 
 # Custom variable persistence
 
@@ -57,3 +75,8 @@ Multiple incoming and outgoing sequence flows will be accepted in the jBPM Web D
 
 [1]: https://github.com/droolsjbpm/jbpm/blob/master/jbpm-services/jbpm-executor/src/main/java/org/jbpm/executor/impl/wih/AsyncWorkItemHandler.java
 
+# Issues
+
+## PerProcessInstanceRuntimeManager
+
+https://access.redhat.com/solutions/1183403
