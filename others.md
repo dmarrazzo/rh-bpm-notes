@@ -24,9 +24,9 @@ In the cli launch the patch command
     [standalone@localhost:9999 /] patch apply /path/to/downloaded-patch.zip
     
 ### Password
-to add user adn change password use
+to add user or change password use
 
-    add-user.sh
+    add-user.sh -a user password
 
 ### Relax password strength enforcement
 
@@ -49,11 +49,6 @@ System properties:
 
     <JBOSSS_HOME>/bin/standalone.conf
 
-e.g.
-
-    JAVA_OPTS="$JAVA_OPTS -Dmysql.host.ip=127.0.0.1"
-    JAVA_OPTS="$JAVA_OPTS -Dmysql.host.port=3306"
-    JAVA_OPTS="$JAVA_OPTS -Dmysql.bpms.schema=bpms"
 
 ### Multiple instances of EAP
 
@@ -72,10 +67,6 @@ with the same IP:
 
     ./standalone.sh -Djboss.node.name=kie-node1 -Djboss.server.base.dir=$JBOSS_HOME/kie-node1 -c standalone.xml -Djboss.socket.binding.port-offset=1
 
-
-### Mysql DB Driver
-
-    JAR: <JBOSSS_HOME>/modules/com/mysql/main/mysql-connector-java.jar
 
 ### Logging
 
@@ -172,4 +163,15 @@ java -cp h2*.jar org.h2.tools.Server -tcp
 To remotely connect to a database using the TCP server, use the following driver and database URL:
 
     JDBC driver class: org.h2.Driver
-    Database URL: jdbc:h2:tcp://localhost/~/test 
+    Database URL: jdbc:h2:tcp://localhost/~/h2-net
+
+
+### Mysql DB Driver
+
+    JAR: <JBOSSS_HOME>/modules/com/mysql/main/mysql-connector-java.jar
+
+
+
+    JAVA_OPTS="$JAVA_OPTS -Dmysql.host.ip=127.0.0.1"
+    JAVA_OPTS="$JAVA_OPTS -Dmysql.host.port=3306"
+    JAVA_OPTS="$JAVA_OPTS -Dmysql.bpms.schema=bpms"

@@ -61,69 +61,10 @@ Node 2:
     export JBOSS_HOME=/home/donato/bin/EAP-7
     ./standalone.sh -Djboss.node.name=kie-node2 -Djboss.server.base.dir=$JBOSS_HOME/kie-node2 -c standalone.xml -Djboss.socket.binding.port-offset=2
 
-# Kie Server REST API
+## Kie server Init - code -
 
-## docs
-http://localhost:8080/kie-server/docs/
+[JbpmKieServerExtension](https://github.com/kiegroup/droolsjbpm-integration/blob/6.5.x/kie-server-parent/kie-server-services/kie-server-services-jbpm/src/main/java/org/kie/server/services/jbpm/JbpmKieServerExtension.java)
 
-## List of deployed processes
-
-    GET
-    <hostname>:<port>/kie-server/services/rest/server/queries/processes/definitions
-
-Example result:
-
-    {
-        "processes": [
-            {
-                "process-id": "job-redo.RedoProc",
-                "process-name": "RedoProc",
-                "process-version": "1.0",
-                "package": "org.jbpm",
-                "container-id": "redo"
-            },
-        ]
-    }
-
-## Create a process instance:
-
-    POST
-    <hostname>:<port>/kie-server/services/rest/server/containers/<container-id>/processes/<process-id>/instances
-
-## List the process instances
-
-    GET
-    <hostname>:<port>/kie-server/services/rest/server/queries/processes/instances
-
-
-## Delete a process instance
-
-    DELETE
-    <hostname>:<port>/kie-server/services/rest/server/containers/<container-id>/processes/instances/<process-instance-id>
-
-## Send a signal
-
-    POST
-    <hostname>:<port>/kie-server/services/rest/server/containers/<container-id>/processes/instances/signal/<signal-ref>
-
-Sample payload:
-
-    { "test" : {"java.lang.String" : "ok"}}
-
-## List available signal for an instance
-
-    GET
-    <hostname>:<port>/kie-server/services/rest/server/containers/<container-id>/processes/instances/<process-instance-id>/signals
-
-## Get the variables
-
-    GET
-    <hostname>:<port>/kie-server/services/rest/server/containers/<container-id>/processes/instances/<process-instance-id>/variables
-
-## Set the variables
-
-    POST
-    <hostname>:<port>/kie-server/services/rest/server/containers/<container-id>/processes/instances/<process-instance-id>/variables
 
 ## Container ALIAS
 
@@ -217,7 +158,10 @@ object	KieServerRegistryImpl  (id=14262)
 
 ## Kie Server image
 
-- In the Business Central enable the SVG saving
+- In the Business Central enable the SVG saving, edit `business-central.war/org.kie.workbench.KIEWebapp/profiles/jbpm.xml` file, change the following line:
+
+        <storesvgonsave enabled="true"/>
+        
 - the kjar has to define a kie base "defaultKieBase"
 - if the process definition is not in the root folder, the property package of the Process must reflect the actual process location
 
@@ -264,3 +208,68 @@ List tasks of a process instance:
 
 
 
+# Kie Server REST API Reference
+
+## docs
+http://localhost:8080/kie-server/docs/
+
+[RH solution - How to generate and send requests to Decision Server?](https://access.redhat.com/solutions/1486613)
+
+## List of deployed processes
+
+    GET
+    <hostname>:<port>/kie-server/services/rest/server/queries/processes/definitions
+
+Example result:
+
+    {
+        "processes": [
+            {
+                "process-id": "job-redo.RedoProc",
+                "process-name": "RedoProc",
+                "process-version": "1.0",
+                "package": "org.jbpm",
+                "container-id": "redo"
+            },
+        ]
+    }
+
+## Create a process instance:
+
+    POST
+    <hostname>:<port>/kie-server/services/rest/server/containers/<container-id>/processes/<process-id>/instances
+
+## List the process instances
+
+    GET
+    <hostname>:<port>/kie-server/services/rest/server/queries/processes/instances
+
+
+## Delete a process instance
+
+    DELETE
+    <hostname>:<port>/kie-server/services/rest/server/containers/<container-id>/processes/instances/<process-instance-id>
+
+## Send a signal
+
+    POST
+    <hostname>:<port>/kie-server/services/rest/server/containers/<container-id>/processes/instances/signal/<signal-ref>
+
+Sample payload:
+
+    { "test" : {"java.lang.String" : "ok"}}
+
+## List available signal for an instance
+
+    GET
+    <hostname>:<port>/kie-server/services/rest/server/containers/<container-id>/processes/instances/<process-instance-id>/signals
+
+## Get the variables
+
+    GET
+    <hostname>:<port>/kie-server/services/rest/server/containers/<container-id>/processes/instances/<process-instance-id>/variables
+
+## Set the variables
+
+    POST
+    <hostname>:<port>/kie-server/services/rest/server/containers/<container-id>/processes/instances/<process-instance-id>/variables

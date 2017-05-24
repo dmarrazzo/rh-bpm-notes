@@ -2,6 +2,10 @@
 
 The form MUST match the variable name of the process
 
+Internal BPM Forms has special requirements for the Data Types (Class definition) 
+
+ - no inheritance
+ - always default constructor (with no parameter)
 
 ## Select
 

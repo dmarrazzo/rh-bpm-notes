@@ -7,6 +7,9 @@ http://mvel.documentnode.com/
 
 ## Variable substitution
 
+There are many place where you can place MVEL expressions.
+For example in human task subject field:
+
     #{varible}
 
 ## Variable

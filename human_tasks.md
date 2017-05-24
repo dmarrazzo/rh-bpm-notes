@@ -9,15 +9,51 @@ Escalation for Artwork Processing #{defaultDataInput}
 
 Users are listed in the following file:
 
-    ~/EAP-6.4.0/standalone/configuration/application-users.properties
+    <EAP_HOME>/standalone/configuration/application-users.properties
 
 Roles are defined in the following file:
 
-    ~/EAP-6.4.0/standalone/configuration/application-roles.properties
+    <EAP_HOME>/standalone/configuration/application-roles.properties
 
 
 **TODO**
-userinfo.conf ....
+
+    userinfo.conf
+
+## ActorId
+
+Add as input parameter of the HT
+You can leverage the initiator variable:
+
+ - declare `initiator` as `String`
+
+## Due date
+
+It's possible to specify a `DueDate` as parameter following ISO standard duration format.
+
+Examples:
+
+ - `P3Y6M4DT12H30M5S` represents a duration of "three years, six months, four days, twelve hours, thirty minutes, and five seconds".
+ - `P2D` represents 2 days
+
+[Wikipedia duration standard format](https://en.wikipedia.org/wiki/ISO_8601#Durations)
+
+## Swim lane assignment
+
+The second task in the swim lane is assigned to the same user that performed the previous task. 
+
+[AbstractHTWorkItemHandler AutoClaim](https://github.com/kiegroup/jbpm/blob/6.5.x/jbpm-human-task/jbpm-human-task-workitems/src/main/java/org/jbpm/services/task/wih/AbstractHTWorkItemHandler.java#L218)
+
+## Assignment Rules
+
+Assignment rules are rules executed automatically when a Human Task is created or completed. This mechanism can be used, for example, to assign a Human Task automatically to a particular user of a group or prevent a user from completing a Task if data is missing.
+
+Create a file that will contain the rule definition on the Business Central classpath (the recommended location is DEPLOY_DIR/standalone/deployments/business-central.war/WEB-INF/classes/):
+
+default-add-task.drl with the rules to be checked when the Human Task is created
+default-complete-task.drl with the rules to be checked when the Human Task is completed
+
+[TaskServiceRequest](https://github.com/kiegroup/jbpm/blob/master/jbpm-human-task/jbpm-human-task-core/src/main/java/org/jbpm/services/task/rule/TaskServiceRequest.java)
 
 
 
@@ -28,6 +64,8 @@ The user `Administrator` and all users in the group `Administrators`, can see an
 In order to define a specific administration group for a task, the developer has to define either `BusinessAdministratorId` or `BusinessAdministratorGroupId` as task input parameter.
 
 If a task define the `ExcludedOwnerId`, this user is removed by the potential owner list.
+
+
 
 ## 4 eye principle
 

@@ -28,6 +28,10 @@ DO NOT import jbpm-case-mgmt in the pom but copy it in WEB-INF/lib!
 
 ## Coding
 
+Reference
+
+[CaseMgmtService](https://github.com/kiegroup/jbpm/blob/6.5.x/jbpm-case-mgmt/src/main/java/org/jbpm/casemgmt/CaseMgmtService.java)
+
 ### Trigger adhoc fragment
 
 			CaseMgmtService caseMgmtService = new CaseMgmtUtil(engine);

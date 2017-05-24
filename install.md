@@ -201,11 +201,36 @@ Add username/password in `~/.m2/settings.xml`
 Reference:
 [https://access.redhat.com/solutions/703423]()
 
+## System properties
+
+
+ * org.uberfire.nio.git.dir: Location of the directory .niogit. Default: working directory
+ * org.uberfire.nio.git.daemon.enabled: Enables/disables git daemon. Default: true
+ * org.uberfire.nio.git.daemon.host: If git daemon enabled, uses this property as local host identifier. Default: localhost
+ * org.uberfire.nio.git.daemon.port: If git daemon enabled, uses this property as port number. Default: 9418
+ * org.uberfire.nio.git.ssh.enabled: Enables/disables ssh daemon. Default: true
+ * org.uberfire.nio.git.ssh.host: If ssh daemon enabled, uses this property as local host identifier. Default: localhost
+ * org.uberfire.nio.git.ssh.port: If ssh daemon enabled, uses this property as port number. Default: 8001
+ * org.uberfire.nio.git.ssh.cert.dir: Location of the directory .security where local certtificates will be stored. Default: working directory
+ * org.uberfire.metadata.index.dir: Place where Lucene .index folder will be stored. Default: working directory
+ * org.uberfire.cluster.id: Name of the helix cluster, for example: kie-cluster
+ * org.uberfire.cluster.zk: Connection string to zookeeper. This is of the form host1:port1,host2:port2,host3:port3, for example: localhost:2188
+ * org.uberfire.cluster.local.id: Unique id of the helix cluster node, note that ':' is replaced with '_', for example: node1_12345
+ * org.uberfire.cluster.vfs.lock: Name of the resource defined on helix cluster, for example: kie-vfs
+ * org.uberfire.cluster.autostart: Delays VFS clustering until the application is fully initialized to avoid conflicts when all cluster members create local clones. Default: false
+ * org.uberfire.sys.repo.monitor.disabled: Disable configuration monitor (do not disable unless you know what you're doing). Default: false
+ * org.uberfire.secure.key: Secret password used by password encryption. Default:  * org.uberfire.admin
+ * org.uberfire.secure.alg: Crypto algorithm used by password encryption. Default: PBEWithMD5AndDES
+ * org.guvnor.m2repo.dir: Place where Maven repository folder will be stored. Default: working-directory/repositories/kie
+ * org.kie.example.repositories: Folder from where demo repositories will be cloned. The demo repositories need to have been obtained and placed in this folder. Demo repositories can be obtained from the kie-wb-6.1.0-SNAPSHOT-example-repositories.zip artifact. This System Property takes precedence over org.kie.demo and org.kie.example. Default: Not used.
+ * org.kie.demo: Enables external clone of a demo application from GitHub. This System Property takes precedence over org.kie.example. Default: true
+ * org.kie.example: Enables example structure composed by Repository, Organization Unit and Project. Default: false
+
 ## Internal git ssh
 
 to connect to an external ssh?
 
-    org.uberfire.nio.git.ssh.cert.dir 
+     * org.uberfire.nio.git.ssh.cert.dir 
 
 default working dir 
 
@@ -215,7 +240,7 @@ there sha_id?
 
 Configure the passphrase
 
-    org.uberfire.nio.git.ssh.passphrase
+     * org.uberfire.nio.git.ssh.passphrase
 
 ## Internal git is not accessible
 
@@ -226,6 +251,9 @@ Look for the <system-properties> tag and add the following:
 Not sure if the following is useful:
 
     <property name="org.uberfire.nio.git.daemon.host" value="yourserverdomain"/>
+
+
+
 
 
 ## Internal git offer ssh-dss
