@@ -30,7 +30,9 @@ create in the project root the `jaxb-bindings.xml` with the following content:
 
 launch wsconsume.sh
 
-    <EAP_HOME>/bin/wsconsume.sh -b jaxb-bindings.xml -k -n -s src/main/java/ src/main/resources/POCJBSS.WSDL 
+    $ <EAP_HOME>/bin/wsconsume.sh -b jaxb-bindings.xml -k -n -s src/main/java/ src/main/resources/POCJBSS.WSDL 
+    $ rm -rf output
+
 
 Recent webservices uses bare type (not wrapped), so in order to match the service signature you have to transform the wrapper class in an object's array.
 

@@ -298,24 +298,48 @@ Here a complete example of maven [settings.xml](config/settings.xml)
 
 Add to the `pom.xml`
 
-    <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jar-plugin</artifactId>
-            <version>2.6</version>
-            <extensions>false</extensions>
-            <inherited>true</inherited>
-            <configuration>
-              <classifier>test</classifier>
-            </configuration>
-            <dependencies>...</dependencies>
-            <executions>...</executions>
-          </plugin>
-        </plugins>
-    </build>
+	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>java</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<mainClass>client.Main</mainClass>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
 
 then issue the following command:
 
-    mvn exec:java
+    mvn -Dkey=value exec:java -Dexec.mainClass=com.yourcompany.yourclass \
+        -Dexec.args="arg1 arg2 arg3"
+    
+### Config the manifest main class
+
+
+	<plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-jar-plugin</artifactId>
+		<version>2.6</version>
+		<extensions>false</extensions>
+		<inherited>true</inherited>
+		<configuration>
+			<archive>
+				<manifest>
+					<mainClass>client.Main</mainClass>
+				</manifest>
+			</archive>
+		</configuration>
+	</plugin>
 

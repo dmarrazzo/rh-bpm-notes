@@ -15,7 +15,7 @@ Launch:
 - copy the content to the EAP7 home
 - add the users
 
-        ./add-user.sh -a -u bpmsAdmin -p password
+        ./add-user.sh -a -u bpmsAdmin -p password --role admin,developer,analyst,user,manager,kie-server,rest-all,Administrators
     
 - add the roles
 - listen all interface:
@@ -44,7 +44,7 @@ Launch:
 
 To add a user use the EAP command line:
 
-    bin/add-user.sh admin admin0
+    ./add-user.sh -a -u bpmsAdmin -p password --role admin,developer,analyst,user,manager,kie-server,rest-all,Administrators
 
 Users are listed in the following file:
 
@@ -252,7 +252,10 @@ Not sure if the following is useful:
 
     <property name="org.uberfire.nio.git.daemon.host" value="yourserverdomain"/>
 
+Generic Solution?
 
+        <property name="org.uberfire.nio.git.daemon.host" value="0.0.0.0"/>
+        <property name="org.uberfire.nio.git.ssh.host" value="0.0.0.0"/>
 
 
 

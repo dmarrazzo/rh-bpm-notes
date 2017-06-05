@@ -1,0 +1,19 @@
+//created on: 23-Mar-2017
+package ssa
+
+//list any import classes here.
+
+
+
+//declare any global variables here
+
+
+
+
+rule "Simple Test"
+
+    then
+        //actions
+        insert( new Test("ok") );
+
+end

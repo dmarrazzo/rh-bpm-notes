@@ -132,10 +132,15 @@ stored where eap is launched:
 
     $EAP_HOME/bin/
 
-- git repo `. `
+- git repo `.niogit`
 - maven `repositories/kie`
 - index `.index`
 - h2 database
+
+Default document implementation store files in the file system:
+
+    .doc
+    business-central.war/WEB-INF/tmp
 
 ## Remote debug
 **By default debug mode is disabled.**
