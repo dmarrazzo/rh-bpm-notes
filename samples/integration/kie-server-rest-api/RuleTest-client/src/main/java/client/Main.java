@@ -71,7 +71,7 @@ public class Main {
 			commands.add(cmdFactory.newFireAllRules());
 		    
 			commands.add(cmdFactory.newGetObjects("objects"));
-			BatchExecutionCommand command = cmdFactory.newBatchExecution(commands, "ksessionStateless");
+			BatchExecutionCommand command = cmdFactory.newBatchExecution(commands, "ksStateLess");
 			
 			ServiceResponse<ExecutionResults> response = ruleClient.executeCommandsWithResults(CONTAINER, command);
 			ExecutionResults results = response.getResult();
