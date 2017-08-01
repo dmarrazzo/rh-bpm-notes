@@ -10,12 +10,19 @@ The BC relies on 3 files system:
 
 In order to get a fresh BC environment, delete the previous directories.
 
+
 ## Project setup
 During development phase, your version SHOULD keep the SNAPSHOT extension, when you need to freeze the code before a release you can remove it, export the code and move your development version to next SNAPSHOT version. In a normal lifecycle, the development environment is setup always on version x.x-SNAPSHOT. SNAPSHOT naming convention has the following benefits on the build process....
 
 - Add **SNAPSHOT** to artifact version. E.g. 1.0-SNAPSHOT
 
+## Workbench Configuration
 
+Within Red Hat JBoss BPM Suite, users may set up roles using LDAP to modify existing roles. Users may modify the roles in the workbench configuration to ensure the unique LDAP based roles conform to enterprise standards by editing the deployments directory located at JBOSS_HOME/standalone/deployments/business-central.war/WEB-INF/classes/workbench-policy.propeties.
+
+Example of customization:
+
+    profile.wb_for_business_analysts=!wb_artifact_repository, !wb_artifact_repository_jar_download, wb_authoring, !wb_data_modeler_edit_sources
 
 ## Internal Maven repository set up
 

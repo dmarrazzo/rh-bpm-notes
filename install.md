@@ -7,7 +7,7 @@
 Launch:
 
     $ java -jar jboss-brms-6.3.0.GA-installer.jar
-    
+
 ### Installing on EAP 7
 
 - Download the deployable for EAP7
@@ -16,7 +16,7 @@ Launch:
 - add the users
 
         ./add-user.sh -a -u bpmsAdmin -p password --role admin,developer,analyst,user,manager,kie-server,rest-all,Administrators
-    
+
 - add the roles
 - listen all interface:
 

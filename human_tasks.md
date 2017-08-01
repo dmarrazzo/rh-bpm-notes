@@ -1,11 +1,14 @@
 Human Tasks
 ===========
 
+## Properties
 Syntax to add variables in **subject** or **description**
 
 E.g.
 Escalation for Artwork Processing #{defaultDataInput}
 
+
+## Authentication
 
 Users are listed in the following file:
 
@@ -16,9 +19,18 @@ Roles are defined in the following file:
     <EAP_HOME>/standalone/configuration/application-roles.properties
 
 
-**TODO**
+### Default Users information
 
-    userinfo.conf
+The default implementation [DefaultUserInfo](https://github.com/kiegroup/jbpm/blob/6.5.x/jbpm-human-task/jbpm-human-task-core/src/main/java/org/jbpm/services/task/identity/DefaultUserInfo.java) reads the configuration from:
+
+    EAP_HOME/standalone/deployments/business-central.war/WEB-INF/classes/userinfo.properties
+
+Example content:
+
+    Luke\ Cage=luke@domain.com:en-UK:luke
+
+It can be changed in `EAP_HOME/standalone/deployments/business-central.war/WEB-INF/beans.xml`
+
 
 ## ActorId
 

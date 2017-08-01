@@ -13,6 +13,12 @@ Example of `range value`:
 
     {aaa,aaa;bbb,bbb}
 
+## Default value for a form field
+
+Example of `Formula`:
+
+    =return "ok";
+
 ## Data provider
 
 [https://access.redhat.com/solutions/1487113]()

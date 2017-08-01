@@ -66,6 +66,10 @@ Then you have to configure the *Persistence descriptor*:
 
 3. By default the new persistence unit points to the same BPM datasource, this means that the table will be created in the same DB of the BPM engine. In order to separate the process specific information from the BPM engine ones, it's a good practice to define a new datasource targeting a different DB. The drawback of the latter configuration is that the BPM datasource and the new one must be XA compliant, with the performance implication that a distributed transaction brings on the table.
 
+## References
+
+[jBPM 6 - store your process variables anywhere](http://mswiderski.blogspot.it/2014/02/jbpm-6-store-your-process-variables.html)
+
 # Advanced Queries
 
 
@@ -88,8 +92,22 @@ Multiple incoming and outgoing sequence flows will be accepted in the jBPM Web D
 
 [1]: https://github.com/droolsjbpm/jbpm/blob/master/jbpm-services/jbpm-executor/src/main/java/org/jbpm/executor/impl/wih/AsyncWorkItemHandler.java
 
-# Issues
+# Registering Manually  
+
+In general, what is most likely happening is that you are registering handler manually via ksession and in case you use runtime manager and strategy other than singleton it will be not visible by other contexts. Looks like you are using per process instance strategy which would explain why it fails after starting subprocess - it gets new context - new ksession without handler being registered there. So you need to use RegisterableItemsFactory for registering handlers. That is set on RuntimeEnvironment used to create runtime manager, see here:https://github.com/kiegroup/jbpm/blob/master/jbpm-services/jbpm-executor/src/test/java/org/jbpm/executor/impl/wih/AsyncContinuationSupportTest.java#L155-L169
+
+# Correlation Key
+
+Technically you probably can create a correlation key afterwards, it's basically an entry in the database that links both.  But in the public api it's only exposed when starting a process.  Using internal apis you can probably create a CorrelationKeyInfo object and persist it.  
+
+correct, you should be able to create it and persist, though that does not much change compared to using variable. If I may ask why not assigning correlation key directly?
+
+<https://github.com/kiegroup/jbpm/blob/d881f2a72bd4279d4277b294c2dbc6663d91c612/jbpm-persistence/jbpm-persistence-jpa/src/main/java/org/jbpm/persistence/processinstance/JPAProcessInstanceManager.java#L73-L91>
+
+Issues
+===========================================================================
 
 ## PerProcessInstanceRuntimeManager
 
 https://access.redhat.com/solutions/1183403
+

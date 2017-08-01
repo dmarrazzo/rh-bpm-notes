@@ -272,19 +272,19 @@ In your **pom.xml**
         </repository>
     </distributionManagement>
 
-In your **`~/.m2/settings.xml`**, add this <server> element:
+In your **`~/.m2/settings.xml`**, add this `<server>` element to the `<servers>` section:
 
     <server>
         <id>guvnor-m2-repo</id>
         <username>bpmsAdmin</username>
         <password>abcd1234!</password>
         <configuration>
-        <wagonProvider>httpclient</wagonProvider>
-        <httpConfiguration>
-        <all>
-        <usePreemptive>true</usePreemptive>
-        </all>
-        </httpConfiguration>
+            <wagonProvider>httpclient</wagonProvider>
+            <httpConfiguration>
+                <all>
+                    <usePreemptive>true</usePreemptive>
+                </all>
+            </httpConfiguration>
         </configuration>
     </server>
 

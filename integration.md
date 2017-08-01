@@ -2,6 +2,17 @@
 
 To get the icon place the png in the `global` folder of the process project.
 
+Init MVEL parameters:
+
+        ksession
+        taskService
+        runtimeManager
+        classLoader
+        entityManagerFactory
+
+Service registry:
+https://docs.jboss.org/jbpm/release/6.5.0.Final/jbpm-docs/html_single/#d0e29362
+
 # Task Service
 
 Implementation: **Java**
