@@ -3,7 +3,7 @@ Maven survival guide
 
 ## BPM Internal Maven repository
 
-Business Central hosts an internal maven repository. 
+Business Central hosts an internal maven repository.
 You can see and upload new artifacts of the Internal repository from the UI:
 
 * Authoring -> Artifact repository
@@ -43,6 +43,7 @@ The upload can be automated with following procedure (acknowledgements to Anton 
 ## Compilation setting (build)
 The following configuration set the **JDK level** and **exclude** unwanted files
 
+```
       <build>
         [...]
         <plugins>
@@ -54,14 +55,14 @@ The following configuration set the **JDK level** and **exclude** unwanted files
               <source>1.8</source>
               <target>1.8</target>
        		  <excludes>
-			    <exclude>**/.*.java</exclude>
-			  </excludes>
+              <exclude>**/.*.java</exclude>
+            </excludes>
             </configuration>
           </plugin>
         </plugins>
         [...]
       </build>
-
+```
 
 
 ## BPM libraries
@@ -75,7 +76,7 @@ To simplify the dependency management you can add this:
 			<dependency>
 				<groupId>org.jboss.bom.brms</groupId>
 				<artifactId>jboss-brms-bpmsuite-platform-bom</artifactId>
-				<version>6.4.3.GA-redhat-2</version>
+				<version>6.4.4.GA-redhat-3</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -84,13 +85,14 @@ To simplify the dependency management you can add this:
 
 Versions:
 
+ - 6.4.4.GA-redhat-3
  - 6.4.3.GA-redhat-2
  - 6.4.2.GA-redhat-2
  - 6.4.1.GA-redhat-3
  - 6.4.0.GA-redhat-2
 
 
-You don't need to configure the dependency version number, because it's centrally handled by the BOM. 
+You don't need to configure the dependency version number, because it's centrally handled by the BOM.
 
 
 Basic lib:
@@ -106,7 +108,7 @@ Basic lib:
     		<scope>provided</scope>
     	</dependency>
 
-    
+
 JPA:
 
     	<dependency>
@@ -114,7 +116,7 @@ JPA:
     		<artifactId>jbpm-persistence-jpa</artifactId>
     		<scope>provided</scope>
     	</dependency>
-    
+
 Testing:
 
     <dependency>
@@ -123,7 +125,7 @@ Testing:
     </dependency>
 
 Human Task:
-    
+
     <dependency>
       <groupId>org.jbpm</groupId>
       <artifactId>jbpm-human-task-core</artifactId>
@@ -148,7 +150,7 @@ Kie runtime services
       <artifactId>jbpm-services-ejb-impl</artifactId>
     </dependency>
 
-Java EE (do not use in bpm project): 
+Java EE (do not use in bpm project):
 
     <dependency>
       <groupId>javax</groupId>
@@ -184,7 +186,7 @@ This is the default scope, used if none is specified. Compile dependencies are a
 This is much like compile, but indicates you expect the JDK or a container to provide the dependency at runtime. For example, when building a web application for the Java Enterprise Edition, you would set the dependency on the Servlet API and related Java EE APIs to scope provided because the web container provides those classes. This scope is only available on the compilation and test classpath, and is not transitive.
 
 ## Javadoc
-In Eclipse go to Windows-> Preferences-> Maven. Check the box that says "Download Artifact Javadoc." 
+In Eclipse go to Windows-> Preferences-> Maven. Check the box that says "Download Artifact Javadoc."
 
 ## Dependency Version
 
@@ -324,7 +326,7 @@ then issue the following command:
 
     mvn -Dkey=value exec:java -Dexec.mainClass=com.yourcompany.yourclass \
         -Dexec.args="arg1 arg2 arg3"
-    
+
 ### Config the manifest main class
 
 
@@ -342,4 +344,3 @@ then issue the following command:
 			</archive>
 		</configuration>
 	</plugin>
-
