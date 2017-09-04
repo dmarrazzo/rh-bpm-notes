@@ -13,12 +13,12 @@ Here the variables:
 The init task initialize the list:
 
     System.out.println("init " + list);
-    
+
     list = new java.util.ArrayList<String>();
     list.add("str1");
     list.add("str2");
     list.add("str3");
-    
+
     kcontext.setVariable("list",list);
 
 Let's see how to configure the multiple instance node:
@@ -40,8 +40,9 @@ Run the process and you'll see the following log output:
 
 It work as designed!
 
+### Reference
+[http://mswiderski.blogspot.it/2015/01/multiinstance-characteristic-example.html]()
+
 ###Glitch found
 
 For some strange reason if you don't specify a form, BPMS autogenerate it for you. It can be useful in some cases, but in this example it initiate `init` as `String` with unexpected cast exception at runtime. You can work around this generating a void start form for the process!
-
-

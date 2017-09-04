@@ -41,7 +41,7 @@ create in the project root the `jaxb-bindings.xml` with the following content:
 
 launch wsconsume.sh
 
-    $ <EAP_HOME>/bin/wsconsume.sh -b jaxb-bindings.xml -k -n -s src/main/java/ src/main/resources/POCJBSS.WSDL 
+    $ <EAP_HOME>/bin/wsconsume.sh -b jaxb-bindings.xml -k -n -s src/main/java/ src/main/resources/POCJBSS.WSDL
     $ rm -rf output
 
 
@@ -53,8 +53,16 @@ Recent webservices uses bare type (not wrapped), so in order to match the servic
     	request.getField3()
     };
 
+### parameters
 
-# Email 
+  - URL = http url for WSDL
+  - endpoint = `location` of `soap:address`
+  - mode = `SYNC`
+  - interface = `name` of `portType`
+  - operation = `name` of `operation`
+  - namespace = `targetNamespace`
+
+# Email
 Test:
 
 [Fake SMTP server/client](https://nilhcem.github.io/FakeSMTP/)

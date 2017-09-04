@@ -5,8 +5,10 @@ Human Tasks
 Syntax to add variables in **subject** or **description**
 
 E.g.
-Escalation for Artwork Processing #{defaultDataInput}
 
+    Escalation for Artwork Processing #{defaultDataInput}
+
+In a multi instance loop the human task description can access to the instance data: ``#{miDataInputX}``
 
 ## Authentication
 
@@ -52,7 +54,7 @@ Examples:
 
 ## Swim lane assignment
 
-The second task in the swim lane is assigned to the same user that performed the previous task. 
+The second task in the swim lane is assigned to the same user that performed the previous task.
 
 [AbstractHTWorkItemHandler AutoClaim](https://github.com/kiegroup/jbpm/blob/6.5.x/jbpm-human-task/jbpm-human-task-workitems/src/main/java/org/jbpm/services/task/wih/AbstractHTWorkItemHandler.java#L218)
 
@@ -77,11 +79,13 @@ In order to define a specific administration group for a task, the developer has
 
 If a task define the `ExcludedOwnerId`, this user is removed by the potential owner list.
 
+## Notifications
 
+https://access.redhat.com/solutions/885393
 
 ## 4 eye principle
 
-And why not to rely on potential owners and excluded owners that come with WS-HT spec that we do have support for? 
+And why not to rely on potential owners and excluded owners that come with WS-HT spec that we do have support for?
 
 the first task that is completed returns `ActorId` data output that represents the actual onwer who completed the task, then map this to variable and use on next task as excluded owner (via data input mapping, parameter name: `ExcludedOwnerId`) so when you query for tasks (via task service queries that take into consideration excluded owners) you won’t see that task and thus won’t be able to work on it.
 
@@ -90,6 +94,3 @@ the first task that is completed returns `ActorId` data output that represents t
 [https://github.com/droolsjbpm/jbpm/blob/6.5.x/jbpm-human-task/jbpm-human-task-workitems/src/main/java/org/jbpm/services/task/wih/AbstractHTWorkItemHandler.java]()
 
 It cannot implemented to a couple of issues.
-
-
-

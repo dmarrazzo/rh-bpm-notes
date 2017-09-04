@@ -16,7 +16,7 @@ The upload can be automated with following procedure (acknowledgements to Anton 
             <repository>
                 <id>guvnor-m2-repo</id>
                 <name>maven repo</name>
-                <url>http://localhost:8080/business-central/maven2/</url>
+                <url>http://10.64.4.78:8080/business-central/maven2/</url>
                 <layout>default</layout>
             </repository>
         </distributionManagement>
@@ -76,7 +76,7 @@ To simplify the dependency management you can add this:
 			<dependency>
 				<groupId>org.jboss.bom.brms</groupId>
 				<artifactId>jboss-brms-bpmsuite-platform-bom</artifactId>
-				<version>6.4.4.GA-redhat-3</version>
+				<version>6.4.5.GA-redhat-3</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -84,7 +84,7 @@ To simplify the dependency management you can add this:
 	</dependencyManagement>
 
 Versions:
-
+ - 6.4.5.GA-redhat-3
  - 6.4.4.GA-redhat-3
  - 6.4.3.GA-redhat-2
  - 6.4.2.GA-redhat-2
@@ -344,3 +344,31 @@ then issue the following command:
 			</archive>
 		</configuration>
 	</plugin>
+
+
+# Build a jar with all dependencies
+
+```
+<!-- single jar with dep: mvn assembly:assembly -->
+<plugin>
+  <artifactId>maven-assembly-plugin</artifactId>
+  <executions>
+    <execution>
+      <phase>package</phase>
+      <goals>
+        <goal>single</goal>
+      </goals>
+    </execution>
+  </executions>
+  <configuration>
+    <descriptorRefs>
+      <descriptorRef>jar-with-dependencies</descriptorRef>
+    </descriptorRefs>
+    <archive>
+      <manifest>
+        <mainClass>dm.app.PrevMain</mainClass>
+      </manifest>
+    </archive>
+  </configuration>
+</plugin>
+```

@@ -24,6 +24,12 @@ Executor can work with or without JMS.
 JMS is the preferred option but executor can work without it and it does for instance on Tomcat where there is no JMS provider out of the box.
 you can disable JMS executor by system property `org.kie.executor.jms=false`
 
+[How can I increase the number of running jobs using the JMS based executor in BPM Suite 6](https://access.redhat.com/solutions/3003791)
+
+1. Increase the number of maxSession for the executor MDB (JmsAvailableJobsExecutor) in business-central.war/WEB-INF/ejb-jar.xml, the mdb pool size and also the number of connections for the connection for JmsXA connection factory.
+2. Increase the EJB pool size for MDBs
+3. Increase the JmsXA connection factory thread pool size
+
 # Deployment Descriptor
 
 While kmodule is mainly targeting on knowledge base and knowledge session basic configuration, deployment descriptors are considered more technical configuration. Following are the items available for configuration via deployment descriptors:
@@ -110,4 +116,3 @@ Issues
 ## PerProcessInstanceRuntimeManager
 
 https://access.redhat.com/solutions/1183403
-

@@ -1,6 +1,6 @@
 # Install
 
-## Installation 
+## Installation
 
 **Prerequisite**: JDK, JBoss EAP 6.4.8
 
@@ -23,9 +23,9 @@ Launch:
     - add the interface:
 
             <interfaces>  
-          
+
                <!-- Equivalent of -b 0.0.0.0 -->  
-          
+
                   <interface name="any">  
                        <any-address/>  
                   </interface>  
@@ -76,7 +76,7 @@ To be precise, following are the two places where the `java:jboss/datasources/Ex
 
     business-central.war/WEB-INF/classes/META-INF/persistence.xml
     dashbuilder.war/WEB-INF/jboss-web.xml
-    
+
 Here are the changes that need to be done, in order to configure BPMS 6 to use an external Database.
 business-central.war/WEB-INF/classes/META-INF/persistence.xml
 
@@ -127,7 +127,7 @@ Downlaod the EAP patched and unzip the bundle to get the incremental fix.
 E.g. jboss-eap-6.4.8.CP.zip
 Lauch the CLI
 
-    $ ./jboss-cli.sh 
+    $ ./jboss-cli.sh
 
 In the cli launch the patch command
 
@@ -163,7 +163,7 @@ Here some basic information to cluster the kie-server:
 [SSO Tison article](https://github.com/jboss-gpe-ref-archs/bpms_rhsso/blob/master/doc/bpms_rhsso.adoc)
 
 
-# Problems 
+# Problems
 ## Cannot login in Business Central (workbench)
 
 Create a new file `/standalone/deployments/business-central.war/WEB-INF/classes/ErraiService.properties` with the following content:
@@ -197,7 +197,7 @@ Add username/password in `~/.m2/settings.xml`
         </httpConfiguration>
       </configuration>
     </server>
-    
+
 Reference:
 [https://access.redhat.com/solutions/703423]()
 
@@ -215,7 +215,7 @@ Reference:
  * org.uberfire.metadata.index.dir: Place where Lucene .index folder will be stored. Default: working directory
  * org.uberfire.cluster.id: Name of the helix cluster, for example: kie-cluster
  * org.uberfire.cluster.zk: Connection string to zookeeper. This is of the form host1:port1,host2:port2,host3:port3, for example: localhost:2188
- * org.uberfire.cluster.local.id: Unique id of the helix cluster node, note that ':' is replaced with '_', for example: node1_12345
+ * org.uberfire.cluster.local.id: Unique id of the helix cluster node, note that ':' is replaced with `'_'`, for example: node1_12345
  * org.uberfire.cluster.vfs.lock: Name of the resource defined on helix cluster, for example: kie-vfs
  * org.uberfire.cluster.autostart: Delays VFS clustering until the application is fully initialized to avoid conflicts when all cluster members create local clones. Default: false
  * org.uberfire.sys.repo.monitor.disabled: Disable configuration monitor (do not disable unless you know what you're doing). Default: false
@@ -230,9 +230,9 @@ Reference:
 
 to connect to an external ssh?
 
-     * org.uberfire.nio.git.ssh.cert.dir 
+     * org.uberfire.nio.git.ssh.cert.dir
 
-default working dir 
+default working dir
 
 then .security
 
@@ -262,7 +262,7 @@ Generic Solution?
 ## Internal git offer ssh-dss
 Issue https://issues.jboss.org/browse/RHBRMS-243
 
-####workaround: 
+####workaround:
 
 Add to ~/.ssh/config the followings:
 
@@ -276,3 +276,49 @@ Add to ~/.ssh/config the followings:
 Old ssh does not accept `+`, so change with:
 
     HostKeyAlgorithms ssh-dss
+
+
+## LDAP
+
+### Authentication on JBoss EAP
+
+```
+<security-domain name="myLdapDomain">
+  <authentication>
+      <login-module code="org.jboss.security.auth.spi.LdapExtLoginModule" flag="required">
+          <module-option name="java.naming.factory.initial" value="com.sun.jndi.ldap.LdapCtxFactory"/>
+          <module-option name="java.naming.provider.url" value="ldap://ldap_server_ip:389"/>
+          <module-option name="bindDN" value="cn=queryUser,cn=Users,dc=mydomain,dc=com"/>
+          <module-option name="bindCredential" value="queryUserPassword"/>
+          <module-option name="baseCtxDN" value="cn=Users,dc=mydomain,dc=com"/>
+          <module-option name="baseFilter" value="(userPrincipalName={0})"/>
+          <module-option name="rolesCtxDN" value="cn=Users,dc=mydomain,dc=com"/>
+          <module-option name="roleFilter" value="(userPrincipalName={0})"/>
+          <module-option name="roleAttributeID" value="memberOf"/>
+          <module-option name="roleNameAttributeID" value="cn"/>
+          <module-option name="roleAttributeIsDN" value="true"/>
+          <module-option name="allowEmptyPasswords" value="true"/>
+          <module-option name="Context.REFERRAL" value="follow"/>
+          <module-option name="throwValidateError" value="true"/>
+          <module-option name="searchScope" value="SUBTREE_SCOPE"/>
+      </login-module>
+      <login-module code="org.jboss.security.auth.spi.RoleMappingLoginModule" flag="optional">
+          <module-option name="rolesProperties" value="roles.properties"/>
+          <module-option name="replaceRole" value="false"/>
+      </login-module>
+  </authentication>
+</security-domain>
+```
+
+### Authorization on BPM side
+
+For some features related to querying the users-groups you must change the default UserGroupCallBack defined into business-central/WEB-INF/beans.xml
+<alternatives>
+    <class>org.jbpm.services.cdi.producer.JAASUserGroupInfoProducer</class>
+  </alternatives>
+change to
+<alternatives>
+    <class>org.jbpm.services.cdi.producer.LDAPUserGroupInfoProducer</class>
+  </alternatives>
+
+Additional you need to define the system property jbpm.usergroup.callback.properties and point to your propertie file (WEB-INF/jbpm.usergroup.callback.properties)
