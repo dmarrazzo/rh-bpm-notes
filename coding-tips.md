@@ -27,7 +27,7 @@ The task assignments are able to perform variable mapping using the MVEL notatio
 E.g.:
 
 ![mapping](imgs/coding-tips-01.png)
- 
+
 ## Get/Set variable by code
 
 The following interface provides the full access to the variable:
@@ -67,13 +67,61 @@ String
 	</properties>
 
 (...)
-	
+
 		<dependency>
 			<groupId>org.jbpm</groupId>
 			<artifactId>jbpm-services-ejb-client</artifactId>
 			<version>${bpm.version}</version>
 			<scope>runtime</scope>
 		</dependency>
+
+## Trigger a process from an other process / rule
+
+To start a process from within a process instance you can use code
+like this (not sure you can use this from within a rule, never tried
+this):
+
+```
+    RuntimeManager rm =
+    RuntimeManagerRegistry.get().getManager(deploymentId);
+    RuntimeEngine engine = rm.getRuntimeEngine(EmptyContext.get());
+    KieSession ksession = engine.getKieSession();
+    try {
+        ksession.startProcess(processId, paramMap);
+    } finally {
+        rm.disposeRuntimeEngine(engine);
+    }
+```
+
+Inside a kieserver:
+
+```
+    KieServerImpl kieServer = KieServerLocator.getInstance();
+    KieServerExtension ext = ((KieServerImpl)kieServer).getServerRegistry().getServerExtension("jBPM");
+    ProcessService processService = (ProcessService) ext.getServices().stream().filter(service -> service instanceof ProcessService).findFirst().get();
+    Map<String, Object> paramMap = new HashMap<>();
+    paramMap.put("eventId", eventId);
+    processService.startProcess(deploymentId ,processId, paramMap);
+```
+
+Import dependencies using `provided` for the scope.
+
+```
+    <dependency>
+      <groupId>org.kie</groupId>
+      <artifactId>kie-api</artifactId>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+```
+
+**Optional** tag should avoid the propagation of the dependency in chain. Not sure if it has impact on kieserver runtime.
+
+## Insert Variable in Working Memory of a Process 
+
+Example
+
+    kcontext.getKnowledgeRuntime().insert( application );
 
 ## Multi thread tolerance
 

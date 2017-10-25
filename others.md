@@ -78,24 +78,25 @@ configuration in JBoss console:
 usage in the code (it's possible to inject it):
 
     import org.slf4j.Logger;
+    import org.slf4j.LoggerFactory;
     (...)
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger LOGGER = LoggerFactory.getLogger(getClass());
 
 #### Configure in a project
 
 In the POM file add:
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.2</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.0.9</version>
-		</dependency>
+  <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.2</version>
+      <scope>runtime</scope>
+  </dependency>
+  <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.0.9</version>
+  </dependency>
 
 Add in the classpath `logback.xml` (or `logback-test.xml`):
 
@@ -146,7 +147,7 @@ Default document implementation store files in the file system:
 **By default debug mode is disabled.**
 Launch:
 
-    standalone.sh --debug
+    ./standalone.sh --debug
 
 or change sh with: `DEBUG_MODE=true`
 

@@ -58,6 +58,39 @@ The second task in the swim lane is assigned to the same user that performed the
 
 [AbstractHTWorkItemHandler AutoClaim](https://github.com/kiegroup/jbpm/blob/6.5.x/jbpm-human-task/jbpm-human-task-workitems/src/main/java/org/jbpm/services/task/wih/AbstractHTWorkItemHandler.java#L218)
 
+When you use JAAS Identity Provider, auto claim does not work if the previous task was out of the swimlane (it was performed by another user): in the log you'll find a permission error:
+
+    WARN  [org.jbpm.services.task.wih.LocalHTWorkItemHandler] (default task-22 ) User ... is not allowed to auto claim task due to permission violation
+
+This is caused by the fact that JAASUserGroupCallbackImpl can retrieve groups just for a logged user.
+This usually is not a problem in a production environment where you rely on other identity providers (e.g. LDAP).
+To test the capability in a test environment there are 2 possible workarounds:
+
+1. Using MVEL identity provider.
+
+    - In Business central you have to edit CDI config `<EAP_HOME>/standalone/deployments/business-central.war/WEB-INF/beans.xml`
+
+            <alternatives>
+                <class>org.jbpm.services.cdi.producer.DefaultUserGroupInfoProducer</class>
+            </alternatives>
+            
+    - In kieserver, add this system property:
+
+            <property name="org.jbpm.ht.callback" value="mvel"/>
+
+    - then add this file `<runtime_war>/WEB-INF/classes/org/jbpm/services/task/identity/UserGroupsAssignmentsOne.mvel`
+
+            usersgroups = [
+                    new User('donato') : [new Group( "developer" ), new Group( "manager" ), new Group( "Administrators" )],
+                    new User('supplier1') : [new Group( "user" ), new Group( "supplier" )],
+                    new User('supplier2') : [new Group( "user" ), new Group( "supplier" )],
+                    new User('supplier3') : [new Group( "user" ), new Group( "supplier" )],
+                  ];
+            return usersgroups;
+
+2. Change the process to set the `Actors` to `#{SwimlaneActorId}` for all the Human Task that follow the first one in the swim lane.
+
+
 ## Assignment Rules
 
 Assignment rules are rules executed automatically when a Human Task is created or completed. This mechanism can be used, for example, to assign a Human Task automatically to a particular user of a group or prevent a user from completing a Task if data is missing.
@@ -94,3 +127,9 @@ the first task that is completed returns `ActorId` data output that represents t
 [https://github.com/droolsjbpm/jbpm/blob/6.5.x/jbpm-human-task/jbpm-human-task-workitems/src/main/java/org/jbpm/services/task/wih/AbstractHTWorkItemHandler.java]()
 
 It cannot implemented to a couple of issues.
+
+# Form modeller
+
+Form Modeller supports jXpath expressions but only to access field values (? to be verified the version)
+
+[https://commons.apache.org/proper/commons-jxpath/]()

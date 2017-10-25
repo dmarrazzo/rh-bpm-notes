@@ -38,30 +38,38 @@ The upload can be automated with following procedure (acknowledgements to Anton 
             </configuration>
         </server>
 
+### To configure the internal maven directory
 
+System property:
 
+<property name="kie.maven.settings.custom" value="/opt/jboss/.m2/settings.xml"/>
+
+Configure the local repository in settings.xml:
+
+<localRepository>/opt/jboss/.m2/repository</localRepository>
+        
 ## Compilation setting (build)
 The following configuration set the **JDK level** and **exclude** unwanted files
 
 ```
-      <build>
-        [...]
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.5.1</version>
-            <configuration>
-              <source>1.8</source>
-              <target>1.8</target>
-       		  <excludes>
-              <exclude>**/.*.java</exclude>
-            </excludes>
-            </configuration>
-          </plugin>
-        </plugins>
-        [...]
-      </build>
+  <build>
+    [...]
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.7.0</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+          <excludes>
+            <exclude>**/.*.java</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+    [...]
+  </build>
 ```
 
 
@@ -76,7 +84,7 @@ To simplify the dependency management you can add this:
 			<dependency>
 				<groupId>org.jboss.bom.brms</groupId>
 				<artifactId>jboss-brms-bpmsuite-platform-bom</artifactId>
-				<version>6.4.5.GA-redhat-3</version>
+				<version>6.4.6.GA-redhat-1</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -84,6 +92,7 @@ To simplify the dependency management you can add this:
 	</dependencyManagement>
 
 Versions:
+ - 6.4.6.GA-redhat-1
  - 6.4.5.GA-redhat-3
  - 6.4.4.GA-redhat-3
  - 6.4.3.GA-redhat-2

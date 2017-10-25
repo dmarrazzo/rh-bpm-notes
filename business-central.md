@@ -10,6 +10,7 @@ The BC relies on 3 files system:
 
 In order to get a fresh BC environment, delete the previous directories.
 
+[An unmanaged repository unexpectedly turned into "managed" in BRMS / BPM Suite](https://access.redhat.com/solutions/2999391)
 
 ## Project setup
 During development phase, your version SHOULD keep the SNAPSHOT extension, when you need to freeze the code before a release you can remove it, export the code and move your development version to next SNAPSHOT version. In a normal lifecycle, the development environment is setup always on version x.x-SNAPSHOT. SNAPSHOT naming convention has the following benefits on the build process....
@@ -49,7 +50,7 @@ You need to add following configuration in the ~/m2/setting.xml
             </configuration>
         </server>
     </servers>
-    
+
 Make sure this following Maven repo are also in the setting.xml
 
 ## REST Services
@@ -58,9 +59,3 @@ Make sure this following Maven repo are also in the setting.xml
 ### remote API
 
 If you are creating a data object, make sure that the class has the `@org.kie.api.remote.Remotable` annotation. The `@org.kie.api.remote.Remotable` annotation makes the entity available for use with JBoss BPM Suite remote services such as REST, JMS, and WS.
-
-
-
-
-
-

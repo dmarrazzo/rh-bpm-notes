@@ -13,9 +13,40 @@ Init MVEL parameters:
 Service registry:
 https://docs.jboss.org/jbpm/release/6.5.0.Final/jbpm-docs/html_single/#d0e29362
 
-# Task Service
+# Service Task
 
-Implementation: **Java**
+* Service implementation: **Java** or **Webservices** (to avoid webservices, becaus there are more options with "Web Service" WIH)
+* Service interface: fully qualified Java class name
+* Service operation: name of the method (static method)
+
+Example of method implementation:
+
+```
+	public static Object call(Object param) throws Exception {
+
+		return param;
+	}
+```
+
+## Handling input/output parameters
+
+1. Edit data I/O (assignments)
+2. Add the following data input and assignments:
+
+  | NAME          | DATA TYPE | SOURCE           |
+  |---------------|-----------|------------------|
+  | Parameter     | String    | info             |
+  | ParameterType | String    | java.lang.String |
+
+3. Add the following data output and assignments:
+
+  | NAME          | DATA TYPE | SOURCE           |
+  |---------------|-----------|------------------|
+  | Result        | String    | info             |
+
+
+Internal implementation: 
+[https://github.com/kiegroup/jbpm/blob/master/jbpm-bpmn2/src/main/java/org/jbpm/bpmn2/handler/ServiceTaskHandler.java]()
 
 # Web Services
 
@@ -125,6 +156,8 @@ Unfortunately, the standard REST Workitem handler (WIH) is not able to handle th
 Here you will found a modified version of the WIH that address the problem.
 
 [Improved REST WIH](./samples/wih/rest-wih/README.md)
+
+[Implementation](https://github.com/kiegroup/jbpm/tree/6.5.x/jbpm-workitems/src/main/java/org/jbpm/process/workitem/rest)
 
 # EJB
 

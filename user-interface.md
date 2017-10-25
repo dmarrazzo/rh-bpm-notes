@@ -11,13 +11,22 @@ Internal BPM Forms has special requirements for the Data Types (Class definition
 
 Example of `range value`:
 
-    {aaa,aaa;bbb,bbb}
+    {supplier1,supplier1;supplier2,supplier2;supplier3,supplier3}
+    
 
 ## Default value for a form field
 
 Example of `Formula`:
 
     =return "ok";
+
+## Hide a field based on checkbox flag
+
+In the checkbox properties add this code to **on change script code**
+
+    $("#order_rejectionReason").toggle(!this.checked);
+
+In the example `order_rejectionReason` is the **field name**.
 
 ## Data provider
 

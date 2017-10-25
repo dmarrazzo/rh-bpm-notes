@@ -11,7 +11,10 @@ Launch:
 ### Installing on EAP 7
 
 - Download the deployable for EAP7
-- extract it
+- extract it and adjust permissions
+
+  chmod 775 jboss-eap-7.0
+
 - copy the content to the EAP7 home
 - add the users
 
@@ -31,9 +34,9 @@ Launch:
                   </interface>  
             </interfaces>  
 
-    - add the binding
+    - change the standard-sockets binding
+    
         <socket-binding-group name="standard-sockets" default-interface="any" ...>
-
 
     - configure maven
 
@@ -54,10 +57,16 @@ Roles are defined in the following file:
 
     ~/<EAP_HOME>/standalone/configuration/application-roles.properties
 
-
-### Roles
+Example:
 
     bpmsAdmin=admin,developer,analyst,user,manager,kie-server,rest-all,Administrators
+
+## Enable kie server
+
+Uncomment properties in standalone.xml
+Add user:
+
+   ./add-user.sh -a -u controllerUser -p "controllerUser1234;" --role kie-server,rest-all
 
 
 ### Assigning role to projects
@@ -115,11 +124,21 @@ Raw
 
 ## Updating / Patching BPM Suite
 
-The topic is well covered in the Installation Guide.
+patches are not comulative
 
 1. Unzip `jboss-bpmsuite-6.3.2-patch.zip`
-2. Issue `./apply-updates.sh <EAP_HOME> eap6.x`
+2. Issue `./apply-updates.sh <EAP_HOME> eap7.x`
 3. Extract the maven repo update in the previous repo directory
+
+
+
+  export BPMS_HOME=/opt/jboss/bpms/jboss-eap-7.0/
+  export BPMS_INST=/opt/jboss/
+  export BPMS_PATCH_WILDCARD=jboss-bpmsuite-6.4.?-*
+  for f in $BPMS_INST$BPMS_PATCH_WILDCARD; do \
+    unzip -qo $f -d $BPMS_INST && \
+    (cd ${f::-4} && exec ./apply-updates.sh $BPMS_HOME eap7.x); \
+  done 
 
 ### Updating JBoss EAP
 
@@ -132,6 +151,11 @@ Lauch the CLI
 In the cli launch the patch command
 
     [standalone@localhost:9999 /] patch apply /path/to/downloaded-patch.zip
+
+otherwise:
+
+  $ ./jboss-cli.sh --commands=patch\ apply\ <dir>/jboss-eap-7.0.5-patch.zip
+
 
 # Clustering
 
