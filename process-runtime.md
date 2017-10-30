@@ -116,3 +116,27 @@ Issues
 ## PerProcessInstanceRuntimeManager
 
 https://access.redhat.com/solutions/1183403
+
+
+## Error deserializing process instance
+
+If you get the following exception, trying to abort a process instance:
+
+```
+java.io.IOException: Error deserializing process instance.
+	at org.jbpm.marshalling.impl.AbstractProtobufProcessInstanceMarshaller.readProcessInstance(AbstractProtobufProcessInstanceMarshaller.java:479)
+
+```
+
+It's likely that you have in your Java model a reference to a class that is not present in the classpath.
+
+In fact, you should find down in the stack trace, the evidence of the missing class:
+
+```
+Caused by: java.lang.ClassNotFoundException: org.slf4j.impl.Slf4jLogger
+	at java.lang.ClassLoader.findClass(ClassLoader.java:530)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+	at org.drools.core.common.ProjectClassLoader$DefaultInternalTypesClassLoader.loadType(ProjectClassLoader.java:394)
+	at org.drools.core.common.ProjectClassLoader.loadType(ProjectClassLoader.java:172)
+```
+

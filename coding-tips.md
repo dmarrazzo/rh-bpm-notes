@@ -40,6 +40,10 @@ This is a code sample:
 	processInstance.getVariable(name);
 	processInstance.setVariable(name, value);
 
+## Class visibility in Business Central
+
+The file `package-names-white-list` can be used to declare visible packages.
+When you declare a package others become invisible to the BC.
 
 ## Debugging process
 
