@@ -6,11 +6,22 @@
 Each kie server can managed by more than a controller.
 The kie server (aka Intelligent Process Server) initiate the conversation with the controller that enlist it in its configuration.
 
+All the members of the **kieserver cluster** require the kjar and potentially other dependencies.
+The kjar is the deployment package of a BPM project: it's just a jar with some BPM specific configuration files.
+Each member downloads the deployment package leveraging maven technology, so it requires a maven server.
+In a productions environment, it's better to rely on a proper maven repository like nexus or artifactory, in a testing environment a simpler alternative is to leverage the internal maven repository of the Business Central.
+In order to configure maven on each kieserver, you have to provide the `settings.xml`: by default, the kieserver reads the maven configuration from the home directory of the user that runs the process (<HOME>/.m2).
+It's possible to enforce a different location configuring the system property `kie.maven.settings.custom`. E.g.:
+
+    <property name="kie.maven.settings.custom" value="/opt/jboss/maven/settings.xml"/>
+
+In the setting.xml, you have to specify the business central URL and the credentials (in server section).
+
 ## Adding users
 
 Change into CONTROLLER_HOME/bin.
 
-    ./add-user.sh -a --user kieserver --password kieserver1! --role kie-server
+        ./add-user.sh -a -u controllerUser -p controllerUser1234 --role kie-server,rest-all
 
 ## Bootstrap Switches
 
@@ -212,6 +223,8 @@ List tasks of a process instance:
 
 ## docs
 http://localhost:8080/kie-server/docs/
+
+### Version 7
 
 [RH solution - How to generate and send requests to Decision Server?](https://access.redhat.com/solutions/1486613)
 
