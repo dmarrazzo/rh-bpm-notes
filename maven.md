@@ -38,6 +38,11 @@ The upload can be automated with following procedure (acknowledgements to Anton 
             </configuration>
         </server>
 
+**References:**
+
+[Uploading Artifacts to Maven Repository](https://access.redhat.com/documentation/en-us/red_hat_jboss_bpm_suite/6.4/html/development_guide/chap_maven_dependencies#uploading_artifacts_to_maven_repository)
+
+
 ### To configure the internal maven directory
 
 System property:
@@ -84,7 +89,7 @@ To simplify the dependency management you can add this:
 			<dependency>
 				<groupId>org.jboss.bom.brms</groupId>
 				<artifactId>jboss-brms-bpmsuite-platform-bom</artifactId>
-				<version>6.4.6.GA-redhat-1</version>
+				<version>6.4.7.GA-redhat-1</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -235,6 +240,16 @@ The following command pull all the dependencies in local repository:
 
 ## How to
 
+### Check artefact existence
+
+
+    mvn dependency:get -Dartifact=g:a:v
+
+To check a specific repo
+
+    mvn dependency:get -Dartifact=g:a:v -o -DrepoUrl=http://192.168.1.200:8080/business-central/maven2/
+
+
 ### Force dependency download
 
 Command line:
@@ -285,6 +300,7 @@ In your **pom.xml**
 
 In your **`~/.m2/settings.xml`**, add this `<server>` element to the `<servers>` section:
 
+    <servers>
     <server>
         <id>guvnor-m2-repo</id>
         <username>bpmsAdmin</username>
@@ -298,6 +314,7 @@ In your **`~/.m2/settings.xml`**, add this `<server>` element to the `<servers>`
             </httpConfiguration>
         </configuration>
     </server>
+    </servers>
 
 Now you can deploy with maven command line:
 
