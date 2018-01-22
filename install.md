@@ -8,6 +8,14 @@ Launch:
 
     $ java -jar jboss-brms-6.3.0.GA-installer.jar
 
+### Installing RHDM 7
+
+- standalone-full.xml
+- kieserver prop
+
+https://github.com/jbossdemocentral/rhdm7-install-demo/blob/dm7ga/init.sh
+
+
 ### Installing on EAP 7
 
 - Download the deployable for EAP7
@@ -41,6 +49,57 @@ Launch:
     - configure maven
 
 
+
+### Configure Persistence
+
+#### Install JDBC drivers
+
+    $ EAP_HOME/bin/jboss-cli.sh
+
+
+    module add --name=MODULE_NAME --resources=PATH_TO_JDBC_JAR --dependencies=DEPENDENCIES
+
+Example
+
+    module add --name=com.mysql --resources=/path/to/mysql-connector-java-5.1.36-bin.jar --dependencies=javax.api,javax.transaction.api
+
+[eap datasource](https://access.redhat.com/documentation/en-us/red_hat_jboss_enterprise_application_platform/7.0/html/configuration_guide/datasource_management)
+
+
+#### Load the DDL
+
+Download Red Hat JBoss BPM Suite 6.4.0 Supplementary Tools.
+
+Unzip jboss-brms-bpmsuite-6.4-supplementary-tools/ddl-scripts, for example into /tmp/ddl.
+
+Import the DDL script for your database into the database you want to use.
+
+[setting up persistence for business central](https://access.redhat.com/documentation/en-us/red_hat_jboss_bpm_suite/6.4/html/installation_guide/chap_special_setups#setting_up_persistence_for_business_central)
+
+#### Register the data source in Business Central
+
+Open EAP_HOME/standalone/deployments/business-central.war/WEB-INF/classes/META-INF/persistence.xml.
+
+#### Register the data source in Dashbuilder
+
+Open EAP_HOME/standalone/deployments/dashbuilder.war/WEB-INF/jboss-web.xml.
+
+Change the <jndi-name> to the JNDI name of your data source, for example:
+
+<jndi-name>java:jboss/datasources/PostgresqlDS</jndi-name>
+
+#### Configuring Persistence for the Intelligent Process Server
+
+Open EAP_HOME/standalone/configuration/standalone.xml and locate the <system-properties> tag.
+
+Add the following properties:
+
+org.kie.server.persistence.ds: The JNDI name of your data source.
+org.kie.server.persistence.dialect: The hibernate dialect for your database.
+
+
+    <property name="org.kie.server.persistence.ds" value="java:jboss/datasources/KieServerDS"/>
+    <property name="org.kie.server.persistence.dialect" value="org.hibernate.dialect.PostgreSQLDialect"
 
 
 ## Users
