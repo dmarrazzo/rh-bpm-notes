@@ -49,6 +49,12 @@ System properties:
 
     <JBOSSS_HOME>/bin/standalone.conf
 
+### Skip application deployment
+
+Add in the deployment directory a file
+
+    <name>.skipdeploy
+    
 
 ### Multiple instances of EAP
 
