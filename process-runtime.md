@@ -11,7 +11,7 @@ Some findings:
 
 # Asynchronous Workitems
 
-http://mswiderski.blogspot.it/2013/08/make-your-work-asynchronous.html
+[make-your-work-asynchronous](http://mswiderski.blogspot.it/2013/08/make-your-work-asynchronous.html)
 
 A process can have two kinds of asynchronous tasks:
 Task with the "Is Async" property set to true - this generates a proxy called "AsyncSignalEventCommand" (an asynchronous job) that is charge to execute the task. In this case, when the job is executed the actual process instance variables are retrieved and passed to the synchronous WorkItemHandler implementation.

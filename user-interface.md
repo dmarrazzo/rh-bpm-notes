@@ -7,6 +7,15 @@ Internal BPM Forms has special requirements for the Data Types (Class definition
  - no inheritance
  - always default constructor (with no parameter)
 
+## Field width
+
+In order to define field more large use the **CSS Style** field.
+
+E.g.
+
+    width:400px
+
+
 ## Select
 
 Example of `range value`:
