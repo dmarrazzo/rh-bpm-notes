@@ -222,6 +222,54 @@ This is the result:
 
 ## Git tips
 
+### A clean history
+
+A good practice is keeping your commit history clean: so you can find the changes you made and the reason for that changes.
+So in order to compact your git history, you can use `git rebase`.
+
+Let's consider the following history:
+
+    a --- b --- c --- e --- f --- g --- h 
+
+You want to compress the commits between `b` and `h`. There are 2 way to achieve this:
+
+#### Squashing
+
+Use the following command: `git rebase -i <commit hash of b>`
+
+Git will present you an editor to *interactively* select the commit to **squash**.
+
+E.g.
+
+    ```
+    pick 0d04918 Created asset patterns.json {/barcellona20180115/global/patterns.json}
+    pick 5fcade4 {/readme.md}
+    pick ec079c7 {/DMNTest/src/main/java/model/Person.java}
+    pick 31c96f6 remoatable
+    pick 2861c2a no remo
+    pick c0dba06 test change
+    ```
+
+    
+In order to squash the unwanted commits, you have to change `pick` in `squash` (or just `s`). Hence, you can save and exit.
+
+#### Create a new commit 
+
+This is an alternative approach:
+
+1. Move the HEAD to the last consolidated commit (b)
+
+        git reset --soft <commit hash of b>
+
+2. Stage all the changes
+
+        git add -A
+
+3. Create a new commit
+
+        git commit -m "all changes from b to h"
+    
+
 ### Emergency procedure to remove unwanted commit
 
 If a developer performed some unwanted updates on the master branch, he can recover a clean situation with the following procedure:
@@ -251,5 +299,34 @@ Now, your git log should look so:
 ### Don't type your password every time
 
     git config --global credential.helper 'cache --timeout=2628000'
+
+The previous method does not work with the git implementation in the Business Central.
+So in order to auto-type the password you can use the following script:
+
+```
+#!/usr/bin/expect
+
+set timeout 13
+# set password [lindex $argv 0]
+set password "donato"
+set command --
+if {[llength $argv] == 1} {
+	set command [lindex $argv 0]
+}
+spawn git push $command
+expect {
+    "(yes/no)?"
+        {
+            send "yes\n"
+            expect "*assword:" { send "$password\r"}
+        }
+    "*assword:"
+        {
+            send "$password\r"
+        }
+    }
+expect eof
+```
+
 
 
