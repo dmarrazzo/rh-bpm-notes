@@ -221,6 +221,16 @@ List tasks of a process instance:
 
 # Kie Server REST API Reference
 
+Queries API are containers independent: so if more kie-servers sits on the same DBMS, one of this exposes informations for all containers.
+
+E.g. Tasks generated from processes of different containers in different kie-servers can be retrieved from one kie-server.
+
+
+## Alias redirection in OpenShift
+In a multi-version deployment, all applications share the same deployment alias. Requests that use the deployment alias of the application require a resolution process in order to redirect the request to the container of the correct version.
+
+[Alias redirection](https://access.redhat.com/documentation/en-us/red_hat_jboss_bpm_suite/6.4/html-single/red_hat_jboss_bpm_suite_intelligent_process_server_for_openshift/#Alias-Redirection)
+
 ## docs
 http://localhost:8080/kie-server/docs/
 
