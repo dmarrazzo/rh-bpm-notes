@@ -45,10 +45,26 @@ This is a code sample:
 The file `package-names-white-list` can be used to declare visible packages.
 When you declare a package others become invisible to the BC.
 
-## Debugging process
+## Debugging technique
 
-Add this event Listener:
-org.drools.core.event.DebugProcessEventListener
+In order to understand the process actual logic at runtime, you can leverage the event listeners.
+There is an already good implementation really useful for debugging purposes.
+
+
+- Open the deployment descriptors and add an **event listener** entry:
+
+    - Identifier: `org.drools.core.event.DebugProcessEventListener`
+    - Resolver: `reflection`
+    - Parameters: *none*
+
+You can debug the process placing breakpoints on the event listeners:
+
+- Start the server in debug mode:
+
+        ./standalone.sh --debug
+
+
+
 
 ## XStream utility
 
