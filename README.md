@@ -18,3 +18,5 @@ There are documents and samples.
 - [Using loosely coupled rules in your process](http://www.opensourcerers.org/loose-coupled-rules/)
 
 - [Capture your decisions with DMN](http://www.opensourcerers.org/capture-your-decisions-with-dmn/)
+
+- [Extend Red Hat JBoss BPM Suite through the Service Repository](https://developers.redhat.com/blog/2018/01/30/red-hat-jboss-bpm-suite/)
