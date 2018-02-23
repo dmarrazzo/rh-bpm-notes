@@ -44,7 +44,7 @@ https://github.com/jbossdemocentral/rhdm7-install-demo/blob/dm7ga/init.sh
 
     - change the standard-sockets binding
     
-        <socket-binding-group name="standard-sockets" default-interface="any" ...>
+            <socket-binding-group name="standard-sockets" default-interface="any" ...>
 
     - configure maven
 
@@ -65,6 +65,66 @@ Example
 
 [eap datasource](https://access.redhat.com/documentation/en-us/red_hat_jboss_enterprise_application_platform/7.0/html/configuration_guide/datasource_management)
 
+#### Oracle XA Datasource
+
+1. Grant the permissions
+
+    This is the EAP doc (it refer to a XA thin driver!):
+    
+    [Datasource management: oracle xa datasource](https://access.redhat.com/documentation/en-us/red_hat_jboss_enterprise_application_platform/7.0/html/configuration_guide/datasource_management#example_oracle_xa_datasource)
+
+        GRANT SELECT ON sys.dba_pending_transactions TO user;
+        GRANT SELECT ON sys.pending_trans$ TO user;
+        GRANT SELECT ON sys.dba_2pc_pending TO user;
+        GRANT EXECUTE ON sys.dbms_xa TO user;
+
+2. Install the module (Using the jboss-cli)
+
+        module add --name=com.oracle --resources=<path>/ojdbc8.jar --dependencies=javax.api,javax.transaction.api
+
+
+3. Install the driver (Using the jboss-cli)
+
+/subsystem=datasources/jdbc-driver=oracle:add(driver-name=oracle,driver-module-name=com.oracle,driver-xa-datasource-class-name=oracle.jdbc.xa.client.OracleXADataSource,driver-class-name=oracle.jdbc.OracleDriver)
+
+Do it even of the server where you installed through the Dashbuilder console, just to be sure that everything is aligned-
+
+4. Configure the XA data source (from the Admin Console)
+
+    URL:
+
+        jdbc:oracle:thin:@oracleHostName:1521:serviceName
+    
+    Other option:
+    
+        url="jdbc:oracle:thin:@(DESCRIPTION=
+        (LOAD_BALANCE=on)
+        (ADDRESS_LIST=
+         (ADDRESS=(PROTOCOL=TCP)(HOST=host1) (PORT=1521))
+         (ADDRESS=(PROTOCOL=TCP)(HOST=host2)(PORT=1521)))
+         (CONNECT_DATA=(SERVICE_NAME=service_name)))"
+
+    Datasource properties (for OpenShift image):
+
+        DATASOURCES=ORACLE
+        ORACLE_DATABASE=jbpm
+        ORACLE_JNDI=java:jboss/datasources/jbpm
+        ORACLE_DRIVER=oracle
+        ORACLE_USERNAME=jbpmuser
+        ORACLE_PASSWORD=jbpmpass
+        ORACLE_TX_ISOLATION=TRANSACTION_READ_UNCOMMITTED
+        ORACLE_JTA=true
+        ORACLE_SERVICE_HOST=1.2.3.4
+        ORACLE_SERVICE_PORT=1521
+
+
+    
+5. RELOAD THE CONFIG
+   (for jboss-cli)
+
+        :reload
+
+    Or restart the application server
 
 #### Load the DDL
 
@@ -78,15 +138,25 @@ Import the DDL script for your database into the database you want to use.
 
 #### Register the data source in Business Central
 
-Open EAP_HOME/standalone/deployments/business-central.war/WEB-INF/classes/META-INF/persistence.xml.
+1) Open EAP_HOME/standalone/deployments/business-central.war/WEB-INF/classes/META-INF/persistence.xml.
+
+2) Locate the `<jta-data-source>` tag and change it to the JNDI name of your data source, for example:
+
+    <jta-data-source>java:/XAOracleDS</jta-data-source>
+
+3) Locate the `<properties>` tag and change the hibernate.dialect property, for example:
+
+    <property name="hibernate.dialect" value="org.hibernate.dialect.DisabledFollowOnLockOracle10gDialect" />
+    
 
 #### Register the data source in Dashbuilder
 
-Open EAP_HOME/standalone/deployments/dashbuilder.war/WEB-INF/jboss-web.xml.
+1) Open EAP_HOME/standalone/deployments/dashbuilder.war/WEB-INF/jboss-web.xml.
 
-Change the <jndi-name> to the JNDI name of your data source, for example:
+2) Locate the `<jndi-name>` tag and change it to the JNDI name of your data source, for example:
 
-<jndi-name>java:jboss/datasources/PostgresqlDS</jndi-name>
+    <jndi-name>java:/XAOracleDS</jndi-name>
+
 
 #### Configuring Persistence for the Intelligent Process Server
 
@@ -99,7 +169,7 @@ org.kie.server.persistence.dialect: The hibernate dialect for your database.
 
 
     <property name="org.kie.server.persistence.ds" value="java:jboss/datasources/KieServerDS"/>
-    <property name="org.kie.server.persistence.dialect" value="org.hibernate.dialect.PostgreSQLDialect"
+    <property name="org.kie.server.persistence.dialect" value="org.hibernate.dialect.DisabledFollowOnLockOracle10gDialect">
 
 
 ## Users
@@ -213,7 +283,7 @@ In the cli launch the patch command
 
 otherwise:
 
-  $ ./jboss-cli.sh --commands=patch\ apply\ <dir>/jboss-eap-7.0.5-patch.zip
+    $ ./jboss-cli.sh --commands=patch\ apply\ <dir>/jboss-eap-7.0.5-patch.zip
 
 
 # Clustering
@@ -225,22 +295,64 @@ Here some basic information to cluster the kie-server:
 - same database
 - setting Quartz
 
+
 ## Clustering JMS Active MQ on EAP 7
 
-???
+TO BE INVESTIGATED
 
-
+```
 <!--cluster jms-->
 
 <pooled-connection-factory name="activemq-ra" transaction="xa" entries="java:/JmsXA java:jboss/DefaultJMSConnectionFactory" connectors="http-connector"/>
                 <broadcast-group name="my-broadcast-group" connectors="http-connector" socket-binding="messaging-group"/>
                 <discovery-group name="my-discovery-group" refresh-timeout="10000" socket-binding="messaging-group"/>
+```
 
+## Offline maven repository
 
-# Configuration for High Performances
+1. Open `settings.xml`
 
-- DisabledFollowOnLockOracle10gDialect
+2. Locate the `activeProfiles` section, remove the online profiles and add the offline one
 
+    
+        <activeProfiles>  
+            <activeProfile>jboss-brms-bpmsuite-repository-64</activeProfile>
+            <activeProfile>business-central</activeProfile>
+        </activeProfiles>
+        
+3. Uncomment the following section (in case you haven't add it) and change `<maven-repodir>` with your actual directory where you placed the offline repo:
+
+    
+        <profile>
+          <id>jboss-brms-bpmsuite-repository-64</id>
+          <repositories>
+            <repository>
+              <id>jboss-brms-bpmsuite-repository-64</id>
+              <url>file:///<maven-repodir>/bpm/64/maven-repository</url>
+              <releases>
+                <enabled>true</enabled>
+              </releases>
+              <snapshots>
+                <enabled>false</enabled>
+              </snapshots>
+            </repository>
+          </repositories>
+          <pluginRepositories>
+            <pluginRepository>
+              <id>jboss-brms-bpmsuite-plugin-repository-64</id>
+              <url>file:///<maven-repodir>/bpm/64/maven-repository</url>
+              <releases>
+                <enabled>true</enabled>
+              </releases>
+              <snapshots>
+                <enabled>false</enabled>
+              </snapshots>
+            </pluginRepository>
+          </pluginRepositories>
+        </profile>          
+        
+
+    
 # Integrating SSO
 
 [SSO Tison article](https://github.com/jboss-gpe-ref-archs/bpms_rhsso/blob/master/doc/bpms_rhsso.adoc)
