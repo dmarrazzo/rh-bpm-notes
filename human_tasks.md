@@ -114,7 +114,15 @@ If a task define the `ExcludedOwnerId`, this user is removed by the potential ow
 
 ## Notifications
 
+Tech note on how to define a custom notification listener:
 https://access.redhat.com/solutions/885393
+
+This is the interface, where you have many information about the task the passed the deadline:
+https://github.com/kiegroup/jbpm/blob/master/jbpm-human-task/jbpm-human-task-core/src/main/java/org/jbpm/services/task/deadlines/NotificationListener.java
+
+A possible library to implement HTML templates:
+
+https://freemarker.apache.org/
 
 ## 4 eye principle
 
