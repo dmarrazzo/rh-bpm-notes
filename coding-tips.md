@@ -155,3 +155,19 @@ KieSessions can be shared between different threads.
 It's better to avoid the execution of long and blocking operations inside the RHS but this is not related with thread-safety. This only related to performance reasons, because also the invocation of a RHS is blocking and synchronous, so having a particularly slow RHS will have the effect of slowing down the whole engine.
 
 KieSession is single threaded (v7 introduces multi-threading capabilities). So any blocking operation in the RHS blocks the full session and all the rule evaluation in that session. So blocking operations in the RHS essentially kills performance of your rules engine.
+
+## Timers
+
+since version 6 timers can be configured with valid ISO8601 date format that supports both one shot timers and repeatable timers. Timers can be defined as date and time representation, time duration or repeating intervals
+
+- Date - 2013-12-24T20:00:00.000+02:00 - fires exactly at Christmas Eve at 8PM
+- Duration - PT1S - fires once after 1 second
+- Repeatable intervals - R/PT1S - fires every second, no limit, alternatively R5/PT1S will fire 5 times every second
+
+### Duration format
+
+ - `P3Y6M4DT12H30M5S` represents a duration of "three years, six months, four days, twelve hours, thirty minutes, and five seconds".
+ - `P2D` represents 2 days
+
+[Wikipedia duration standard format](https://en.wikipedia.org/wiki/ISO_8601#Durations)
+
