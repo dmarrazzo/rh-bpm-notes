@@ -15,7 +15,48 @@ It's possible to enforce a different location configuring the system property `k
 
     <property name="kie.maven.settings.custom" value="/opt/jboss/maven/settings.xml"/>
 
-In the setting.xml, you have to specify the business central URL and the credentials (in server section).
+In the setting.xml, you have to specify the business central credentials (in server section):
+
+```
+    <server>
+      <id>guvnor-m2-repo</id>
+      <username>bpmsAdmin</username>
+      <password>BPMs3cr3t</password>
+      <privateKey>prdprivatekey</privateKey>
+      <configuration>
+        <wagonProvider>httpclient</wagonProvider>
+        <httpConfiguration>
+          <all>
+              <usePreemptive>true</usePreemptive>
+          </all>
+        </httpConfiguration>
+      </configuration>
+    </server>
+```
+
+Then Business Central maven URL in the profile section:
+
+```
+    <profile>
+      <id>business-central</id>
+      <repositories>
+        <repository>
+          <id>guvnor-m2-repo</id>
+          <url>http://192.168.1.200:8080/business-central/maven2/</url>
+          <layout>default</layout>
+          <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+          </snapshots>
+        </repository>
+      </repositories>
+    </profile>
+```
+
 
 ## Adding users
 
