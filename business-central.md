@@ -1,5 +1,11 @@
 # Business Central
 
+## Spaces (version 7)
+
+Version 7 introduced the concept of Spaces as a way to group projects.
+Each space is mapped in an internal git repository, the name of which is `spacename-myrepo`. 
+The suffix `myrepo` can be changed in the general settings.
+
 ## Artefacts
 
 The BC relies on 3 files system:
@@ -24,6 +30,14 @@ Within Red Hat JBoss BPM Suite, users may set up roles using LDAP to modify exis
 Example of customization:
 
     profile.wb_for_business_analysts=!wb_artifact_repository, !wb_artifact_repository_jar_download, wb_authoring, !wb_data_modeler_edit_sources
+
+# Task does not allow multiple incoming sequence flow (uncontrolled flow)
+
+According to BPMN 2.0 specification allows on page 153 multiple incoming flow sequences for activities (i.e. also for tasks). jBPM fails to validate such an BPMN file. It throws an IllegalArgumentException with the message This type of node cannot have more than one incoming connection!.
+
+Multiple incoming and outgoing sequence flows will be accepted in the jBPM Web Designer and by the jBPM6 Engine after adding the system property `jbpm.enable.multi.con=true` while starting BPMS/BRMS server.
+
+[https://access.redhat.com/solutions/779893]()
 
 ## Internal Maven repository set up
 
