@@ -73,6 +73,25 @@ with the same IP:
 
     ./standalone.sh -Djboss.node.name=kie-node1 -Djboss.server.base.dir=$JBOSS_HOME/kie-node1 -c standalone.xml -Djboss.socket.binding.port-offset=1
 
+### Adding a shared library to the EAP configuration
+
+[class loading and modules](https://access.redhat.com/documentation/en-us/red_hat_jboss_enterprise_application_platform/7.1/html/configuration_guide/overview_of_class_loading_and_modules#modules)
+
+- Add the module:
+
+        ./jboss-cli.sh 
+    
+        module add --name=<module-name> --resources=<absolute_path>/library.jar
+
+- Define a global module, so it will be shared among all the other modules
+
+        connect
+        /subsystem=ee:list-add(name=global-modules,value={name=<module-name>})
+
+- Another option is to declare the dependency in a specific WAR file adding the following line to META-INF/MANIFEST.MF
+
+        Dependencies: <module-name>
+
 
 ### Logging
 
