@@ -1,9 +1,11 @@
-# Notes about Red Hat JBoss BPM Suite
+# Red Hat JBoss BPM Suite and Red Hat Decision Manager Usage notes
 
-This project collects my experiences on Red Hat JBoss BPM Suite.
+This project collects my experiences on [Red Hat JBoss BPM Suite][1] and [Red Hat Decision Manager 7.0][2] (formerly known as JBoss BRMS).
 
 There are documents and samples.
 
+[1]: https://www.redhat.com/en/technologies/jboss-middleware/bpm
+[2]: https://www.redhat.com/en/technologies/jboss-middleware/businessrules
 
 ## What's new
 

@@ -1,5 +1,9 @@
 # Business Central
 
+**Business Central** is the web console where the user can develop the BPM / rule solution. In the Decision Manager context, it's called **Decision Central**.
+
+In the upstream project, it is called even **workbench** or **jbpm console**.
+
 ## Spaces (version 7)
 
 Version 7 introduced the concept of Spaces as a way to group projects.
@@ -69,6 +73,13 @@ Make sure this following Maven repo are also in the setting.xml
 
 ## REST Services
 
+### New in version 7
+
+REST APIs in Red Hat Decision Manager are reorganized to follow the new complete separation of duties:
+
+- Decision Central is responsible for assets management a development. APIs are reachable at the address: `http://<hostname>:8080/decision-central/rest/`  APIs are documented at: [https://docs.jboss.org/jbpm/release/7.6.0.Final/jbpm-docs/html_single/#_drools.workbenchremoteapi]()
+
+- Decision Server (aka kieserver) is responsible for the runtime / deployment. APIs are reachable at the address `http://<hostname>:8080/kie-server/services/rest` There is a swagger documentation at `http://<hostname>:8080/kie-server/docs`
 
 ### remote API
 
