@@ -15,6 +15,8 @@ There are documents and samples.
 
 - [Webinar on simulation - BPMSim](https://www.youtube.com/watch?v=xNzM7A3MGJI&list=PLZPWJhPaP-K7u2cjmyhf2SknXX9HhyWrq)
 
+- [Unit-testing your BPM processes by bending time](https://developers.redhat.com/blog/2016/07/18/unit-testing-your-bpm-processes-by-bending-time/)
+
 - [Demystifying the Business Central repository](http://www.opensourcerers.org/demystifying-business-central-repository/)
 
 - [Using loosely coupled rules in your process](http://www.opensourcerers.org/loose-coupled-rules/)
@@ -22,3 +24,9 @@ There are documents and samples.
 - [Capture your decisions with DMN](http://www.opensourcerers.org/capture-your-decisions-with-dmn/)
 
 - [Extend Red Hat JBoss BPM Suite through the Service Repository](https://developers.redhat.com/blog/2018/01/30/red-hat-jboss-bpm-suite/)
+
+### Video
+
+- [Understand the kieserver REST APIs, monitoring the Java APIs traffic](https://youtu.be/v7Td4PsT1O8)
+
+
