@@ -337,3 +337,19 @@ Sample payload:
 
     POST
     <hostname>:<port>/kie-server/services/rest/server/containers/<container-id>/processes/instances/<process-instance-id>/variables
+
+
+## Change potential owners to an existing task
+
+PUT /server/admin/containers/{id}/tasks/{tInstanceId}/pot-owners
+
+- remove: optional flag that indicates if existing potential owners should be removed, defaults to false
+
+Payload
+
+    {
+      "users" : null,
+      "groups" : [ "user" ]
+    }
+
+

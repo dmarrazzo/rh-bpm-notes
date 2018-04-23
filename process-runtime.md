@@ -76,8 +76,8 @@ Then you have to configure the *Persistence descriptor*:
 
 [jBPM 6 - store your process variables anywhere](http://mswiderski.blogspot.it/2014/02/jbpm-6-store-your-process-variables.html)
 
-# Advanced Queries
 
+# Advanced Queries
 
 
 ## References
@@ -91,7 +91,8 @@ Then you have to configure the *Persistence descriptor*:
 
 # Registering Manually  
 
-In general, what is most likely happening is that you are registering handler manually via ksession and in case you use runtime manager and strategy other than singleton it will be not visible by other contexts. Looks like you are using per process instance strategy which would explain why it fails after starting subprocess - it gets new context - new ksession without handler being registered there. So you need to use RegisterableItemsFactory for registering handlers. That is set on RuntimeEnvironment used to create runtime manager, see here:https://github.com/kiegroup/jbpm/blob/master/jbpm-services/jbpm-executor/src/test/java/org/jbpm/executor/impl/wih/AsyncContinuationSupportTest.java#L155-L169
+In general, what is most likely happening is that you are registering handler manually via ksession and in case you use runtime manager and strategy other than singleton it will be not visible by other contexts. Looks like you are using per process instance strategy which would explain why it fails after starting subprocess - it gets new context - new ksession without handler being registered there. So you need to use RegisterableItemsFactory for registering handlers. That is set on RuntimeEnvironment used to create runtime manager, see here:
+https://github.com/kiegroup/jbpm/blob/master/jbpm-services/jbpm-executor/src/test/java/org/jbpm/executor/impl/wih/AsyncContinuationSupportTest.java#L155-L169
 
 # Correlation Key
 
@@ -100,6 +101,32 @@ Technically you probably can create a correlation key afterwards, it's basically
 correct, you should be able to create it and persist, though that does not much change compared to using variable. If I may ask why not assigning correlation key directly?
 
 <https://github.com/kiegroup/jbpm/blob/d881f2a72bd4279d4277b294c2dbc6663d91c612/jbpm-persistence/jbpm-persistence-jpa/src/main/java/org/jbpm/persistence/processinstance/JPAProcessInstanceManager.java#L73-L91>
+
+Audit 
+===========================================================================
+
+## Separate Runtime and BAM data
+
+[https://issues.jboss.org/browse/JBPM-5211]()
+
+# JMS Audit
+setting system property
+
+    -Djbpm.audit.jms.enabled=true
+
+File `jbpm.audit.jms.properties` needs to be placed on application classpath (kie-server.war/WEB-INF/classes) as it’s a global setting
+
+```
+jbpm.audit.jms.connection.factory.jndi=java:/JmsXA
+jbpm.audit.jms.queue.jndi=queue/KIE.AUDIT.ALL
+```
+For WebLogic AS add: `jbpm.audit.jms.transacted=false` 
+
+[https://access.redhat.com/solutions/3301681]()
+
+Log producer: 
+
+[https://github.com/kiegroup/jbpm/blob/master/jbpm-audit/src/main/java/org/jbpm/process/audit/jms/AsyncAuditLogProducer.java]()
 
 Issues
 ===========================================================================

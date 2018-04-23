@@ -171,6 +171,7 @@ org.kie.server.persistence.dialect: The hibernate dialect for your database.
     <property name="org.kie.server.persistence.ds" value="java:jboss/datasources/KieServerDS"/>
     <property name="org.kie.server.persistence.dialect" value="org.hibernate.dialect.DisabledFollowOnLockOracle10gDialect">
 
+Other DB dialect in [Other Related Products Information](other.md)
 
 ## Users
 

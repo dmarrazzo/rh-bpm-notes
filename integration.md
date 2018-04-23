@@ -15,9 +15,10 @@ https://docs.jboss.org/jbpm/release/6.5.0.Final/jbpm-docs/html_single/#d0e29362
 
 # Service Task
 
-* Service implementation: **Java** or **Webservices** (to avoid webservices, becaus there are more options with "Web Service" WIH)
+* Service implementation: **Java** or **Webservices** (to avoid webservices, because there are more options with "Web Service" WIH)
 * Service interface: fully qualified Java class name
 * Service operation: name of the method (static method)
+* Add a **input** `Parameter` that match the name of method parameter.
 
 Example of method implementation:
 

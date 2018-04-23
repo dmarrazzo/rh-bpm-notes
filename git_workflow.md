@@ -328,5 +328,8 @@ expect {
 expect eof
 ```
 
+### Support for SCP style git Repository URLs
+
+When cloning git Repositories it is now possible to use SCP style URLS, for example `git@github.com:user/repository.git`. If your Operating System’s public keystore is password protected the passphrase can be provided with the `org.uberfire.nio.git.ssh.passphrase` System Property.
 
 

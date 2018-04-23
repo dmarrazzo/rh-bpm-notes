@@ -63,6 +63,13 @@ You can debug the process placing breakpoints on the event listeners:
 
         ./standalone.sh --debug
 
+### Check the generated code
+
+In order to debug the java code in the snippet you need to access to the generated code.
+
+There is a system property that force the runtime to dump the code:
+`-Ddrools.dump.dir=some/root/dir`
+
 
 
 

@@ -1,5 +1,5 @@
-Other useful information
-========================
+Other Related Products Information
+==================================
 
 ## Developing
 
@@ -24,9 +24,10 @@ In the cli launch the patch command
     [standalone@localhost:9999 /] patch apply /path/to/downloaded-patch.zip
     
 ### Password
+
 to add user or change password use
 
-    add-user.sh -a user password
+    ./add-user.sh -a user password
 
 ### Relax password strength enforcement
 
@@ -34,7 +35,7 @@ Change `bin\add-user.properties`:
 
     password.restriction=RELAX
 
-### stop EAP
+### Stop EAP
 
     ./jboss-cli.sh -c --command=":shutdown()"
 
@@ -151,6 +152,48 @@ Edit `bin/standalone.conf` and change:
 
     JAVA_OPTS="-Xms2303m -Xmx4303m -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=1024m -Djava.net.preferIPv4Stack=true"
 
+### Frameworks supported by EAP
+
+EAP 6.4 - Hibernate 4.2.18
+
+#### SQL Dialects (hibernate.dialect)
+
+    DB2	org.hibernate.dialect.DB2Dialect
+    DB2 AS/400	org.hibernate.dialect.DB2400Dialect
+    DB2 OS390	org.hibernate.dialect.DB2390Dialect
+    Firebird	org.hibernate.dialect.FirebirdDialect
+    FrontBase	org.hibernate.dialect.FrontbaseDialect
+    H2 Database	org.hibernate.dialect.H2Dialect
+    HypersonicSQL	org.hibernate.dialect.HSQLDialect
+    Informix	org.hibernate.dialect.InformixDialect
+    Ingres	org.hibernate.dialect.IngresDialect
+    Interbase	org.hibernate.dialect.InterbaseDialect
+    Mckoi SQL	org.hibernate.dialect.MckoiDialect
+    Microsoft SQL Server 2000	org.hibernate.dialect.SQLServerDialect
+    Microsoft SQL Server 2005	org.hibernate.dialect.SQLServer2005Dialect
+    Microsoft SQL Server 2008	org.hibernate.dialect.SQLServer2008Dialect
+    Microsoft SQL Server 2012	org.hibernate.dialect.SQLServer2008Dialect
+    MySQL5	org.hibernate.dialect.MySQL5Dialect
+    MySQL5 with InnoDB	org.hibernate.dialect.MySQL5InnoDBDialect
+    MySQL with MyISAM	org.hibernate.dialect.MySQLMyISAMDialect
+    Oracle (any version)	org.hibernate.dialect.OracleDialect
+    Oracle 9i	org.hibernate.dialect.Oracle9iDialect
+    Oracle 10g	org.hibernate.dialect.Oracle10gDialect
+    Oracle 11g	org.hibernate.dialect.Oracle10gDialect
+    Pointbase	org.hibernate.dialect.PointbaseDialect
+    PostgreSQL	org.hibernate.dialect.PostgreSQLDialect
+    PostgreSQL 9.2	org.hibernate.dialect.PostgreSQL82Dialect
+    Postgres Plus Advanced Server	org.hibernate.dialect.PostgresPlusDialect
+    Progress	org.hibernate.dialect.ProgressDialect
+    SAP DB	org.hibernate.dialect.SAPDBDialect
+    Sybase	org.hibernate.dialect.SybaseASE15Dialect
+    Sybase 15.7	org.hibernate.dialect.SybaseASE157Dialect
+    Sybase Anywhere	org.hibernate.dialect.SybaseAnywhereDialect
+    
+
+EAP 7.0 - Hibernate 5.0.9
+
+[JBoss Enterprise Application Platform Component Details](https://access.redhat.com/articles/112673)
 
 ## Internal repositories
 

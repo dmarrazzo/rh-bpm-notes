@@ -13,9 +13,7 @@ There are documents and samples.
 
 ## Other source of information on Red Hat JBoss BPM
 
-- [Webinar on simulation - BPMSim](https://www.youtube.com/watch?v=xNzM7A3MGJI&list=PLZPWJhPaP-K7u2cjmyhf2SknXX9HhyWrq)
-
-- [Unit-testing your BPM processes by bending time](https://developers.redhat.com/blog/2016/07/18/unit-testing-your-bpm-processes-by-bending-time/)
+### Blogs
 
 - [Demystifying the Business Central repository](http://www.opensourcerers.org/demystifying-business-central-repository/)
 
@@ -25,8 +23,19 @@ There are documents and samples.
 
 - [Extend Red Hat JBoss BPM Suite through the Service Repository](https://developers.redhat.com/blog/2018/01/30/red-hat-jboss-bpm-suite/)
 
-### Video
+- [Unit-testing your BPM processes by bending time](https://developers.redhat.com/blog/2016/07/18/unit-testing-your-bpm-processes-by-bending-time/)
+ 
+- [What is a kjar?](https://developers.redhat.com/blog/2018/03/14/what-is-a-kjar/)
+
+- [Business process management in a microservices world](https://developers.redhat.com/blog/2016/10/10/business-process-management-in-a-microservices-world/)
+
+- [Deep dive on case management](https://rh2017.smarteventscloud.com/connect/sessionDetail.ww?SESSION_ID=104878)
+
+
+### Video and Webinars
 
 - [Understand the kieserver REST APIs, monitoring the Java APIs traffic](https://youtu.be/v7Td4PsT1O8)
 
+- [Webinar on simulation - BPMSim](https://www.youtube.com/watch?v=xNzM7A3MGJI&list=PLZPWJhPaP-K7u2cjmyhf2SknXX9HhyWrq)
 
+- [Business process management in a microservices world](https://onlinexperiences.com/scripts/Server.nxp?LASCmd=AI:4;F:QS!10100&ShowKey=34303)
