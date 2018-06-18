@@ -16,6 +16,15 @@ Launch:
 https://github.com/jbossdemocentral/rhdm7-install-demo/blob/dm7ga/init.sh
 
 
+### Installing RHPAM 7
+
+- EAP 7.1
+- add users
+
+    ./add-user.sh -a -u bpmsAdmin -p password --role admin,process-admin,developer,analyst,user,manager,rest-all,kie-server
+
+
+
 ### Installing on EAP 7
 
 - Download the deployable for EAP7

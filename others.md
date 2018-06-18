@@ -5,6 +5,8 @@ Other Related Products Information
 
 - eclipse UML visualizer: ObjectAid UML Explorer
 
+[Simian (Similarity Analyser) identifies duplication in code and rules](https://www.harukizaemon.com/simian/index.html)
+
 ## JBoss EAP 6.4
 
 ### Install

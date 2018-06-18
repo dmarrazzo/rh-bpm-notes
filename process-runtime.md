@@ -102,6 +102,20 @@ correct, you should be able to create it and persist, though that does not much 
 
 <https://github.com/kiegroup/jbpm/blob/d881f2a72bd4279d4277b294c2dbc6663d91c612/jbpm-persistence/jbpm-persistence-jpa/src/main/java/org/jbpm/persistence/processinstance/JPAProcessInstanceManager.java#L73-L91>
 
+Tracking the loops
+===========================================================================
+-Djbpm.loop.level.disabled=true
+this loop level is to track different loops over the same constructs in your process. But it capable of tracking them if they are properly structured - so called structured loops.
+
+it’s enabled by default as when you do proper process design around loops this will allow you to isolate them and keep track on the engine level properly. Potential side effect is that it will trigger incorrect nodes if you do have structured loops in your process and multiple instances of given loop is active at the same time.
+
+Classloading
+===========================================================================
+
+[Can we change a project classloading precedence in JBoss BPM Suite 6?](https://access.redhat.com/node/1414423/)
+
+[How does JBoss BPM Suite 6 maven dependencies classloading work?](https://access.redhat.com/solutions/1588343)
+
 Audit 
 ===========================================================================
 

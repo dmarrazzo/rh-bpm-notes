@@ -90,6 +90,38 @@ To test the capability in a test environment there are 2 possible workarounds:
 
 2. Change the process to set the `Actors` to `#{SwimlaneActorId}` for all the Human Task that follow the first one in the swim lane.
 
+3. Properties
+
+```
+org.jbpm.ht.callback = props
+jbpm.user.info.properties=classpath:/userinfo.properties
+```
+
+Constructs default UserInfo implementation to provide required information to the escalation handler.
+following is the string for every organizational entity
+entityId=email:locale:displayname:[member,member]
+members are optional and should be given for group entities
+
+
+Example:
+
+```
+john=john@domain.com:en-UK:john
+mary=mary@domain.com:en-UK:mary
+krisv=krisv@domain.com:en-UK:krisv
+admin=admin@domain.com:en-UK:admin
+
+Crusaders=Crusaders@domain.com:en-UK:Crusaders:[Luke Cage,Bobba Fet,Tony Stark]
+Knights\ Templer=Crusaders@domain.com:en-UK:ACrusaders:[Bobba Fet]
+Wrong\ Crusaders=WrongCrusaders@domain.com:en-UK:Wrong Crusaders:[Darth Vader]
+Nobodies=nobodies@domain.com:en-UK:Nobodies:[]
+```
+
+
+
+
+
+
 
 ## Assignment Rules
 

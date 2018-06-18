@@ -1,86 +1,69 @@
 Maven survival guide
 ====================
 
-## BPM Internal Maven repository
+## Red Hat Decision Manager v7 Bill of Material (BOM)
 
-Business Central hosts an internal maven repository.
-You can see and upload new artifacts of the Internal repository from the UI:
+Bill of Material
 
-* Authoring -> Artifact repository
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.jboss.bom.rhdm</groupId>
+				<artifactId>rhdm-platform-bom</artifactId>
+				<version>${version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
-The upload can be automated with following procedure (acknowledgements to Anton Gerli)
+Decision Manager version 7.0:
 
-- in the project pom.xml add
+	<properties>
+		<version>7.0.0.GA-redhat-2</version>
+	</properties>
 
-        <distributionManagement>
-            <repository>
-                <id>guvnor-m2-repo</id>
-                <name>maven repo</name>
-                <url>http://10.64.4.78:8080/business-central/maven2/</url>
-                <layout>default</layout>
-            </repository>
-        </distributionManagement>
+### Business Optimizer dependencies
 
-- Configure server connection in your `~/.m2/settings.xml`
+	<dependencies>
+		<dependency>
+			<groupId>org.optaplanner</groupId>
+			<artifactId>optaplanner-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.optaplanner</groupId>
+			<artifactId>optaplanner-persistence-common</artifactId>
+		</dependency>
+		<dependency><!-- examples that use the XStream integration -->
+			<groupId>org.optaplanner</groupId>
+			<artifactId>optaplanner-persistence-xstream</artifactId>
+		</dependency>
+		<dependency><!-- examples that use the JAXB integration -->
+			<groupId>org.optaplanner</groupId>
+			<artifactId>optaplanner-persistence-jaxb</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- Logging -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
+	</dependencies>
 
-        <server>
-            <id>guvnor-m2-repo</id>
-            <username>user</username>
-            <password>password</password>
-            <privateKey>prdprivatekey</privateKey>
-            <configuration>
-                <wagonProvider>httpclient</wagonProvider>
-                <httpConfiguration>
-                    <all>
-                        <usePreemptive>true</usePreemptive>
-                    </all>
-                </httpConfiguration>
-            </configuration>
-        </server>
+## Logging
 
-**References:**
+it is important for all Java plain execution:
 
-[Uploading Artifacts to Maven Repository](https://access.redhat.com/documentation/en-us/red_hat_jboss_bpm_suite/6.4/html/development_guide/chap_maven_dependencies#uploading_artifacts_to_maven_repository)
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
 
-
-### To configure the internal maven directory
-
-System property:
-
-<property name="kie.maven.settings.custom" value="/opt/jboss/.m2/settings.xml"/>
-
-Configure the local repository in settings.xml:
-
-<localRepository>/opt/jboss/.m2/repository</localRepository>
-        
-## Compilation setting (build)
-The following configuration set the **JDK level** and **exclude** unwanted files
-
-```
-  <build>
-    [...]
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.7.0</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-          <excludes>
-            <exclude>**/.*.java</exclude>
-          </excludes>
-        </configuration>
-      </plugin>
-    </plugins>
-    [...]
-  </build>
-```
-
-
-## BPM libraries
-
-### Bill of material (BOM)
+## Red Hat JBoss BPM Suite v6.4 Bill of material (BOM)
 
 To simplify the dependency management you can add this:
 
@@ -172,6 +155,7 @@ Java EE (do not use in bpm project):
       <version>6.0</version>
     </dependency>
 
+
 ## kie plugin
 
 This is used to build the kjar package
@@ -187,6 +171,83 @@ This is used to build the kjar package
 		</plugins>
 	</build>
 
+
+## BPM Internal Maven repository
+
+Business Central hosts an internal maven repository.
+You can see and upload new artifacts of the Internal repository from the UI:
+
+* Authoring -> Artifact repository
+
+The upload can be automated with following procedure (acknowledgements to Anton Gerli)
+
+- in the project pom.xml add
+
+        <distributionManagement>
+            <repository>
+                <id>guvnor-m2-repo</id>
+                <name>maven repo</name>
+                <url>http://10.64.4.78:8080/business-central/maven2/</url>
+                <layout>default</layout>
+            </repository>
+        </distributionManagement>
+
+- Configure server connection in your `~/.m2/settings.xml`
+
+        <server>
+            <id>guvnor-m2-repo</id>
+            <username>user</username>
+            <password>password</password>
+            <privateKey>prdprivatekey</privateKey>
+            <configuration>
+                <wagonProvider>httpclient</wagonProvider>
+                <httpConfiguration>
+                    <all>
+                        <usePreemptive>true</usePreemptive>
+                    </all>
+                </httpConfiguration>
+            </configuration>
+        </server>
+
+**References:**
+
+[Uploading Artifacts to Maven Repository](https://access.redhat.com/documentation/en-us/red_hat_jboss_bpm_suite/6.4/html/development_guide/chap_maven_dependencies#uploading_artifacts_to_maven_repository)
+
+
+### To configure the internal maven directory
+
+System property:
+
+<property name="kie.maven.settings.custom" value="/opt/jboss/.m2/settings.xml"/>
+
+Configure the local repository in settings.xml:
+
+<localRepository>/opt/jboss/.m2/repository</localRepository>
+
+
+## Compilation setting (build)
+The following configuration set the **JDK level** and **exclude** unwanted files
+
+```
+  <build>
+    [...]
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.7.0</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+          <excludes>
+            <exclude>**/.*.java</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+    [...]
+  </build>
+```
 
 ## Dependency Scope
 

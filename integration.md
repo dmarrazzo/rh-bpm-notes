@@ -13,6 +13,31 @@ Init MVEL parameters:
 Service registry:
 https://docs.jboss.org/jbpm/release/6.5.0.Final/jbpm-docs/html_single/#d0e29362
 
+
+## wid file to get pre-populated fields:
+
+https://issues.jboss.org/browse/JBPM-5416
+
+```
+"parameters" : [
+...
+  "Operation" : new StringDataType(),
+...
+],
+"parameterValues" : [
+   "Operation" : "opA,opB,opC"
+]
+```
+
+or if you have an existing enum class in workbench you could do:
+
+```
+"parameterValues" : [
+   "Operation" : new EnumDataType("org.jbpm.myenums.MyEnum")
+]
+```
+
+
 # Service Task
 
 * Service implementation: **Java** or **Webservices** (to avoid webservices, because there are more options with "Web Service" WIH)

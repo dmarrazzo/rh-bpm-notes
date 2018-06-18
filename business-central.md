@@ -6,9 +6,17 @@ In the upstream project, it is called even **workbench** or **jbpm console**.
 
 ## Spaces (version 7)
 
-Version 7 introduced the concept of Spaces as a way to group projects.
-Each space is mapped in an internal git repository, the name of which is `spacename-myrepo`. 
+Decision Manager Version 7 introduced the concept of Spaces as a way to group projects.
+Each space is mapped in an internal git repository, the name of which is `<spacename>-myrepo`. 
 The suffix `myrepo` can be changed in the general settings.
+
+The default space is just "myrepo".
+
+To clone the repository you can use the following command:
+
+```
+git clone ssh://<user>@localhost:8001/<space-name>-myrepo
+```
 
 ## Artefacts
 
