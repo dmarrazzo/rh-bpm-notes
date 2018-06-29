@@ -1,71 +1,18 @@
-# Case Management
-
-In order to design a case you have to set **AdHoc** property to **true**.
-
-To design adhoc activities you have to place them in an **adhoc subprocess**.
-
-![Adhoc subprocess](imgs/adhoc.png)
-
-## Adhoc subprocess
-An Ad-Hoc Sub-Process is a specialized type of Sub-Process that is a group of Activities that have no REQUIRED sequence relationships.
-
-Properties:
-
-- AdHocCompletionCondition
-
-    the condition that once met the execution is considered successful and finishes
-
-- AdHocCancelRemainingInstances
-
-    if set to true, once the AdHocCompletionCondition is met, execution of any Elements is immediately cancelled.
-
-In the designer the user has possibility to set 'AdHocOrdering' property for Ad Hoc Sub-Processes: parallel and sequential.
-Nevertheless, core engine only supports parallel execution, property should be hidden in designer.
-
-## Dependencies
-
-DO NOT import jbpm-case-mgmt in the pom but copy it in WEB-INF/lib!
-
-## Coding
-
-Reference
-
-[CaseMgmtService](https://github.com/kiegroup/jbpm/blob/6.5.x/jbpm-case-mgmt/src/main/java/org/jbpm/casemgmt/CaseMgmtService.java)
-
-### Trigger adhoc fragment
-
-			CaseMgmtService caseMgmtService = new CaseMgmtUtil(engine);
-			String[] adHocFragmentNames = caseMgmtService.getAdHocFragmentNames(646);
-		
-			for (String frag : adHocFragmentNames) {
-				System.out.println(">>> "+frag);
-			}
-			caseMgmtService.triggerAdHocFragment(646, "Segreteria Prepara Pubblicazione");
-
-
-### Start a dynamic task
-org.jbpm.casemgmt.CaseMgmtService cmService = new org.jbpm.casemgmt.CaseMgmtUtil(kcontext);
-
-java.util.Map<String, Object> workParams = new java.util.HashMap<String, Object>();
-
-workParams.put("Message", testVar);
-
-
-cmService.createDynamicWorkTask(kcontext.getProcessInstance().getId(), "Log", workParams);
-
 # Case management in version 7
 
 Article that describe the new capabilities:
+
 - [Case management - jBPM v7 - Part 1](http://mswiderski.blogspot.it/2016/10/case-management-jbpm-v7-part-1.html)
 - [Case management - jBPM v7 - Part 2 - working with case data](http://mswiderski.blogspot.it/2016/10/case-management-jbpm-v7-part-2-working.html)
 - [Case management - jBPM v7 - Part 3 - dynamic activities](http://mswiderski.blogspot.it/2016/10/case-management-jbpm-v7-part-3-dynamic.html)
 - [Order IT hardware - jBPM 7 case application](http://mswiderski.blogspot.it/2017/01/order-it-hardware-jbpm-7-case.html)
 - [case management security](http://mswiderski.blogspot.it/2017/02/jbpm-7-case-management-security.html)
 - [Make use of rules to drive your cases](http://mswiderski.blogspot.it/2017/07/make-use-of-rules-to-drive-your-cases.html)
-Case management improvements - data authorisation
-Case management - mention someone in comments and …
-Track your processes and activities with SLA
-React to SLA violations in cases
+- [Case management improvements - data authorisation](http://mswiderski.blogspot.com/2017/10/case-management-improvements-data.html)
+- [Sub cases for case instance and ... process instance](http://mswiderski.blogspot.com/2017/10/sub-cases-for-case-instance-and-process.html)
+- [Case management - mention someone in comments](http://mswiderski.blogspot.com/2017/11/case-management-mention-someone-in.html)
+- [Track your processes and activities with SLA](http://mswiderski.blogspot.com/2018/02/track-your-processes-and-activities.html)
+- [React to SLA violations in cases](http://mswiderski.blogspot.com/2018/02/react-to-sla-violations-in-cases.html)
 
 
 ## Project 
@@ -159,6 +106,15 @@ The variable MUST be declared case file, flag it in the process variable list.
 
     org.kie.api.runtime.process.CaseData(data.get("ok") == true)
 
+In order to get a more readable expression:
+
+1. At process level add this import: `org.kie.api.runtime.process.CaseData`
+2. Leverage the **OOPath**
+
+In this way the previous condition can be expressed as:
+
+    CaseData(data["ok"] == true)
+
 
 ## Roles
 
@@ -216,8 +172,7 @@ Use the case APIs:
     rule "ask user for details"
     
     when 
-        $caseData : CaseFileInstance()
-        String(this == "AskForDetails") from $caseData.getData("decision")
+        CaseData ( data["decision"] == "AskForDetails" )
               
     then 
         $caseData.remove("decision");
@@ -228,6 +183,83 @@ Use the case APIs:
         
     end
 
+## Accessing to the case data from scripts
+
+Variables in the case (process) definition that are flagged as **Case File** are special variables, in order to read and write them from scripts you cannot use the usual `kcontext.getVariable()` / `kcontext.setVariable(...)`.
+
+This the correct approach:
+
+	CaseData caseData = kcontext.getCaseData();
+	
+	Data data = (Data) caseData.getData("data");
+	data.setPrice(data.getPrice() + 10);
+	caseData.add("data", data);
+
+**Pay attention:** `caseData.add("data", data)` update the **caseFile** variable, but it DOES NOT triggers the rules (e.g. the Milestone condition).
+
+To have a "full" caseFile update use the following snippet of code:
+
+	RuntimeDataService runtimeDataService = (RuntimeDataService) ServiceRegistry.get().service(ServiceRegistry.RUNTIME_DATA_SERVICE);
+	ProcessInstanceDesc processInstanceDesc = runtimeDataService.getProcessInstanceById(kcontext.getProcessInstance().getId());
+	String correlationKey = processInstanceDesc.getCorrelationKey();
+	CaseService caseService = (CaseService) ServiceRegistry.get().service(ServiceRegistry.CASE_SERVICE);
+	caseService.addDataToCaseFile(correlationKey, "data", data);
+
+
+# Case Management in BPM Suite version 6
+
+In order to design a case you have to set **AdHoc** property to **true**.
+
+To design adhoc activities you have to place them in an **adhoc subprocess**.
+
+![Adhoc subprocess](imgs/adhoc.png)
+
+## Adhoc subprocess
+An Ad-Hoc Sub-Process is a specialized type of Sub-Process that is a group of Activities that have no REQUIRED sequence relationships.
+
+Properties:
+
+- AdHocCompletionCondition
+
+    the condition that once met the execution is considered successful and finishes
+
+- AdHocCancelRemainingInstances
+
+    if set to true, once the AdHocCompletionCondition is met, execution of any Elements is immediately cancelled.
+
+In the designer the user has possibility to set 'AdHocOrdering' property for Ad Hoc Sub-Processes: parallel and sequential.
+Nevertheless, core engine only supports parallel execution, property should be hidden in designer.
+
+## Dependencies
+
+DO NOT import jbpm-case-mgmt in the pom but copy it in WEB-INF/lib!
+
+## Coding
+
+Reference
+
+[CaseMgmtService](https://github.com/kiegroup/jbpm/blob/6.5.x/jbpm-case-mgmt/src/main/java/org/jbpm/casemgmt/CaseMgmtService.java)
+
+### Trigger adhoc fragment
+
+			CaseMgmtService caseMgmtService = new CaseMgmtUtil(engine);
+			String[] adHocFragmentNames = caseMgmtService.getAdHocFragmentNames(646);
+		
+			for (String frag : adHocFragmentNames) {
+				System.out.println(">>> "+frag);
+			}
+			caseMgmtService.triggerAdHocFragment(646, "Segreteria Prepara Pubblicazione");
+
+
+### Start a dynamic task
+org.jbpm.casemgmt.CaseMgmtService cmService = new org.jbpm.casemgmt.CaseMgmtUtil(kcontext);
+
+java.util.Map<String, Object> workParams = new java.util.HashMap<String, Object>();
+
+workParams.put("Message", testVar);
+
+
+cmService.createDynamicWorkTask(kcontext.getProcessInstance().getId(), "Log", workParams);
 
 
 
