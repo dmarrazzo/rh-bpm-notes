@@ -140,9 +140,13 @@ solo XSTREAM !!!
 
 # KieServer Extensions
 
-Extending REST interface
+[Extending KIE Server capabilities](http://mswiderski.blogspot.com/2015/12/extending-kie-server-capabilities.html)
 
-[http://mswiderski.blogspot.it/2015/12/kie-server-extend-existing-server.html]()
+There are 3 extension types:
+
+- [Extend existing server capability with extra REST endpoint](http://mswiderski.blogspot.it/2015/12/kie-server-extend-existing-server.html) - useful to expose hidden engine features, or to group more actions in one request
+- [Extend KIE Server client with new capabilities](http://mswiderski.blogspot.com/2015/12/kie-server-extend-kie-server-client.html) - to add the new capabilities in the client APIs
+- [Extend KIE Server with additional transport](http://mswiderski.blogspot.com/2015/12/kie-server-extend-kie-server-with.html)
 
 ## jBPM Services
 
@@ -322,6 +326,18 @@ Example result:
 Sample payload:
 
     { "test" : {"java.lang.String" : "ok"}}
+
+
+## Send a signal to a specific process instance id
+
+    POST
+
+    <hostname>:<port>/kie-server/services/rest/server/containers/<container-id>/processes/instances/<p-instance-id>/signal/<signal-ref>
+
+Sample payload:
+
+    { "test" : {"java.lang.String" : "ok"}}
+
 
 ## List available signal for an instance
 
