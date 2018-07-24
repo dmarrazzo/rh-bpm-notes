@@ -17,11 +17,19 @@ Bill of Material
 		</dependencies>
 	</dependencyManagement>
 
-Decision Manager version 7.0:
+Version property:
 
 	<properties>
-		<version>7.0.0.GA-redhat-2</version>
+		<version>7.0.1.GA-redhat-2</version>
 	</properties>
+
+
+| Product version | BOM Version        |
+|-----------------|--------------------|
+| 7.0.0           | 7.0.0.GA-redhat-2  |
+| 7.0.1           | 7.0.1.GA-redhat-2  |
+
+
 
 ### Business Optimizer dependencies
 
@@ -63,6 +71,36 @@ it is important for all Java plain execution:
 			<artifactId>logback-classic</artifactId>
 		</dependency>
 
+## Red Hat Process Automation Manager v7 Bill of Material (BOM)
+
+Bill of Material:
+
+	<dependencyManagement>
+		<dependencies>
+            <dependency>
+              <groupId>org.jboss.bom</groupId>
+              <artifactId>rhpam-platform-bom</artifactId>
+              <version>${version}</version>
+              <scope>import</scope>
+              <type>pom</type>
+            </dependency>
+		</dependencies>
+	</dependencyManagement>
+
+
+Version property:
+
+	<properties>
+		<version>7.0.1.GA-redhat-1</version>
+	</properties>
+
+
+| Product version | BOM Version        |
+|-----------------|--------------------|
+| 7.0.0           | 7.0.0.GA-redhat-3  |
+| 7.0.1           | 7.0.1.GA-redhat-1  |
+
+
 ## Red Hat JBoss BPM Suite v6.4 Bill of material (BOM)
 
 To simplify the dependency management you can add this:
@@ -80,6 +118,7 @@ To simplify the dependency management you can add this:
 	</dependencyManagement>
 
 Versions:
+
  - 6.4.6.GA-redhat-1
  - 6.4.5.GA-redhat-3
  - 6.4.4.GA-redhat-3
@@ -309,6 +348,11 @@ The following command pull all the dependencies in local repository:
 To check a specific repo
 
     mvn dependency:get -Dartifact=g:a:v -o -DrepoUrl=http://192.168.1.200:8080/business-central/maven2/
+
+
+### Skip Tests
+
+    mvn install -DskipTests
 
 
 ### Force dependency download

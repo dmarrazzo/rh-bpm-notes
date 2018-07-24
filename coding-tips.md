@@ -45,6 +45,9 @@ This is a code sample:
 The file `package-names-white-list` can be used to declare visible packages.
 When you declare a package others become invisible to the BC.
 
+The use of this file allows a developer to narrow down the group of facts that are loaded and are therefore, visible. This helps in speeding up the loading of these facts while creating new rules. This file is created automatically on the creation of a new project in the root directory, along with the pom.xml and project.imports project files. For existing projects, you may create this file manually.
+
+
 ## Debugging technique
 
 In order to understand the process actual logic at runtime, you can leverage the event listeners.
