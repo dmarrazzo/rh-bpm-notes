@@ -25,6 +25,7 @@ It can be used as a template for WIH.
 	  [
 	    "name" : "TestWIH",
 	    "displayName" : "TestWIH",
+         "category" : "Test"	    
 	  ]
 	]
 

@@ -26,7 +26,7 @@ public class TestWorkItemHandler implements WorkItemHandler {
 
 	public void executeWorkItem(WorkItem workItem, WorkItemManager manager) {
 		Map<String, Object> output = null;
-		System.out.println("TestWorkItemHandler.executeWorkItem()");
+		System.out.println("TestWorkItemHandler.executeWorkItem() - workitem id: "+workItem.getId());
 		log.trace("{} start", WORKITEMHANDLER_NAME);
 		
 		Map<String, Object> parameters = workItem.getParameters();
