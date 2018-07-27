@@ -19,6 +19,15 @@ Task with an [AsyncWorkItemHandler][1] Implementation (or the command pattern) -
 
 [How do I use job executor from a task in JBoss BPM Suite 6.1?](https://access.redhat.com/solutions/2142501)
 
+The 2nd option is to register different instances of `AsyncWorkItemHandler` for different work items.
+
+>To register such handlers for jbpm console or kie-wb additional class is required to inform what shall be registered. A CDI bean that implements WorkItemHandlerProducer interface needs to be provided and placed on the application classpath so CDI container will be able to find it. Then at modeling time TaskName property needs to be aligned with those used at registration time.
+
+**To be clarified: ** Why does it need a new `WorkItemHandlerProducer` to register another implementation of `AsyncWorkItemHandler`? Maybe a traditional workitem registration is enough?
+
+[Introduction to CDI Dependency Injection](https://dzone.com/articles/cdi-di-p1)
+[WorkItemHandlerProducer interface](https://github.com/kiegroup/droolsjbpm-knowledge/blob/master/kie-internal/src/main/java/org/kie/internal/runtime/manager/WorkItemHandlerProducer.java)
+
 # Executor configuration
 Executor can work with or without JMS.
 JMS is the preferred option but executor can work without it and it does for instance on Tomcat where there is no JMS provider out of the box.
