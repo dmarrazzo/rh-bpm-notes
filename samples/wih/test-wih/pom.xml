@@ -14,7 +14,7 @@
 			<dependency>
 				<groupId>org.jboss.bom.brms</groupId>
 				<artifactId>jboss-brms-bpmsuite-platform-bom</artifactId>
-				<version>6.3.2.GA-redhat-2</version>
+				<version>6.4.9.GA-redhat-2</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -46,48 +46,10 @@
 
 	<repositories>
 		<repository>
-			<id>rh-repository</id>
-			<url>http://maven.repository.redhat.com/techpreview/all</url>
-		</repository>
-
-		<repository>
-			<id>jboss-public-repository-group</id>
-			<name>JBoss Public Maven Repository Group</name>
-			<url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
-			<layout>default</layout>
-			<releases>
-				<enabled>true</enabled>
-				<updatePolicy>never</updatePolicy>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>daily</updatePolicy>
-			</snapshots>
-		</repository>
-
-		<repository>
-			<id>jboss-snapshots</id>
-			<name>JBoss Snapschots</name>
-			<url>https://repository.jboss.org/nexus/content/repositories/snapshots/</url>
-			<layout>default</layout>
-			<releases>
-				<enabled>false</enabled>
-				<updatePolicy>never</updatePolicy>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>daily</updatePolicy>
-			</snapshots>
-		</repository>
-
-
-		<repository>
 			<id>guvnor-m2-repo</id>
 			<name>Guvnor M2 Repo</name>
 			<url>http://localhost:8080/business-central/maven2/</url>
 		</repository>
-
-
 	</repositories>
 	<distributionManagement>
 		<repository>

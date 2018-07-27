@@ -1,5 +1,8 @@
-# Simple TX Workitem Handler
+# TestWorkitem Handler
 
+Basic WorkItemHandler to test exception handling.
+After 4 calls, it generate Exception.
+It can be used as a template for WIH.
 
 ## To install the WIH
 
@@ -13,16 +16,15 @@
      
 4. From **Project Editor** open **Deployment Descriptor** and add the new WIH 
 
-    - `NewTX`
-    - `new com.redhat.ssa.bpm.wih.NewTXWorkItemHandler()`
+    - `TestWIH`
+    - `new com.redhat.ssa.bpm.wih.TestWorkItemHandler()`
 
 5. Open Work Item Definitions file and replace the last square bracket with the following 
 
 	  ,
 	  [
-	    "name" : "NewTX",
-	    "displayName" : "NewTX",
-	    "icon" : "/icons/db_insert.png"
+	    "name" : "TestWIH",
+	    "displayName" : "TestWIH",
 	  ]
 	]
 

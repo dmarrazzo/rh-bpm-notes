@@ -45,7 +45,7 @@ public class TestWorkItemHandler implements WorkItemHandler {
 		} else {
 			log.trace("{} exception WIH", WORKITEMHANDLER_NAME);
 			System.out.println("TestWorkItemHandler.executeWorkItem() - exception");
-			//manager.abortWorkItem(workItem.getId());
+			manager.abortWorkItem(workItem.getId());
 			
 			executed = false;
 			throw new WorkItemHandlerNotFoundException("TestException", workItem.getName());
