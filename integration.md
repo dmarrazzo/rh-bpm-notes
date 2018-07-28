@@ -9,6 +9,7 @@ Init MVEL parameters:
         runtimeManager
         classLoader
         entityManagerFactory
+        kieContainer
 
 Service registry:
 https://docs.jboss.org/jbpm/release/6.5.0.Final/jbpm-docs/html_single/#d0e29362

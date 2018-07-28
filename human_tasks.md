@@ -168,8 +168,30 @@ the first task that is completed returns `ActorId` data output that represents t
 
 It cannot implemented to a couple of issues.
 
+## Notification Email
+
+### Variable available in the template
+
+- processInstanceId
+- processSessionId
+- workItemId
+- expirationTime
+- taskId
+- `doc` is an HashMap with the Task Input Parameters
+
+
+
+Source class:
+
+    jbpm/jbpm-human-task/jbpm-human-task-core/src/main/java/org/jbpm/services/task/deadlines/notifications/impl/email/EmailNotificationListener.java
+
+[EmailNotificationListener - github](https://github.com/kiegroup/jbpm/blob/6.5.x/jbpm-human-task/jbpm-human-task-core/src/main/java/org/jbpm/services/task/deadlines/notifications/impl/email/EmailNotificationListener.java)
+
+
+
 # Form modeller
 
 Form Modeller supports jXpath expressions but only to access field values (? to be verified the version)
 
 [https://commons.apache.org/proper/commons-jxpath/]()
+

@@ -1,4 +1,5 @@
-# Asynchronous Jobs
+Asynchronous Jobs
+===========================================================================
 
 Some findings:
 
@@ -9,7 +10,8 @@ Some findings:
 5. from the Jobs page, you can stop and start the Executor, change the frequency and the threads (I think that it is implemented with a polling logic over the DB)
 6. If I stop the executor and launch a new process, for some strange reason the job is executed (regardless the executor stop status!) but if the service raise an exception, it is marked as "retrying" and is not processed again till the executor is started again
 
-# Asynchronous Workitems
+Asynchronous Workitems
+===========================================================================
 
 [make-your-work-asynchronous](http://mswiderski.blogspot.it/2013/08/make-your-work-asynchronous.html)
 
@@ -28,7 +30,15 @@ The 2nd option is to register different instances of `AsyncWorkItemHandler` for 
 [Introduction to CDI Dependency Injection](https://dzone.com/articles/cdi-di-p1)
 [WorkItemHandlerProducer interface](https://github.com/kiegroup/droolsjbpm-knowledge/blob/master/kie-internal/src/main/java/org/kie/internal/runtime/manager/WorkItemHandlerProducer.java)
 
-# Executor configuration
+## Registering Manually  
+
+In general, what is most likely happening is that you are registering handler manually via ksession and in case you use runtime manager and strategy other than singleton it will be not visible by other contexts. Looks like you are using per process instance strategy which would explain why it fails after starting subprocess - it gets new context - new ksession without handler being registered there. So you need to use RegisterableItemsFactory for registering handlers. That is set on RuntimeEnvironment used to create runtime manager, see here:
+https://github.com/kiegroup/jbpm/blob/master/jbpm-services/jbpm-executor/src/test/java/org/jbpm/executor/impl/wih/AsyncContinuationSupportTest.java#L155-L169
+
+
+Executor configuration
+===========================================================================
+
 Executor can work with or without JMS.
 JMS is the preferred option but executor can work without it and it does for instance on Tomcat where there is no JMS provider out of the box.
 you can disable JMS executor by system property `org.kie.executor.jms=false`
@@ -39,7 +49,8 @@ you can disable JMS executor by system property `org.kie.executor.jms=false`
 2. Increase the EJB pool size for MDBs
 3. Increase the JmsXA connection factory thread pool size
 
-# Deployment Descriptor
+Deployment Descriptor
+===========================================================================
 
 While kmodule is mainly targeting on knowledge base and knowledge session basic configuration, deployment descriptors are considered more technical configuration. Following are the items available for configuration via deployment descriptors:
 
@@ -62,7 +73,8 @@ While kmodule is mainly targeting on knowledge base and knowledge session basic 
 
 [https://docs.jboss.org/jbpm/release/6.5.0.Final/jbpm-docs/html/ch14.html#d0e15405]()
 
-# Custom variable persistence
+Custom variable persistence
+===========================================================================
 
 It is possible store the process variable in a DBMS table.
 In order to achieve this result, you have to configure the *Data Object* as *Persistable*.
@@ -86,7 +98,8 @@ Then you have to configure the *Persistence descriptor*:
 [jBPM 6 - store your process variables anywhere](http://mswiderski.blogspot.it/2014/02/jbpm-6-store-your-process-variables.html)
 
 
-# Advanced Queries
+Advanced Queries
+===========================================================================
 
 
 ## References
@@ -98,12 +111,9 @@ Then you have to configure the *Persistence descriptor*:
 
 [1]: https://github.com/droolsjbpm/jbpm/blob/master/jbpm-services/jbpm-executor/src/main/java/org/jbpm/executor/impl/wih/AsyncWorkItemHandler.java
 
-# Registering Manually  
 
-In general, what is most likely happening is that you are registering handler manually via ksession and in case you use runtime manager and strategy other than singleton it will be not visible by other contexts. Looks like you are using per process instance strategy which would explain why it fails after starting subprocess - it gets new context - new ksession without handler being registered there. So you need to use RegisterableItemsFactory for registering handlers. That is set on RuntimeEnvironment used to create runtime manager, see here:
-https://github.com/kiegroup/jbpm/blob/master/jbpm-services/jbpm-executor/src/test/java/org/jbpm/executor/impl/wih/AsyncContinuationSupportTest.java#L155-L169
-
-# Correlation Key
+Correlation Key
+===========================================================================
 
 Technically you probably can create a correlation key afterwards, it's basically an entry in the database that links both.  But in the public api it's only exposed when starting a process.  Using internal apis you can probably create a CorrelationKeyInfo object and persist it.  
 
@@ -132,7 +142,9 @@ Audit
 
 [https://issues.jboss.org/browse/JBPM-5211]()
 
-# JMS Audit
+JMS Audit
+===========================================================================
+
 setting system property
 
     -Djbpm.audit.jms.enabled=true
@@ -150,6 +162,25 @@ For WebLogic AS add: `jbpm.audit.jms.transacted=false`
 Log producer: 
 
 [https://github.com/kiegroup/jbpm/blob/master/jbpm-audit/src/main/java/org/jbpm/process/audit/jms/AsyncAuditLogProducer.java]()
+
+Task not implemented
+===========================================================================
+Although the BPMN Editor has almost all BPMN task in the palette. Not all are implemented by the runtime.
+
+Missing implementation:
+
+- Messages related nodes (the BPMN spec is not clear on how to implement) **See: Signals**
+- Send Task and Receive Task
+- Manual Task
+
+The process developer can fill the gap providing the implementation for this tasks through the standard work item handler registration mechanism
+
+## References
+
+[When using Send Task or Receive Task in a BPMN2 process definition with BPMS 6 it gives the ERROR "Could not find work item handler for Send Task"](https://access.redhat.com/solutions/1223443)
+
+[Send Task and Receive Task of a BPMN2 process do not work when they are used in different processes as the latter process seems to be waiting for the message to arrive](https://access.redhat.com/solutions/1243573)
+
 
 Issues
 ===========================================================================
