@@ -73,6 +73,7 @@ While kmodule is mainly targeting on knowledge base and knowledge session basic 
 
 [https://docs.jboss.org/jbpm/release/6.5.0.Final/jbpm-docs/html/ch14.html#d0e15405]()
 
+
 Custom variable persistence
 ===========================================================================
 
@@ -134,6 +135,28 @@ Classloading
 [Can we change a project classloading precedence in JBoss BPM Suite 6?](https://access.redhat.com/node/1414423/)
 
 [How does JBoss BPM Suite 6 maven dependencies classloading work?](https://access.redhat.com/solutions/1588343)
+
+## DataObjects and remote API
+
+If you are creating a data object, make sure that the class has the `@org.kie.api.remote.Remotable` annotation. The `@org.kie.api.remote.Remotable` annotation makes the entity available for use with JBoss BPM Suite remote services such as REST, JMS, and WS.
+
+Upon deployment, jbpm will scan classpath of given kjar to automatically register classes that might be needed for remote interaction. This is done based on following rules:
+
+- all classes included in kjar project itself
+- all classes included as dependency of projects type kjar
+- classes that are annotated with @XmlRootElement (JAXB annotation) and included as regular dependency of the kjar
+- classes that are annotated with @Remotable (kie annotation) and included as regular dependency of the kjar
+
+If that is not enough deployment descriptor allows to manually specify classes that shall be added to the JAXB context via remoteable-classes element:
+
+    <remoteable-classes>
+       ...
+       <remotable-class>org.jbpm.test.CustomClass</remotable-class>
+       <remotable-class>org.jbpm.test.AnotherCustomClass</remotable-class>
+       ...
+    </remoteable-classes>
+    
+With this all classes can be added to the JAXB context to properly marshal and unmarshal data types when interacting with jBPM remotely.
 
 Audit 
 ===========================================================================

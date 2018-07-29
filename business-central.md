@@ -89,6 +89,3 @@ REST APIs in Red Hat Decision Manager are reorganized to follow the new complete
 
 - Decision Server (aka kieserver) is responsible for the runtime / deployment. APIs are reachable at the address `http://<hostname>:8080/kie-server/services/rest` There is a swagger documentation at `http://<hostname>:8080/kie-server/docs`
 
-### remote API
-
-If you are creating a data object, make sure that the class has the `@org.kie.api.remote.Remotable` annotation. The `@org.kie.api.remote.Remotable` annotation makes the entity available for use with JBoss BPM Suite remote services such as REST, JMS, and WS.
