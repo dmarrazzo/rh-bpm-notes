@@ -1,5 +1,5 @@
 Human Tasks
-===========
+=============================================================================
 
 ## Properties
 Syntax to add variables in **subject** or **description**
@@ -20,6 +20,22 @@ Roles are defined in the following file:
 
     <EAP_HOME>/standalone/configuration/application-roles.properties
 
+## Custom UserGroupCallback
+
+User/group information obtained via callbacks
+
+Callback = implementation of interface
+
+- org.kie.api.task.UserGroupCallback
+- org.kie.internal.task.api.UserInfo
+
+
+UserGroupCallback methods are:
+
+    boolean existsUser (String userId);
+    boolean existsGroup (String groupId);
+    List<String> getGroupsForUser (String userId);
+
 
 ### Default Users information
 
@@ -32,6 +48,16 @@ Example content:
     Luke\ Cage=luke@domain.com:en-UK:luke
 
 It can be changed in `EAP_HOME/standalone/deployments/business-central.war/WEB-INF/beans.xml`
+
+DefaultUserInfo implements [UserInfo](https://github.com/kiegroup/droolsjbpm-knowledge/blob/master/kie-api/src/main/java/org/kie/api/task/UserInfo.java) methods:
+
+    String getDisplayName (OrganizationalEntity entity);
+    Iterator<OrganizationalEntity> getMembersForGroup (Group group);
+    boolean hasEmail(Group group);
+    String getEmailForEntity (OrganizationalEntity entity);
+    String getLanguageForEntity (OrganizationalEntity entity);
+
+
 
 
 ## ActorId
@@ -47,8 +73,15 @@ It's possible to specify a `DueDate` as parameter following ISO standard duratio
 
 Examples:
 
+ - 3 hours, 30 minutes: 3H 30M
+ - 1 day: 1D
+ - 1,500 milliseconds: 1500MS
  - `P3Y6M4DT12H30M5S` represents a duration of "three years, six months, four days, twelve hours, thirty minutes, and five seconds".
- - `P2D` represents 2 days
+
+Same format used in **Expiry Delay**:
+
+Regular expression: `([+-])?((\\d+)[Dd])?\\s*((\\d+)[Hh])?\\s*((\\d+)[Mm])?\\s*((\\d+)[Ss])?\\s*((\\d+)([Mm][Ss])?)?`
+
 
 [Wikipedia duration standard format](https://en.wikipedia.org/wiki/ISO_8601#Durations)
 
@@ -188,8 +221,31 @@ Source class:
 [EmailNotificationListener - github](https://github.com/kiegroup/jbpm/blob/6.5.x/jbpm-human-task/jbpm-human-task-core/src/main/java/org/jbpm/services/task/deadlines/notifications/impl/email/EmailNotificationListener.java)
 
 
+## Business Calendar
 
-# Form modeller
+- Can define business calendar in JBoss BPM Suite
+- Allows for custom definitions of work days, work hours, holidays
+
+
+Implement: `org.jbpm.process.core.timer.BusinessCalendar`
+
+    public long calculateBusinessTimeAsDuration (String timeExpression);
+    public Date calculateBusinessTimeAsDate (String timeExpression);
+    
+Business calendar deployment configured in `<environment-entries>` section of `kie-deployment-descriptor`:
+
+    <environment-entries>
+      <environment-entry>
+        <identifier>org.jbpm.process.core.timer.BusinessCalendarImpl</identifier>
+        <name>jbpm.business.calendar</name>
+      </environment-entry>
+    </environment-entries>
+
+
+
+Form modeller
+=============================================================================
+
 
 Form Modeller supports jXpath expressions but only to access field values (? to be verified the version)
 
