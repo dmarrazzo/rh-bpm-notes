@@ -60,11 +60,31 @@ There is an already good implementation really useful for debugging purposes.
     - Resolver: `reflection`
     - Parameters: *none*
 
-You can debug the process placing breakpoints on the event listeners:
+
+
+Otherwise, if you prefer have a proper debug session with your favourite java IDE
+
 
 - Start the server in debug mode:
 
         ./standalone.sh --debug
+
+- attach the IDE to the remote debugging port 8787.
+- place your breakpoints and run the process
+
+You can debug the process placing breakpoints on the event listeners.
+Another (simpler) option is to leverage a simple utility class, e.g.:
+
+	public static void debug(ProcessContext kcontext) {
+		System.out.println("Util.debug()");
+	}
+
+The designer place the method call in the "on entry" script of the task that he want to analyse (or "on exit" one).
+The designer sets a breakpoint in that method and when the method is reached he can inspect and the `kcontext` information.
+
+The latter technique has the drawback of being quite intrusive, because it requires an update of the process model. 
+
+**Warning:** the process runs in a transaction context with a default time out of 120 seconds, so if the debugging activities last more than that, you should incur in a runtime exception.
 
 ### Check the generated code
 
