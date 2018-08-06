@@ -154,6 +154,17 @@ Inside a kieserver:
     processService.startProcess(deploymentId ,processId, paramMap);
 ```
 
+Inside a WorkItemHandler, `runtimeManager` is provided at initialization time:
+
+
+	RuntimeEngine runtimeEngine = runtimeManager.getRuntimeEngine(ProcessInstanceIdContext.get());
+	KieSession kieSession2 = runtimeEngine.getKieSession();
+	Map<String, Object> startParams = new HashMap<>();
+	startParams.put("businessId", "id-"+n);
+	kieSession2.startProcess(processName, startParams );
+
+**Warning:** When `PER_PROCESS_INSTANCE` strategy in place, DON'T reuse the runtime engine, but get a new one for each new process to start.
+
 Import dependencies using `provided` for the scope.
 
 ```
@@ -165,13 +176,35 @@ Import dependencies using `provided` for the scope.
     </dependency>
 ```
 
-**Optional** tag should avoid the propagation of the dependency in chain. Not sure if it has impact on kieserver runtime.
+**Optional** tag should avoid the propagation of the dependency in chain. It's useful in case the code is in the Business Central.
 
 ## Insert Variable in Working Memory of a Process 
 
 Example
 
     kcontext.getKnowledgeRuntime().insert( application );
+
+## Adding a signal listener
+
+
+        import org.jbpm.process.instance.ProcessInstance;
+
+        (...)
+		InternalProcessRuntime processRuntime = (InternalProcessRuntime) processInstance.getKnowledgeRuntime().getProcessRuntime();
+		SignalManager signalManager = processRuntime.getSignalManager();
+		signalManager.addEventListener("test", listener);
+
+## Catching a closing process instance
+
+It's possible to ask a process to sent a signal when it complete:
+
+		piImpl.setSignalCompletion(true);
+
+`piImpl` is a `org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl` that you can retrieve from the kieSession.
+
+Conventionally, it sends a signal with the following *SignalRef*: `processInstanceCompleted:#{processInstanceId}`.
+
+The event payload is the `RuleFlowProcessInstance`, where it's possible to retrieve all the information on the closing instance.
 
 ## Multi thread tolerance
 
