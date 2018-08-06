@@ -60,12 +60,30 @@ DefaultUserInfo implements [UserInfo](https://github.com/kiegroup/droolsjbpm-kno
 
 
 
-## ActorId
+## User Assignment
 
-Add as input parameter of the HT
-You can leverage the initiator variable:
+Instead of using the task properties pane, user assignment can be done using Task input parameters:
 
- - declare `initiator` as `String`
+ - ActorId
+ - GroupId
+ - BusinessAdministratorId: users that can manage the task life cycle, change it reassign. 
+ - BusinessAdministratorGroupId
+ - TaskStakeholderId: can view and modify the task (not claiming, etc)
+ - ExcludedOwnerId: users that cannot see and perform the task
+ - RecipientId: notification receiver
+
+By default the user task administration is in charge of user: `Administrator` and group `Administrators`.
+This configuration can be changed using the following system properties:
+ - org.jbpm.ht.admin.user
+ - org.jbpm.ht.admin.group
+
+The user that started the process instance can be retrieved using the process variable `initiator`.
+In order to statically refer it, declare it in the process definition: `initiator` as `String`.
+
+### References
+
+- jbpm-human-task/jbpm-human-task-workitems/src/main/java/org/jbpm/services/task/wih/util/PeopleAssignmentHelper.java
+- jbpm-human-task/jbpm-human-task-core/src/main/resources/operations-dsl.mvel
 
 ## Due date
 
