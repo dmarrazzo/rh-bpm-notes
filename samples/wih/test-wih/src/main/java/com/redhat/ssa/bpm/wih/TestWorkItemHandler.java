@@ -24,6 +24,10 @@ public class TestWorkItemHandler implements WorkItemHandler {
 		System.out.println("TestWorkItemHandler.TestWorkItemHandler()");
 	}
 
+	public TestWorkItemHandler(ClassLoader classLoader) {
+		super();
+	}
+
 	public void executeWorkItem(WorkItem workItem, WorkItemManager manager) {
 		Map<String, Object> output = null;
 		System.out.println("TestWorkItemHandler.executeWorkItem() - workitem id: "+workItem.getId());
