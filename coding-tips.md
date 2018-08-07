@@ -186,22 +186,20 @@ Example
 
 ## Adding a signal listener
 
-
-        import org.jbpm.process.instance.ProcessInstance;
-
-        (...)
-		InternalProcessRuntime processRuntime = (InternalProcessRuntime) processInstance.getKnowledgeRuntime().getProcessRuntime();
-		SignalManager signalManager = processRuntime.getSignalManager();
-		signalManager.addEventListener("test", listener);
-
+    RuleFlowProcessInstance processInstance = (...)
+    
+    InternalProcessRuntime processRuntime = (InternalProcessRuntime) processInstance.getKnowledgeRuntime().getProcessRuntime();
+    SignalManager signalManager = processRuntime.getSignalManager();
+    retryHandlingListener.register(signalManager);
+    signalManager.addEventListener("test", listener);
+    
 ## Catching a closing process instance
 
 It's possible to ask a process to sent a signal when it complete:
 
-		piImpl.setSignalCompletion(true);
-
-`piImpl` is a `org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl` that you can retrieve from the kieSession.
-
+    RuleFlowProcessInstance processInstance = (...)
+    piImpl.setSignalCompletion(true);
+    
 Conventionally, it sends a signal with the following *SignalRef*: `processInstanceCompleted:#{processInstanceId}`.
 
 The event payload is the `RuleFlowProcessInstance`, where it's possible to retrieve all the information on the closing instance.
