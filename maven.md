@@ -1,6 +1,36 @@
 Maven survival guide
 ====================
 
+## Red Hat Process Automation Manager v7 Bill of Material (BOM)
+
+Bill of Material:
+
+	<dependencyManagement>
+		<dependencies>
+            <dependency>
+              <groupId>org.jboss.bom</groupId>
+              <artifactId>rhpam-platform-bom</artifactId>
+              <version>${version}</version>
+              <scope>import</scope>
+              <type>pom</type>
+            </dependency>
+		</dependencies>
+	</dependencyManagement>
+
+
+Version property:
+
+	<properties>
+		<version>7.0.2.GA-redhat-2</version>
+	</properties>
+
+
+| Product version | BOM Version        |
+|-----------------|--------------------|
+| 7.0.0           | 7.0.0.GA-redhat-3  |
+| 7.0.1           | 7.0.1.GA-redhat-1  |
+| 7.0.2           | 7.0.2.GA-redhat-2  |
+
 ## Red Hat Decision Manager v7 Bill of Material (BOM)
 
 Bill of Material
@@ -67,38 +97,15 @@ Version property:
 it is important for all Java plain execution:
 
 		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
+			<scope>provided</scope>
 		</dependency>
-
-## Red Hat Process Automation Manager v7 Bill of Material (BOM)
-
-Bill of Material:
-
-	<dependencyManagement>
-		<dependencies>
-            <dependency>
-              <groupId>org.jboss.bom</groupId>
-              <artifactId>rhpam-platform-bom</artifactId>
-              <version>${version}</version>
-              <scope>import</scope>
-              <type>pom</type>
-            </dependency>
-		</dependencies>
-	</dependencyManagement>
-
-
-Version property:
-
-	<properties>
-		<version>7.0.1.GA-redhat-1</version>
-	</properties>
-
-
-| Product version | BOM Version        |
-|-----------------|--------------------|
-| 7.0.0           | 7.0.0.GA-redhat-3  |
-| 7.0.1           | 7.0.1.GA-redhat-1  |
 
 
 ## Red Hat JBoss BPM Suite v6.4 Bill of material (BOM)
