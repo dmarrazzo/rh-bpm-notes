@@ -1,15 +1,26 @@
-# Red Hat JBoss BPM Suite and Red Hat Decision Manager Usage notes
+# Red Hat Process Automation Manager and Red Hat Decision Manager Usage notes
 
-This project collects my experiences on [Red Hat JBoss BPM Suite][1] and [Red Hat Decision Manager 7.0][2] (formerly known as JBoss BRMS).
+This project collects my experiences on [Red Hat Process Automation Manager][1] and [Red Hat Decision Manager 7.0][2] (formerly known as JBoss BRMS).
 
 There are documents and samples.
 
-[1]: https://www.redhat.com/en/technologies/jboss-middleware/bpm
-[2]: https://www.redhat.com/en/technologies/jboss-middleware/businessrules
+**Disclaimer** 
 
-## What's new
+- *Red Hat Process Automation Manager* was previously known as *Red Hat JBoss BPM Suite*. It is the productised version of the upstream project [jbpm](http://www.jbpm.org) 
+- *Red Hat Decision Manager* was previously known as *Red Hat JBoss BRMS*. It is the productised version of the upstream projects [drools](http://www.drools.org) and [optaplanner](http://www.optaplanner.org) 
 
-[Version 6.4 (6.5 community)](http://blog.athico.com/2016/10/drools-650final-is-available.html)
+
+
+[1]: https://www.redhat.com/en/technologies/jboss-middleware/process-automation-manager
+[2]: https://www.redhat.com/en/technologies/jboss-middleware/decision-manager
+
+## Introduction and news
+
+ - [Process management and business logic for responsive cloud-native applications: Red Hat Process Automation Manager is released](https://middlewareblog.redhat.com/2018/06/19/process-management-and-business-logic-for-responsive-cloud-native-applications-red-hat-process-automation-manager-is-released/)
+
+ - [From BPM and business automation to digital automation platforms](https://middlewareblog.redhat.com/2018/07/18/from-bpm-and-business-automation-to-digital-automation-platforms/)
+
+ - [Digital Automation Platforms: Injecting speed into application development](https://middlewareblog.redhat.com/2018/06/06/digital-automation-platforms-injecting-speed-into-application-development/)
 
 ## Other source of information on Red Hat JBoss BPM
 
@@ -31,11 +42,17 @@ There are documents and samples.
 
 - [Deep dive on case management](https://rh2017.smarteventscloud.com/connect/sessionDetail.ww?SESSION_ID=104878)
 
+- [Effective Case Management within a BPM Framework](https://middlewareblog.redhat.com/2018/06/19/effective-case-management-within-a-bpm-framework/)
 
 ### Video and Webinars
 
-- [Understand the kieserver REST APIs, monitoring the Java APIs traffic](https://youtu.be/v7Td4PsT1O8)
+ - [Understand the kieserver REST APIs, monitoring the Java APIs traffic](https://youtu.be/v7Td4PsT1O8)
 
-- [Webinar on simulation - BPMSim](https://www.youtube.com/watch?v=xNzM7A3MGJI&list=PLZPWJhPaP-K7u2cjmyhf2SknXX9HhyWrq)
+ - [Webinar on simulation - BPMSim](https://www.youtube.com/watch?v=xNzM7A3MGJI&list=PLZPWJhPaP-K7u2cjmyhf2SknXX9HhyWrq)
 
-- [Business process management in a microservices world](https://onlinexperiences.com/scripts/Server.nxp?LASCmd=AI:4;F:QS!10100&ShowKey=34303)
+ - [Business process management in a microservices world](https://onlinexperiences.com/scripts/Server.nxp?LASCmd=AI:4;F:QS!10100&ShowKey=34303)
+
+### Books
+
+ - **Free ebook** [Effective Business Process Management with JBoss BPM](https://developers.redhat.com/books/effective-business-process-management-jboss-bpm/)
+ - [Mastering jBPM 6](https://www.packtpub.com/application-development/mastering-jbpm6)
