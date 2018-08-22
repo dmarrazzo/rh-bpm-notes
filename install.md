@@ -367,47 +367,7 @@ TO BE INVESTIGATED
 
 [SSO Tison article](https://github.com/jboss-gpe-ref-archs/bpms_rhsso/blob/master/doc/bpms_rhsso.adoc)
 
-
-# Problems
-## Cannot login in Business Central (workbench)
-
-Create a new file `/standalone/deployments/business-central.war/WEB-INF/classes/ErraiService.properties` with the following content:
-
-    errai.bus.enable_sse_support=false
-
-add in `standalone.conf` the following line:
-
-    JAVA_OPTS="$JAVA_OPTS -Djava.security.egd=file:/dev/./urandom"
-
-If the problem persist, try to disable the workstation antivirus.
-
-Reference:
-
-[https://access.redhat.com/solutions/1183473]()
-
-## How to access maven repository?
-
-Add username/password in `~/.m2/settings.xml`
-
-    <server>
-      <id>guvnor-m2-repo</id>
-      <username>admin</username>
-      <password>admin</password>
-      <configuration>
-        <wagonProvider>httpclient</wagonProvider>
-        <httpConfiguration>
-          <all>
-            <usePreemptive>true</usePreemptive>
-          </all>
-        </httpConfiguration>
-      </configuration>
-    </server>
-
-Reference:
-[https://access.redhat.com/solutions/703423]()
-
-## System properties
-
+# System properties
 
  * org.uberfire.nio.git.dir: Location of the directory .niogit. Default: working directory
  * org.uberfire.nio.git.daemon.enabled: Enables/disables git daemon. Default: true
@@ -430,58 +390,6 @@ Reference:
  * org.kie.example.repositories: Folder from where demo repositories will be cloned. The demo repositories need to have been obtained and placed in this folder. Demo repositories can be obtained from the kie-wb-6.1.0-SNAPSHOT-example-repositories.zip artifact. This System Property takes precedence over org.kie.demo and org.kie.example. Default: Not used.
  * org.kie.demo: Enables external clone of a demo application from GitHub. This System Property takes precedence over org.kie.example. Default: true
  * org.kie.example: Enables example structure composed by Repository, Organization Unit and Project. Default: false
-
-## Internal git ssh
-
-to connect to an external ssh?
-
-     * org.uberfire.nio.git.ssh.cert.dir
-
-default working dir
-
-then .security
-
-there sha_id?
-
-Configure the passphrase
-
-     * org.uberfire.nio.git.ssh.passphrase
-
-## Internal git is not accessible
-
-Look for the <system-properties> tag and add the following:
-
-    <property name="org.uberfire.nio.git.ssh.host" value="yourserverdomain"/>
-
-Not sure if the following is useful:
-
-    <property name="org.uberfire.nio.git.daemon.host" value="yourserverdomain"/>
-
-Generic Solution?
-
-        <property name="org.uberfire.nio.git.daemon.host" value="0.0.0.0"/>
-        <property name="org.uberfire.nio.git.ssh.host" value="0.0.0.0"/>
-
-
-
-## Internal git offer ssh-dss
-Issue https://issues.jboss.org/browse/RHBRMS-243
-
-####workaround:
-
-Add to ~/.ssh/config the followings:
-
-    Host *
-        VerifyHostKeyDNS no
-        StrictHostKeyChecking no
-        HostKeyAlgorithms +ssh-dss
-        UserKnownHostsFile /dev/null
-
-
-Old ssh does not accept `+`, so change with:
-
-    HostKeyAlgorithms ssh-dss
-
 
 ## LDAP
 
@@ -527,3 +435,110 @@ change to
   </alternatives>
 
 Additional you need to define the system property jbpm.usergroup.callback.properties and point to your propertie file (WEB-INF/jbpm.usergroup.callback.properties)
+
+
+
+Problems
+============================================================================
+
+## Cannot login in Business Central (workbench)
+
+Create a new file `/standalone/deployments/business-central.war/WEB-INF/classes/ErraiService.properties` with the following content:
+
+    errai.bus.enable_sse_support=false
+
+add in `standalone.conf` the following line:
+
+    JAVA_OPTS="$JAVA_OPTS -Djava.security.egd=file:/dev/./urandom"
+
+If the problem persist, try to disable the workstation antivirus.
+
+Reference:
+
+[https://access.redhat.com/solutions/1183473]()
+
+## How to access maven repository?
+
+Add username/password in `~/.m2/settings.xml`
+
+    <server>
+      <id>guvnor-m2-repo</id>
+      <username>admin</username>
+      <password>admin</password>
+      <configuration>
+        <wagonProvider>httpclient</wagonProvider>
+        <httpConfiguration>
+          <all>
+            <usePreemptive>true</usePreemptive>
+          </all>
+        </httpConfiguration>
+      </configuration>
+    </server>
+
+Reference:
+[https://access.redhat.com/solutions/703423]()
+
+## Internal git ssh
+
+to connect to an external ssh?
+
+     * org.uberfire.nio.git.ssh.cert.dir
+
+default working dir
+
+then .security
+
+there sha_id?
+
+Configure the passphrase
+
+     * org.uberfire.nio.git.ssh.passphrase
+
+## Internal git is not accessible
+
+Look for the <system-properties> tag and add the following:
+
+    <property name="org.uberfire.nio.git.ssh.host" value="yourserverdomain"/>
+
+Not sure if the following is useful:
+
+    <property name="org.uberfire.nio.git.daemon.host" value="yourserverdomain"/>
+
+Generic Solution?
+
+        <property name="org.uberfire.nio.git.daemon.host" value="0.0.0.0"/>
+        <property name="org.uberfire.nio.git.ssh.host" value="0.0.0.0"/>
+
+
+
+## Internal git offer ssh-dss
+Issue https://issues.jboss.org/browse/RHBRMS-243
+
+#### workaround:
+
+Add to ~/.ssh/config the followings:
+
+    Host *
+        VerifyHostKeyDNS no
+        StrictHostKeyChecking no
+        HostKeyAlgorithms +ssh-dss
+        UserKnownHostsFile /dev/null
+
+
+Old ssh does not accept `+`, so change with:
+
+    HostKeyAlgorithms ssh-dss
+
+
+## inotify watches reached
+
+Exception:
+
+    Caused by: java.io.IOException: User limit of inotify watches reached
+    	at sun.nio.fs.LinuxWatchService$Poller.implRegister(LinuxWatchService.java:264)
+    
+Add the following lines to /etc/sysctl.conf:
+
+    fs.inotify.max_user_watches = 524288
+    fs.inotify.max_user_instances = 524288
+    
