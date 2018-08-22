@@ -26,6 +26,8 @@ There are documents and samples.
 
 ### Blogs
 
+- [Reducing data inconsistencies with Red Hat Process Automation Manager](https://developers.redhat.com/blog/2018/08/22/reducing-data-inconsistencies-with-red-hat-process-automation-manager/)
+
 - [Demystifying the Business Central repository](http://www.opensourcerers.org/demystifying-business-central-repository/)
 
 - [Using loosely coupled rules in your process](http://www.opensourcerers.org/loose-coupled-rules/)
