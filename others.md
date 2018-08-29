@@ -3,9 +3,11 @@ Other Related Products Information
 
 ## Developing
 
-- eclipse UML visualizer: ObjectAid UML Explorer
+### eclipse UML visualizer: ObjectAid UML Explorer
 
-[Simian (Similarity Analyser) identifies duplication in code and rules](https://www.harukizaemon.com/simian/index.html)
+In the 'Add Repository' dialog, enter this information and press 'OK':
+- Name: `ObjectAid UML Explorer`
+- URL: `http://www.objectaid.com/update/current`
 
 ## JBoss EAP 6.4
 
@@ -251,3 +253,9 @@ To remotely connect to a database using the TCP server, use the following driver
     JAVA_OPTS="$JAVA_OPTS -Dmysql.host.ip=127.0.0.1"
     JAVA_OPTS="$JAVA_OPTS -Dmysql.host.port=3306"
     JAVA_OPTS="$JAVA_OPTS -Dmysql.bpms.schema=bpms"
+
+
+# Interesting information
+
+- [Simian (Similarity Analyser) identifies duplication in code and rules](https://www.harukizaemon.com/simian/index.html)
+- [Bridge Java and .net](http://jni4net.com/)
