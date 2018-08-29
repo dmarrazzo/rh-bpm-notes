@@ -161,6 +161,14 @@ OPERATION=role1,role2,roleN
 
 ## Case service
 
+Dependency:
+
+		<dependency>
+			<groupId>org.jbpm</groupId>
+			<artifactId>jbpm-services-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
 Use the case APIs:
 
     org.jbpm.casemgmt.api.CaseService caseService =  org.jbpm.services.api.service.ServiceRegistry.get().service(org.jbpm.services.api.service.ServiceRegistry.CASE_SERVICE);
