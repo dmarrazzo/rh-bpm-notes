@@ -158,12 +158,23 @@ Inside a WorkItemHandler, `runtimeManager` is provided at initialization time:
 
 
 	RuntimeEngine runtimeEngine = runtimeManager.getRuntimeEngine(ProcessInstanceIdContext.get());
-	KieSession kieSession2 = runtimeEngine.getKieSession();
+	KieSession kieSession = runtimeEngine.getKieSession();
 	Map<String, Object> startParams = new HashMap<>();
 	startParams.put("businessId", "id-"+n);
-	kieSession2.startProcess(processName, startParams );
+	kieSession.startProcess(processName, startParams );
 
 **Warning:** When `PER_PROCESS_INSTANCE` strategy in place, DON'T reuse the runtime engine, but get a new one for each new process to start.
+
+
+Remind to **free up** the resources:
+
+    runtimeManager.disposeRuntimeEngine(runtimeEngine);
+
+Retrieve the runtimeEngine when `PER_PROCESS_INSTANCE` strategy in place:
+
+	Context<?> context = new ProcessInstanceIdContext(parentProcessInstanceId);
+	RuntimeEngine runtimeEngine = runtimeManager.getRuntimeEngine(context);
+
 
 Import dependencies using `provided` for the scope.
 
@@ -177,6 +188,11 @@ Import dependencies using `provided` for the scope.
 ```
 
 **Optional** tag should avoid the propagation of the dependency in chain. It's useful in case the code is in the Business Central.
+
+## Retrieve runtime manager
+
+    KieRuntime kruntime = ((ProcessInstance) getProcessInstance()).getKnowledgeRuntime();
+    RuntimeManager manager = (RuntimeManager) kruntime.getEnvironment().get(EnvironmentName.RUNTIME_MANAGER);
 
 ## Insert Variable in Working Memory of a Process 
 
@@ -231,4 +247,14 @@ since version 6 timers can be configured with valid ISO8601 date format that sup
  - `P2D` represents 2 days
 
 [Wikipedia duration standard format](https://en.wikipedia.org/wiki/ISO_8601#Durations)
+
+# Service Registry
+
+Service Registry must be used in a kie-server (CDI not allowed):
+
+[ServiceRegistry](https://github.com/kiegroup/jbpm/blob/master/jbpm-services/jbpm-services-api/src/main/java/org/jbpm/services/api/service/ServiceRegistry.java)
+
+Usage example:
+
+    RuntimeDataService runtimeDataService = (RuntimeDataService) ServiceRegistry.get().service(ServiceRegistry.RUNTIME_DATA_SERVICE);
 
