@@ -542,3 +542,15 @@ Add the following lines to /etc/sysctl.conf:
     fs.inotify.max_user_watches = 524288
     fs.inotify.max_user_instances = 524288
     
+## security strength of SHA-1 digest algorithm 
+
+Exception:
+
+    [org.apache.sshd.server.session.ServerSession] (sshd-SshServer[36dcd1db]-nio2-thread-3) Exception caught: java.security.InvalidKeyException: The security strength of SHA-1 digest algorithm is not sufficient for this key size
+    	at sun.security.provider.DSA.checkKey(DSA.java:104)
+    	at sun.security.provider.DSA.engineInitSign(DSA.java:136)
+
+
+Add the following system property:
+
+    <property name="org.uberfire.nio.git.ssh.algorithm" value="RSA"/>
