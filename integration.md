@@ -1,6 +1,14 @@
-# Work Item Handler
+# Work Item Handler (WIH)
 
-To get the icon place the png in the `global` folder of the process project.
+Using the Service registry to define a WIH:
+
+[https://docs.jboss.org/jbpm/release/6.5.0.Final/jbpm-docs/html_single/#d0e29362]()
+
+Beside the service registry, you can define a new WIH with the following artefacts:
+
+- create the wid file (just for the editor sake)
+- add the dependency in pom.xml
+- define it in the kie-deployment-descriptor using the MVEL initialization script e.g. `new org.jbpm.process.workitem.webservice.WebServiceWorkItemHandler(ksession, classLoader)`
 
 Init MVEL parameters:
 
@@ -11,13 +19,16 @@ Init MVEL parameters:
         entityManagerFactory
         kieContainer
 
-Service registry:
-https://docs.jboss.org/jbpm/release/6.5.0.Final/jbpm-docs/html_single/#d0e29362
+
+### Custom icons for WIH
+
+If you add the WIH in `WorkDefinition.wid` the icon should be included in the `global` folder of the project.
+
+Otherwise, if you create another wid file you can add the icon everywhere in the resources folder.
 
 
-## wid file to get pre-populated fields:
+### Wid file to get pre-populated fields:
 
-https://issues.jboss.org/browse/JBPM-5416
 
 ```
 "parameters" : [
@@ -38,6 +49,9 @@ or if you have an existing enum class in workbench you could do:
 ]
 ```
 
+Reference:
+
+- [https://issues.jboss.org/browse/JBPM-5416]()
 
 # Service Task
 
