@@ -1,6 +1,7 @@
-# Install
+Install
+======================================
 
-## Installation
+## Graphical Installation BPM Suite
 
 **Prerequisite**: JDK, JBoss EAP 6.4.8
 
@@ -8,15 +9,16 @@ Launch:
 
     $ java -jar jboss-brms-6.3.0.GA-installer.jar
 
-### Installing RHDM 7
+## Installing RHDM 7
 
 - standalone-full.xml
 - kieserver prop
 
+Sample script: 
 https://github.com/jbossdemocentral/rhdm7-install-demo/blob/dm7ga/init.sh
 
 
-### Installing RHPAM 7
+## Installing RHPAM 7
 
 - EAP 7.1
 - add users
@@ -24,6 +26,7 @@ https://github.com/jbossdemocentral/rhdm7-install-demo/blob/dm7ga/init.sh
     ./add-user.sh -a -u bpmsAdmin -p password --role admin,process-admin,developer,analyst,user,manager,rest-all,kie-server
 
 
+## Installing Red Hat BPM Suite
 
 ### Installing on EAP 7
 
@@ -57,7 +60,15 @@ https://github.com/jbossdemocentral/rhdm7-install-demo/blob/dm7ga/init.sh
 
     - configure maven
 
+### Disable datasource lookup in Business Central
 
+Add the following setting in `business-central.war/WEB-INF/classes/datasource-management.properties`
+
+    datasource.management.disableDefaultDrivers=true
+
+known issue: 
+
+ - [datasource.management.disableDefaultDrivers parameter does not disable default drivers in RHPAM 7.0.1](https://issues.jboss.org/browse/RHPAM-1366)
 
 ### Configure Persistence
 
