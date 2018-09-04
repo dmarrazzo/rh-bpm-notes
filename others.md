@@ -254,6 +254,9 @@ To remotely connect to a database using the TCP server, use the following driver
     JAVA_OPTS="$JAVA_OPTS -Dmysql.host.port=3306"
     JAVA_OPTS="$JAVA_OPTS -Dmysql.bpms.schema=bpms"
 
+# CI/CD
+
+the post-commit hook script check if the commit touched the POM file, and if it's the case you could also check if it was a version bump, then the script pushes the changes triggering the pipeline.
 
 # Interesting information
 

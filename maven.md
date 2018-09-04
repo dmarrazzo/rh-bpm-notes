@@ -31,6 +31,10 @@ Version property:
 | 7.0.1           | 7.0.1.GA-redhat-1  |
 | 7.0.2           | 7.0.2.GA-redhat-2  |
 
+Reference:
+
+[What is the mapping between RHPAM product and maven library version?](https://access.redhat.com/solutions/3405361)
+
 ## Red Hat Decision Manager v7 Bill of Material (BOM)
 
 Bill of Material
@@ -109,6 +113,8 @@ it is important for all Java plain execution:
 
 
 ## Red Hat JBoss BPM Suite v6.4 Bill of material (BOM)
+
+[What is the mapping between BRMS / BPM Suite product and maven library version?](https://access.redhat.com/solutions/2985841)
 
 To simplify the dependency management you can add this:
 
