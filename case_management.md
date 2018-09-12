@@ -62,7 +62,7 @@ Article that describe the new capabilities:
             "parameters" : [
               "Condition" : new StringDataType()
             ],
-            "displayName" : "Milestone",
+            "displayName" : "Milestone",org.kie.api.runtime.process.CaseData
             "icon" : "defaultmilestoneicon.png",
             "category" : "Milestone"
           ],
@@ -70,7 +70,7 @@ Article that describe the new capabilities:
           [
             "name" : "StartCaseInstance",
             "parameters" : [
-              "DeploymentId" : new StringDataType(),
+              "DeploymentId" : new StringDorg.kie.api.runtime.process.CaseDataataType(),
               "CaseDefinitionId" : new StringDataType(),
               "Data_" : new StringDataType(),
               "UserRole_" : new StringDataType(),
@@ -111,6 +111,8 @@ In order to get a more readable expression:
 1. At process level add this import: `org.kie.api.runtime.process.CaseData`
 2. Leverage the **OOPath**
 
+    import org.kie.api.runtime.process.CaseData
+    
 In this way the previous condition can be expressed as:
 
     CaseData(data["ok"] == true)
@@ -122,7 +124,7 @@ Roles simplify the dynamic role assignment, they work like variables, used at ta
 
 
 ## Case Management Security
-
+org.kie.api.runtime.process.CaseData
 By default case instance security is enabled. It does protect each case instance from being seen by users who do not belong to a case in anyway. In other words, if you are not part of case role assignment (either assigned as user or a group member) then you won't be able to get access to the case instance.
 
 
@@ -143,11 +145,11 @@ Above access is just one part of the security for case instances. In addition, t
 - MODIFY_COMMENT
 
 by default three of these operations:
-
+org.kie.api.runtime.process.CaseData
 - CANCEL_CASE
 - DESTROY_CASE
 - REOPEN_CASE
-
+    CaseData ( data["decision"] == "AskForDetails" )
 are protected with following roles:
 
 - owner
@@ -177,17 +179,20 @@ Use the case APIs:
 
 ## Case Rules
 
+    import org.kie.api.runtime.processorg.kie.api.runtime.process.CaseData.CaseData;
+    
     rule "ask user for details"
     
     when 
-        CaseData ( data["decision"] == "AskForDetails" )
-              
+        $caseData : CaseFileInstance()
+        String(this == "AskForDetails") from $caseData.getData("decision")
+                  
     then 
         $caseData.remove("decision");
         CaseService caseService = (CaseService) ServiceRegistry.get().service(ServiceRegistry.CASE_SERVICE);
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("reason", "How did it happen?");
-        caseService.addDynamicTask($caseData.getCaseId(), caseService.newHumanTaskSpec("Please provide additional details", "Action", "insured", null, parameters));
+        caseService.addDynamicTask($corg.kie.api.runtime.process.CaseDataaseData.getCaseId(), caseService.newHumanTaskSpec("Please provide additional details", "Action", "insured", null, parameters));
         
     end
 
