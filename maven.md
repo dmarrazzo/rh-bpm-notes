@@ -1,7 +1,33 @@
 Maven survival guide
 ====================
 
-## Red Hat Process Automation Manager v7 Bill of Material (BOM)
+Bill of Material:
+
+## Red Hat Process Automation Manager v7.1 Bill of Material (BOM)
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.redhat.ba</groupId>
+				<artifactId>ba-platform-bom</artifactId>
+				<version>${version}</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+Version property:
+
+	<properties>
+		<version>7.1.0.GA-redhat-00003</version>
+	</properties>
+
+| Product version | BOM Version        |
+|-----------------|--------------------|
+| 7.1.0           | 7.1.0.GA-redhat-00003  |
+
+## Red Hat Process Automation Manager v7.0 Bill of Material (BOM)
 
 Bill of Material:
 
@@ -35,7 +61,7 @@ Reference:
 
 [What is the mapping between RHPAM product and maven library version?](https://access.redhat.com/solutions/3405361)
 
-## Red Hat Decision Manager v7 Bill of Material (BOM)
+## Red Hat Decision Manager v7.0 Bill of Material (BOM)
 
 Bill of Material
 

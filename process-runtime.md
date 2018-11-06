@@ -196,7 +196,22 @@ Missing implementation:
 - Send Task and Receive Task
 - Manual Task
 
-The process developer can fill the gap providing the implementation for this tasks through the standard work item handler registration mechanism
+The process developer can fill the gap providing the implementation for this tasks through the standard work item handler registration mechanism.
+
+Dummy implementation:
+
+        <work-item-handler>
+            <resolver>mvel</resolver>
+            <identifier>new org.jbpm.bpmn2.handler.ReceiveTaskHandler(ksession)</identifier>
+            <parameters/>
+            <name>Receive Task</name>
+        </work-item-handler>
+        <work-item-handler>
+            <resolver>mvel</resolver>
+            <identifier>new org.jbpm.bpmn2.handler.SendTaskHandler()</identifier>
+            <parameters/>
+            <name>Send Task</name>
+        </work-item-handler>
 
 ## References
 

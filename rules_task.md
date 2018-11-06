@@ -6,6 +6,10 @@ Input are placed in working memory and then remove
 Output are disregarded
 [RuleSetNodeInstance][1]
 
+# New decoupled rule and decision WIH
+
+http://mswiderski.blogspot.it/2017/04/control-business-rules-execution-from.html
+
 ## Runtime Strategies
 
 Using **per process instance** as runtime strategy, you will find the same kiesession through all the interaction with the process. This will ensure that the working memory follow the process instance life cycle. The working memory is saved and survive the server restart.

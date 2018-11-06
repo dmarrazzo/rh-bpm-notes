@@ -10,7 +10,7 @@ http://mvel.documentnode.com/
 There are many place where you can place MVEL expressions.
 For example in human task subject field:
 
-    #{varible}
+    #{variable}
 
 ## Variable
 

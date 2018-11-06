@@ -447,6 +447,10 @@ change to
 
 Additional you need to define the system property jbpm.usergroup.callback.properties and point to your propertie file (WEB-INF/jbpm.usergroup.callback.properties)
 
+### Other info
+
+
+[Video](https://youtu.be/0UpT92-GIxc) and [configuration](https://github.com/BalakrishnanBalasubramanian/ldap-jbpm-auth)
 
 
 Problems
@@ -541,7 +545,7 @@ Old ssh does not accept `+`, so change with:
     HostKeyAlgorithms ssh-dss
 
 
-## inotify watches reached
+## inotify watches reached••••••••
 
 Exception:
 

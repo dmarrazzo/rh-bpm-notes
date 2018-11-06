@@ -26,6 +26,8 @@ There are documents and samples.
 
 ### Blogs
 
+- [The Ultimate Guide to Business Central and Git](http://porcelli.me/rhba/business-central/git/2018/11/05/business-central-git.html)
+
 - [Reducing data inconsistencies with Red Hat Process Automation Manager](https://developers.redhat.com/blog/2018/08/22/reducing-data-inconsistencies-with-red-hat-process-automation-manager/)
 
 - [Demystifying the Business Central repository](http://www.opensourcerers.org/demystifying-business-central-repository/)
