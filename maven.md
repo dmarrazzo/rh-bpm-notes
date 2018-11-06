@@ -249,6 +249,21 @@ This is used to build the kjar package
 		</plugins>
 	</build>
 
+### Error Missing parameter for pluginExecutionFilter
+
+Eclipse has a problem with the version 7.1 of the plugin:
+
+()[https://issues.jboss.org/browse/DROOLS-3236]
+
+Work around: use a previous release
+
+	<plugin>
+		<groupId>org.kie</groupId>
+		<artifactId>kie-maven-plugin</artifactId>
+		<version>7.9.0.Final</version>
+		<extensions>true</extensions>
+	</plugin>
+
 
 ## BPM Internal Maven repository
 
