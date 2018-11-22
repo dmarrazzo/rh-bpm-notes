@@ -20,78 +20,40 @@ Bill of Material:
 Version property:
 
 	<properties>
-		<version>7.1.0.GA-redhat-00003</version>
+		<version>7.1.1.GA-redhat-00001</version>
 	</properties>
 
-| Product version | BOM Version        |
-|-----------------|--------------------|
+| Product version | BOM Version            |
+|-----------------|------------------------|
 | 7.1.0           | 7.1.0.GA-redhat-00003  |
-
-## Red Hat Process Automation Manager v7.0 Bill of Material (BOM)
-
-Bill of Material:
-
-	<dependencyManagement>
-		<dependencies>
-            <dependency>
-              <groupId>org.jboss.bom</groupId>
-              <artifactId>rhpam-platform-bom</artifactId>
-              <version>${version}</version>
-              <scope>import</scope>
-              <type>pom</type>
-            </dependency>
-		</dependencies>
-	</dependencyManagement>
+| 7.1.1           | 7.1.1.GA-redhat-00001  |
 
 
-Version property:
+## Dependencies
 
-	<properties>
-		<version>7.0.2.GA-redhat-2</version>
-	</properties>
+### Basic lib
 
-
-| Product version | BOM Version        |
-|-----------------|--------------------|
-| 7.0.0           | 7.0.0.GA-redhat-3  |
-| 7.0.1           | 7.0.1.GA-redhat-1  |
-| 7.0.2           | 7.0.2.GA-redhat-2  |
-
-Reference:
-
-[What is the mapping between RHPAM product and maven library version?](https://access.redhat.com/solutions/3405361)
-
-## Red Hat Decision Manager v7.0 Bill of Material (BOM)
-
-Bill of Material
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.jboss.bom.rhdm</groupId>
-				<artifactId>rhdm-platform-bom</artifactId>
-				<version>${version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
-Version property:
-
-	<properties>
-		<version>7.0.1.GA-redhat-2</version>
-	</properties>
+    	<dependency>
+    		<groupId>org.kie</groupId>
+    		<artifactId>kie-api</artifactId>
+    		<scope>provided</scope>
+    	</dependency>
+    	<dependency>
+    		<groupId>org.drools</groupId>
+    		<artifactId>drools-compiler</artifactId>
+    		<scope>provided</scope>
+    	</dependency>
 
 
-| Product version | BOM Version        |
-|-----------------|--------------------|
-| 7.0.0           | 7.0.0.GA-redhat-2  |
-| 7.0.1           | 7.0.1.GA-redhat-2  |
+### DMN
 
-
+		<dependency>
+			<groupId>org.kie</groupId>
+			<artifactId>kie-dmn-core</artifactId>
+		</dependency>
 
 ### Business Optimizer dependencies
+
 
 	<dependencies>
 		<dependency>
@@ -122,7 +84,7 @@ Version property:
 		</dependency>
 	</dependencies>
 
-## Logging
+### Logging
 
 it is important for all Java plain execution:
 
@@ -138,53 +100,7 @@ it is important for all Java plain execution:
 		</dependency>
 
 
-## Red Hat JBoss BPM Suite v6.4 Bill of material (BOM)
-
-[What is the mapping between BRMS / BPM Suite product and maven library version?](https://access.redhat.com/solutions/2985841)
-
-To simplify the dependency management you can add this:
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.jboss.bom.brms</groupId>
-				<artifactId>jboss-brms-bpmsuite-platform-bom</artifactId>
-				<version>6.4.7.GA-redhat-1</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
-Versions:
-
- - 6.4.6.GA-redhat-1
- - 6.4.5.GA-redhat-3
- - 6.4.4.GA-redhat-3
- - 6.4.3.GA-redhat-2
- - 6.4.2.GA-redhat-2
- - 6.4.1.GA-redhat-3
- - 6.4.0.GA-redhat-2
-
-
-You don't need to configure the dependency version number, because it's centrally handled by the BOM.
-
-
-Basic lib:
-
-    	<dependency>
-    		<groupId>org.kie</groupId>
-    		<artifactId>kie-api</artifactId>
-    		<scope>provided</scope>
-    	</dependency>
-    	<dependency>
-    		<groupId>org.drools</groupId>
-    		<artifactId>drools-compiler</artifactId>
-    		<scope>provided</scope>
-    	</dependency>
-
-
-JPA:
+### JPA
 
     	<dependency>
     		<groupId>org.jbpm</groupId>
@@ -192,21 +108,21 @@ JPA:
     		<scope>provided</scope>
     	</dependency>
 
-Testing:
+### JBPM Testing
 
     <dependency>
         	<groupId>org.jbpm</groupId>
         	<artifactId>jbpm-test</artifactId>
     </dependency>
 
-Human Task:
+### Human Task
 
     <dependency>
       <groupId>org.jbpm</groupId>
       <artifactId>jbpm-human-task-core</artifactId>
     </dependency>
 
-Kie runtime services
+### Kie runtime services
 
     <dependency>
       <groupId>org.jbpm</groupId>
@@ -225,16 +141,7 @@ Kie runtime services
       <artifactId>jbpm-services-ejb-impl</artifactId>
     </dependency>
 
-Java EE (do not use in bpm project):
-
-    <dependency>
-      <groupId>javax</groupId>
-      <artifactId>javaee-api</artifactId>
-      <version>6.0</version>
-    </dependency>
-
-
-## kie plugin
+### kie plugin
 
 This is used to build the kjar package
 
@@ -248,6 +155,17 @@ This is used to build the kjar package
 			</plugin>
 		</plugins>
 	</build>
+
+### Java EE 
+
+**Warning: do not use in bpm project**
+
+    <dependency>
+      <groupId>javax</groupId>
+      <artifactId>javaee-api</artifactId>
+      <version>6.0</version>
+    </dependency>
+
 
 ### Error Missing parameter for pluginExecutionFilter
 
@@ -487,11 +405,12 @@ Add to the `pom.xml`
 
 	<build>
 		<plugins>
-
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>1.2.1</version>
+				<!-- WARNING: This configuration must be run with "mvn exec:java" not "mvn exec:exec". -->
+				<!-- It is impossible to write a configuration that is compatible with both exec:java and exec:exec -->
 				<executions>
 					<execution>
 						<goals>
@@ -501,16 +420,21 @@ Add to the `pom.xml`
 				</executions>
 				<configuration>
 					<mainClass>client.Main</mainClass>
+					<arguments>
+						<argument>-Xms256m</argument>
+					</arguments>
 				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
 
 then issue the following command:
 
-    mvn -Dkey=value exec:java -Dexec.mainClass=com.yourcompany.yourclass \
-        -Dexec.args="arg1 arg2 arg3"
+    mvn exec:java 
+
+Optionally, it's possible to override configuration adding following parameters:
+
+    -Dexec.mainClass=com.yourcompany.yourclass -Dexec.args="arg1 arg2 arg3" -Dkey=value
 
 ### Config the manifest main class
 
@@ -557,3 +481,102 @@ then issue the following command:
   </configuration>
 </plugin>
 ```
+
+Former Information
+===============
+
+## Red Hat Process Automation Manager v7.0 Bill of Material (BOM)
+
+Bill of Material:
+
+	<dependencyManagement>
+		<dependencies>
+            <dependency>
+              <groupId>org.jboss.bom</groupId>
+              <artifactId>rhpam-platform-bom</artifactId>
+              <version>${version}</version>
+              <scope>import</scope>
+              <type>pom</type>
+            </dependency>
+		</dependencies>
+	</dependencyManagement>
+
+
+Version property:
+
+	<properties>
+		<version>7.0.2.GA-redhat-2</version>
+	</properties>
+
+
+| Product version | BOM Version        |
+|-----------------|--------------------|
+| 7.0.0           | 7.0.0.GA-redhat-3  |
+| 7.0.1           | 7.0.1.GA-redhat-1  |
+| 7.0.2           | 7.0.2.GA-redhat-2  |
+
+Reference:
+
+[What is the mapping between RHPAM product and maven library version?](https://access.redhat.com/solutions/3405361)
+
+## Red Hat Decision Manager v7.0 Bill of Material (BOM)
+
+Bill of Material
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.jboss.bom.rhdm</groupId>
+				<artifactId>rhdm-platform-bom</artifactId>
+				<version>${version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+Version property:
+
+	<properties>
+		<version>7.0.1.GA-redhat-2</version>
+	</properties>
+
+
+| Product version | BOM Version        |
+|-----------------|--------------------|
+| 7.0.0           | 7.0.0.GA-redhat-2  |
+| 7.0.1           | 7.0.1.GA-redhat-2  |
+
+
+
+## Red Hat JBoss BPM Suite v6.4 Bill of material (BOM)
+
+[What is the mapping between BRMS / BPM Suite product and maven library version?](https://access.redhat.com/solutions/2985841)
+
+To simplify the dependency management you can add this:
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.jboss.bom.brms</groupId>
+				<artifactId>jboss-brms-bpmsuite-platform-bom</artifactId>
+				<version>6.4.7.GA-redhat-1</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+Versions:
+
+ - 6.4.6.GA-redhat-1
+ - 6.4.5.GA-redhat-3
+ - 6.4.4.GA-redhat-3
+ - 6.4.3.GA-redhat-2
+ - 6.4.2.GA-redhat-2
+ - 6.4.1.GA-redhat-3
+ - 6.4.0.GA-redhat-2
+
+
+You don't need to configure the dependency version number, because it's centrally handled by the BOM.
+
