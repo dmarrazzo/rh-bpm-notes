@@ -456,6 +456,18 @@ Additional you need to define the system property jbpm.usergroup.callback.proper
 Problems
 ============================================================================
 
+## Process Definitions could not be loaded. Check if the jBPM Capabilities are enabled and if the remote server is correctly set up. 
+
+If the Process Server for some misconfiguration (usually on the DBMS) starts without the process capability, the Business Central will store a server configuration without this capability. 
+When later, the Process Server configuration is fixed, the Business Central will retain the capabilities defined at the first connection.
+To solve this problem:
+
+1. Open Execution Servers page
+2. Near the broken server configuration name, **click** the **engine wheel** and then the **Remove** button
+3. Restart the kieserver to repeat the registration
+
+
+
 ## Cannot login in Business Central (workbench)
 
 Create a new file `/standalone/deployments/business-central.war/WEB-INF/classes/ErraiService.properties` with the following content:
