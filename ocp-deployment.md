@@ -170,6 +170,10 @@ In other words, you have to delete the pod, in this way OCP will create and star
 
 	oc delete pod <podname>
 
+### Application exposed URLs
+
+	oc get routes
+
 ### environment variables
 
 List all
