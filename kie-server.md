@@ -1,6 +1,5 @@
-# Kie Server 
-
-# Configuration
+Kie Server Configuration
+===========================================================
 
 **controller** is the BC
 Each kie server can managed by more than a controller.
@@ -130,15 +129,8 @@ http://localhost:8080/kie-server/services/rest/server/containers/{container-name
 
 if the container-name has a version then the routing layer acts as a pass-through. 
 
-## Retrieve all the facts
-
-http://stackoverflow.com/questions/34339791/kie-execution-server-guided-rule-inserted-fact-how-to-get-it-in-java
-solo XSTREAM !!!
-
-	commands.add(cmdFactory.newGetObjects("objects"));
-
-
-# KieServer Extensions
+KieServer Extensions
+===========================================================
 
 [Extending KIE Server capabilities](http://mswiderski.blogspot.com/2015/12/extending-kie-server-capabilities.html)
 
@@ -148,69 +140,73 @@ There are 3 extension types:
 - [Extend KIE Server client with new capabilities](http://mswiderski.blogspot.com/2015/12/kie-server-extend-kie-server-client.html) - to add the new capabilities in the client APIs
 - [Extend KIE Server with additional transport](http://mswiderski.blogspot.com/2015/12/kie-server-extend-kie-server-with.html)
 
+
+
 ## jBPM Services
 
-object	KModuleDeploymentService  (id=648)	
-object	BPMN2DataServiceImpl  (id=655)	
-object	ProcessServiceImpl  (id=14234)	
+	object	KModuleDeploymentService  (id=648)	
+	object	BPMN2DataServiceImpl  (id=655)	
+	object	ProcessServiceImpl  (id=14234)	
 
-org.jbpm.services.api.ProcessService
-- startProcess(String, String)
-
-
-object	UserTaskServiceImpl  (id=14237)	
-
-object	RuntimeDataServiceImpl  (id=14187)	
-org.jbpm.services.api.RuntimeDataService
-This service provides an interface to retrieve data about the runtime, including the following:
- * <ul>
- * 	<li>process instances</li>
- * 	<li>process definitions</li>
- * 	<li>node instance information</li>
- * 	<li>variable information</li>
- * </ul>
+	org.jbpm.services.api.ProcessService
+	- startProcess(String, String)
 
 
+	object	UserTaskServiceImpl  (id=14237)	
+	
+	object	RuntimeDataServiceImpl  (id=14187)	
+	org.jbpm.services.api.RuntimeDataService
+	This service provides an interface to retrieve data about the runtime, including the following:
+	 * <ul>
+	 * 	<li>process instances</li>
+	 * 	<li>process definitions</li>
+	 * 	<li>node instance information</li>
+	 * 	<li>variable information</li>
+	 * </ul>
+	
+	
 
-object	ExecutorServiceImpl  (id=14171)	
-Entry point of the executor component. Application should always talk
-via this service to ensure all internals are properly initialized
+	object	ExecutorServiceImpl  (id=14171)	
+	Entry point of the executor component. Application should always talk
+	via this service to ensure all internals are properly initialized
+	
+	object	FormManagerServiceImpl  (id=14180)	
+	object	QueryServiceImpl  (id=14254)	
+	object	KieServerRegistryImpl  (id=14262)	
+	
+	<map>
+	  <entry>
+	    <string>Method</string>
+	    <string>PUT</string>
+	  </entry>
+	  <entry>
+	    <string>Url</string>
+	    <string>http://localhost:8090/rest</string>
+	  </entry>
+	  <entry>
+	    <string>Content-Type</string>
+	    <string>application/json</string>
+	  </entry>
+	
+	  <entry>
+	    <string>Content</string>
+	<model.Payload>
+	<field1>aaa</field1> <field2>bb3</field2>  <field3>ccc</field3>
+	</model.Payload>
+	  </entry>
+	</map>
+	
 
-object	FormManagerServiceImpl  (id=14180)	
-object	QueryServiceImpl  (id=14254)	
-object	KieServerRegistryImpl  (id=14262)	
+	{
+	  "Url" : "http://localhost:8090/rest",
+	  "Method" : "GET",
+	  "Content" : { 
+	    "field1" : "aaa",
+	    "field2" : "bbb",
+	    "field3" : "ccc"
+	  }
+	}
 
-<map>
-  <entry>
-    <string>Method</string>
-    <string>PUT</string>
-  </entry>
-  <entry>
-    <string>Url</string>
-    <string>http://localhost:8090/rest</string>
-  </entry>
-  <entry>
-    <string>Content-Type</string>
-    <string>application/json</string>
-  </entry>
-
-  <entry>
-    <string>Content</string>
-<model.Payload>
-<field1>aaa</field1> <field2>bb3</field2>  <field3>ccc</field3>
-</model.Payload>
-  </entry>
-</map>
-
-{
-  "Url" : "http://localhost:8090/rest",
-  "Method" : "GET",
-  "Content" : { 
-    "field1" : "aaa",
-    "field2" : "bbb",
-    "field3" : "ccc"
-  }
-}
 
 ## Kie Server image
 
@@ -222,49 +218,65 @@ object	KieServerRegistryImpl  (id=14262)
 - if the process definition is not in the root folder, the property package of the Process must reflect the actual process location
 
 
+KIE Server APIs
+===========================================================
 
-## Kie Server API
+RHPAM and DM version 7.1 now have good documentation:
 
-Important articles:
+[INTERACTING WITH RED HAT PROCESS AUTOMATION MANAGER USING KIE APIS](https://access.redhat.com/documentation/en-us/red_hat_process_automation_manager/7.1/html-single/interacting_with_red_hat_process_automation_manager_using_kie_apis/index)
 
-http://mswiderski.blogspot.it/2015/09/unified-kie-execution-server-part-1.html
-http://mswiderski.blogspot.it/2015/09/unified-kie-execution-server-part-2.html
-http://mswiderski.blogspot.it/2015/09/unified-kie-execution-server-part-3.html
-http://mswiderski.blogspot.it/2015/09/unified-kie-execution-server-part-4.html
+Other references:
+
+* http://mswiderski.blogspot.it/2015/09/unified-kie-execution-server-part-1.html
+* http://mswiderski.blogspot.it/2015/09/unified-kie-execution-server-part-2.html
+* http://mswiderski.blogspot.it/2015/09/unified-kie-execution-server-part-3.html
+* http://mswiderski.blogspot.it/2015/09/unified-kie-execution-server-part-4.html
+* [RH solution - How to generate and send requests to Decision Server?](https://access.redhat.com/solutions/1486613)
+
+Self documentation (Swagger): 
+
+[http://localhost:8080/kie-server/docs/]()
+
+## Code snippets
 
 Initial variables:
 
-
-        private static final String URL = "http://localhost:8080/kie-server/services/rest/server";
-        private static final String user = "";
-        private static final String password = "";
-        private static final String CONTAINER = "atti";
-        
+    private static final String URL = "http://localhost:8080/kie-server/services/rest/server";
+    private static final String user = "";
+    private static final String password = "";
+    private static final String CONTAINER = "atti";
 
 List tasks of a process instance:
 
         
-        	KieServicesConfiguration config = KieServicesFactory.newRestConfiguration(URL, user, password);
-        	
-        	// Marshalling configuration
-        	config.setMarshallingFormat(MarshallingFormat.JSON);
-		extraClasses.add(Transaction.class);
-		config.addExtraClasses(extraClasses);
-        	KieServicesClient client = KieServicesFactory.newKieServicesClient(config);
+	KieServicesConfiguration config = KieServicesFactory.newRestConfiguration(URL, user, password);
+	
+	// Marshalling configuration
+	config.setMarshallingFormat(MarshallingFormat.JSON);
+	extraClasses.add(Transaction.class);
+	config.addExtraClasses(extraClasses);
+	KieServicesClient client = KieServicesFactory.newKieServicesClient(config);
+	
+	// client facade
+	UserTaskServicesClient taskServicesClient = client.getServicesClient(UserTaskServicesClient.class);
+	List<String> status = new ArrayList<String>();
+	status.add(Status.Ready.toString());
+	List<TaskSummary> tasksSummaries = taskServicesClient.findTasksAssignedAsPotentialOwner("donato", status, 0, 10);
+	tasksSummaries.forEach((ts)->System.out.println(ts.getDescription()));
 
-        // client facade
-        	UserTaskServicesClient taskServicesClient = client.getServicesClient(UserTaskServicesClient.class);
-        	List<String> status = new ArrayList<String>();
-        	status.add(Status.Ready.toString());
-        	List<TaskSummary> tasksSummaries = taskServicesClient.findTasksAssignedAsPotentialOwner("donato", status, 0, 10);
-        	tasksSummaries.forEach((ts)->System.out.println(ts.getDescription()));
-    
+## Retrieve all the facts
+
+[http://stackoverflow.com/questions/34339791/kie-execution-server-guided-rule-inserted-fact-how-to-get-it-in-java]()
 
 
+	commands.add(cmdFactory.newGetObjects("objects"));
+
+**Limitation:**
+
+- works for XSTREAM serialization only (TO INVESTIGATE!)
 
 
-
-# Kie Server REST API Reference
+## Queries
 
 Queries API are containers independent: so if more kie-servers sits on the same DBMS, one of this exposes informations for all containers.
 
@@ -276,12 +288,9 @@ In a multi-version deployment, all applications share the same deployment alias.
 
 [Alias redirection](https://access.redhat.com/documentation/en-us/red_hat_jboss_bpm_suite/6.4/html-single/red_hat_jboss_bpm_suite_intelligent_process_server_for_openshift/#Alias-Redirection)
 
-## docs
-http://localhost:8080/kie-server/docs/
 
-### Version 7
-
-[RH solution - How to generate and send requests to Decision Server?](https://access.redhat.com/solutions/1486613)
+REST APIs Usage Examples
+===========================================================
 
 ## List of deployed processes
 
