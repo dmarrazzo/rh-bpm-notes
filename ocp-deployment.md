@@ -139,6 +139,77 @@ References:
 
 [Exposing Services](https://docs.okd.io/latest/minishift/openshift/exposing-services.html)
 
+## Change maven configuration
+
+1) Create your own copy of settings.xml
+
+2) oc create configmap settings.xml --from-file settings.xml
+
+3) vi rhpam71-trial-ephemeral.yaml (new sections are 'volume' and 'volumeMounts')
+
+```
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    name: "${APPLICATION_NAME}-kieserver"
+    <!-- ... snip ...-->
+    template:
+      metadata:
+        name: "${APPLICATION_NAME}-kieserver"
+        labels:
+          deploymentConfig: "${APPLICATION_NAME}-kieserver"
+          application: "${APPLICATION_NAME}"
+          service: "${APPLICATION_NAME}-kieserver"
+      spec:
+        serviceAccountName: "${APPLICATION_NAME}-rhpamsvc"
+        terminationGracePeriodSeconds: 60
+        volumes:
+          - name: settings-volume
+            configMap:
+              name: settings.xml
+              defaultMode: 420
+        containers:
+        - name: "${APPLICATION_NAME}-kieserver"
+          volumeMounts:
+            - name: settings-volume
+              mountPath: /home/jboss/.m2/settings.xml
+              subPath: settings.xml
+          image: "${KIE_SERVER_IMAGE_STREAM_NAME}"
+          imagePullPolicy: Always
+          <!-- ... snip ...-->
+```
+
+4) Deploy the app from the modified rhpam71-trial-ephemeral.yaml
+
+5) Navigate to the running kieserver pod and access the Terminal tab (or use `$ oc rsh <pod name>`)
+
+6) Inspect the `/home/jboss/.m2/settings.xml` file and verify it is your custom one.
+
+## Maven proxy
+
+According to [maven documentation](https://maven.apache.org/guides/mini/guide-proxies.html) add the section `<proxies>` to `${user.home}/.m2/settings.xml`
+
+```
+<settings>
+  .
+  .
+  <proxies>
+   <proxy>
+      <id>example-proxy</id>
+      <active>true</active>
+      <protocol>http</protocol>
+      <host>proxy.example.com</host>
+      <port>8080</port>
+      <username>proxyuser</username>
+      <password>somepassword</password>
+      <nonProxyHosts>www.google.com|*.example.com</nonProxyHosts>
+    </proxy>
+  </proxies>
+  .
+  .
+</settings>
+```
+
 # Source 2 image (S2I)
 
 It's possible to override the default configuration of the image using the `configuration` directory in the source code:
@@ -191,3 +262,4 @@ List all
 ### server log
 	
 	oc log -f <pod-name>
+
