@@ -1,3 +1,17 @@
+Process Instances Migration
+===========================================================================
+
+Official Documentation:
+
+[Process Instance Migration](https://access.redhat.com/documentation/en-us/red_hat_jboss_bpm_suite/6.4/html/development_guide/chap_human_tasks_management#process_instance_migration)
+
+Limitations:
+
+[Process instance migration limitations](https://access.redhat.com/solutions/3599791)
+
+[Fix for case management](https://issues.jboss.org/browse/JBPM-7230)
+
+
 Asynchronous Jobs
 ===========================================================================
 

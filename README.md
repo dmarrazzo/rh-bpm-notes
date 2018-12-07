@@ -60,3 +60,8 @@ There are documents and samples.
 
  - **Free ebook** [Effective Business Process Management with JBoss BPM](https://developers.redhat.com/books/effective-business-process-management-jboss-bpm/)
  - [Mastering jBPM 6](https://www.packtpub.com/application-development/mastering-jbpm6)
+ 
+### Official courses
+
+ - [Red Hat Decision Manager and Red Hat Process Automation Manager 7.0 for Business Users - JB371](https://www.redhat.com/en/services/training/jb371-red-hat-decision-manager-and-red-hat-process-automation-manager-70-business-users)
+ - [Red Hat Decision Manager and Red Hat Process Automation Manager 7.0 for Developers - JB373](https://www.redhat.com/en/services/training/jb373-red-hat-decision-manager-and-red-hat-process-automation-manager-70-developers)
