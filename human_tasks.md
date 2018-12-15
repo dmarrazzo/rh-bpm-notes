@@ -115,42 +115,64 @@ When you use JAAS Identity Provider, auto claim does not work if the previous ta
 
 This is caused by the fact that JAASUserGroupCallbackImpl can retrieve groups just for a logged user.
 This usually is not a problem in a production environment where you rely on other identity providers (e.g. LDAP).
-To test the capability in a test environment there are 2 possible workarounds:
+To test the capability in a development environment, there are 2 possible workarounds:
 
-1. Using MVEL identity provider.
-
-    - In Business central you have to edit CDI config `<EAP_HOME>/standalone/deployments/business-central.war/WEB-INF/beans.xml`
-
-            <alternatives>
-                <class>org.jbpm.services.cdi.producer.DefaultUserGroupInfoProducer</class>
-            </alternatives>
-            
-    - In kieserver, add this system property:
-
-            <property name="org.jbpm.ht.callback" value="mvel"/>
-
-    - then add this file `<runtime_war>/WEB-INF/classes/org/jbpm/services/task/identity/UserGroupsAssignmentsOne.mvel`
-
-            usersgroups = [
-                    new User('donato') : [new Group( "developer" ), new Group( "manager" ), new Group( "Administrators" )],
-                    new User('supplier1') : [new Group( "user" ), new Group( "supplier" )],
-                    new User('supplier2') : [new Group( "user" ), new Group( "supplier" )],
-                    new User('supplier3') : [new Group( "user" ), new Group( "supplier" )],
-                  ];
-            return usersgroups;
-
+1. Configure the user registry to leverage a property file
 2. Change the process to set the `Actors` to `#{SwimlaneActorId}` for all the Human Task that follow the first one in the swim lane.
 
-3. Properties
+## User Registry 
+
+RHPAM security is based on the underling Application Server security (JAAS). 
+In the basic configuration the Human Task Manager relies on the same user registry, there are some limitation of this configuration:
+
+- user lacks of some information: the locale, the email address and the extended name
+- groups are implemented using JAAS roles, so the group structure is flat.
+- for security reason, it is not possible to enquire freely the user / group relationship  
+
+This configuration could be sufficient in some basic scenarios, but those, who want to exploit the full capabilities of the Human Task Manager, have to rely on one the following configurations:
+
+ - LDAP
+ - DB
+ - Custom
+ 
+For development / testing purposes are available even:
+
+ - Properties
+ - MVEL
+ 
+The configuration relies on the following system properties:
+
+ - `org.jbpm.ht.callback` that can accept the following values: `ldap`, `db`, `mvel`, `props`, `jaas`, `custom`
+ - `org.jbpm.ht.userinfo` that can accept the following values: `ldap`, `db`, `props`, `custom`
+
+When `custom` is selected, the following further system properties are required:
+
+ - `org.jbpm.ht.custom.callback` the class name of the custom implementation of the `UserGroupCallback`
+ - `org.jbpm.ht.custom.userinfo` the class name of the custom implementation of the `UserInfo`
+
+### Property based identity provider
+
+This configuration is useful for demo / development environment:
 
 ```
-org.jbpm.ht.callback = props
-jbpm.user.info.properties=classpath:/userinfo.properties
+<property name="org.jbpm.ht.callback" value="props"/>
+<property name="org.jbpm.ht.custom.userinfo" value="props"/>
+<property name="jbpm.user.info.properties" value="classpath:/userinfo.properties"/>
 ```
+
+The property callback is implemented by `JBossUserGroupCallbackImpl` class
+and expects this file `roles.properties` in the default application server config dir (System property: `jboss.server.config.dir`).
+
+The format of this file is as follows:
+
+	username=role1,role2,role3
+
 
 Constructs default UserInfo implementation to provide required information to the escalation handler.
 following is the string for every organizational entity
-entityId=email:locale:displayname:[member,member]
+
+	entityId=email:locale:displayname:[member,member]
+
 members are optional and should be given for group entities
 
 
@@ -160,7 +182,7 @@ Example:
 john=john@domain.com:en-UK:john
 mary=mary@domain.com:en-UK:mary
 krisv=krisv@domain.com:en-UK:krisv
-admin=admin@domain.com:en-UK:admin
+Administrator=Administrator@domain.com:en-UK:Administrator
 
 Crusaders=Crusaders@domain.com:en-UK:Crusaders:[Luke Cage,Bobba Fet,Tony Stark]
 Knights\ Templer=Crusaders@domain.com:en-UK:ACrusaders:[Bobba Fet]
@@ -169,10 +191,36 @@ Nobodies=nobodies@domain.com:en-UK:Nobodies:[]
 ```
 
 
+### MVEL Callback Implementation
 
+Through mvel callback implementation is possible to provide user
 
+Version 6.x Business Central runtime:
 
+- In Business central you have to edit CDI config `<EAP_HOME>/standalone/deployments/business-central.war/WEB-INF/beans.xml`
 
+    <alternatives>
+        <class>org.jbpm.services.cdi.producer.DefaultUserGroupInfoProducer</class>
+    </alternatives>
+
+In version 7, the runtime is hosted in the kieserver:
+
+- In kieserver, add this system property:
+
+	<property name="org.jbpm.ht.callback" value="mvel"/>
+
+- then add this file `<runtime_war>/WEB-INF/classes/org/jbpm/services/task/identity/UserGroupsAssignmentsOne.mvel`
+
+```
+    usersgroups = [
+            new User('donato') : [new Group( "developer" ), new Group( "manager" ), new Group( "Administrators" )],
+            new User('supplier1') : [new Group( "user" ), new Group( "supplier" )],
+            new User('supplier2') : [new Group( "user" ), new Group( "supplier" )],
+            new User('supplier3') : [new Group( "user" ), new Group( "supplier" )],
+          ];
+          
+    return usersgroups;
+```
 
 ## Assignment Rules
 
@@ -187,7 +235,7 @@ default-complete-task.drl with the rules to be checked when the Human Task is co
 
 
 
-## Special Roles
+## Special Groups
 
 The user `Administrator` and all users in the group `Administrators`, can see and manage all the task. (This name can be configure through these system properties: `org.jbpm.ht.admin.user`, `org.jbpm.ht.admin.group`.
 
@@ -196,6 +244,10 @@ In order to define a specific administration group for a task, the developer has
 If a task define the `ExcludedOwnerId`, this user is removed by the potential owner list.
 
 ## Notifications
+
+Example of notification configuration:
+
+![](imgs/notification.png)
 
 Tech note on how to define a custom notification listener:
 https://access.redhat.com/solutions/885393
@@ -237,6 +289,51 @@ Source class:
     jbpm/jbpm-human-task/jbpm-human-task-core/src/main/java/org/jbpm/services/task/deadlines/notifications/impl/email/EmailNotificationListener.java
 
 [EmailNotificationListener - github](https://github.com/kiegroup/jbpm/blob/6.5.x/jbpm-human-task/jbpm-human-task-core/src/main/java/org/jbpm/services/task/deadlines/notifications/impl/email/EmailNotificationListener.java)
+
+To use notification in human tasks, you need email information for users.
+In development environment, you can easily provide such information with property based user registry.
+
+System properties:
+
+	<system-properties>
+	    <property name="org.kie.mail.session" value="java:jboss/mail/jbpmMailSession"/>
+	</system-properties>
+
+Mail session configuration:
+
+	<subsystem xmlns="urn:jboss:domain:mail:1.2">
+		<mail-session name="default" jndi-name="java:jboss/mail/jbpmMailSession" >
+			<smtp-server outbound-socket-binding-ref="mail-smtp" tls="true">
+				<login name="email@gmail.com" password="___"/>
+			</smtp-server>
+		</mail-session>
+	</subsystem>
+
+
+SMTP host and port:
+
+	<outbound-socket-binding name="mail-smtp">
+		<remote-destination host="smtp.gmail.com" port="587"/>
+	</outbound-socket-binding>
+
+Keep sending emails if some email addresses are incorrect:
+
+	<mail-session jndi-name="java:/mail/jbpmMailSession" from="admin@domain.com">
+	    <custom-server name="smtp" outbound-socket-binding-ref="mail-smtp">
+	        <property name="mail.smtp.sendpartial" value="true"/>
+	    </custom-server>
+	</mail-session> 
+
+### email.properties
+
+If `mail/jbpmMailSession` is not found, jBPM searches `/email.properties` in classpath. The content should be like:
+
+	mail.smtp.host=localhost
+	mail.smtp.port=25
+	mail.from=xxx@xxx.com
+	mail.replyto=xxx@xxx.com
+
+
 
 
 ## Business Calendar
