@@ -74,16 +74,17 @@ Example of method implementation:
 1. Edit data I/O (assignments)
 2. Add the following data input and assignments:
 
-  | NAME          | DATA TYPE | SOURCE           |
-  |---------------|-----------|------------------|
-  | Parameter     | String    | info             |
-  | ParameterType | String    | java.lang.String |
+
+| NAME          | DATA TYPE | SOURCE           |
+|---------------|-----------|------------------|
+| Parameter     | String    | info             |
+| ParameterType | String    | java.lang.String |
 
 3. Add the following data output and assignments:
 
-  | NAME          | DATA TYPE | SOURCE           |
-  |---------------|-----------|------------------|
-  | Result        | String    | info             |
+| NAME          | DATA TYPE | SOURCE           |
+|---------------|-----------|------------------|
+| Result        | String    | info             |
 
 
 Internal implementation: 
@@ -117,64 +118,6 @@ Internal implementation:
             <name>Rest</name>
         </work-item-handler>
     </work-item-handlers>
-
-# Web Services
-
-create a maven project
-
-copy the WSDL in the `resources` folder
-
-create in the project root the `jaxb-bindings.xml` with the following content:
-
-    <?xml version="1.0" encoding="UTF-8"?>
-    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
-    	elementFormDefault="qualified" attributeFormDefault="unqualified"
-    	jaxb:extensionBindingPrefixes="xjc" jaxb:version="1.0">
-    	<xs:annotation>
-    		<xs:appinfo>
-    			<jaxb:globalBindings>
-    				<xjc:serializable />
-    			</jaxb:globalBindings>
-    		</xs:appinfo>
-    	</xs:annotation>
-    </xs:schema>
-
-launch wsconsume.sh
-
-    $ <EAP_HOME>/bin/wsconsume.sh -b jaxb-bindings.xml -k -n -s src/main/java/ src/main/resources/POCJBSS.WSDL
-    $ rm -rf output
-
-
-Recent webservices uses bare type (not wrapped), so in order to match the service signature you have to transform the wrapper class in an object's array.
-
-    requestArray = new Object[] {
-    	request.getField1(),
-    	request.getField2(),
-    	request.getField3()
-    };
-
-### parameters
-
-  - URL = http url for WSDL
-  - endpoint = `location` of `soap:address`
-  - mode = `SYNC`
-  - interface = `name` of `portType`
-  - operation = `name` of `operation`
-  - namespace = `targetNamespace`
-
-# Email
-Test:
-
-[Fake SMTP server/client](https://nilhcem.github.io/FakeSMTP/)
-
-Configure at project level the WorkitemHandler:
-
-1. Open Project Editor > Deployment Descriptor
-
-
-    new org.jbpm.process.workitem.email.EmailWorkItemHandler("localhost", "8086","me@localhost","password")
-
 
 
 # Call REST service
@@ -228,6 +171,69 @@ Here you will found a modified version of the WIH that address the problem.
 [Improved REST WIH](./samples/wih/rest-wih/README.md)
 
 [Implementation](https://github.com/kiegroup/jbpm/tree/6.5.x/jbpm-workitems/src/main/java/org/jbpm/process/workitem/rest)
+
+# Web Services
+
+create a maven project
+
+copy the WSDL in the `resources` folder
+
+create in the project root the `jaxb-bindings.xml` with the following content:
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+    	elementFormDefault="qualified" attributeFormDefault="unqualified"
+    	jaxb:extensionBindingPrefixes="xjc" jaxb:version="1.0">
+    	<xs:annotation>
+    		<xs:appinfo>
+    			<jaxb:globalBindings>
+    				<xjc:serializable />
+    			</jaxb:globalBindings>
+    		</xs:appinfo>
+    	</xs:annotation>
+    </xs:schema>
+
+launch wsconsume.sh
+
+    $ <EAP_HOME>/bin/wsconsume.sh -b jaxb-bindings.xml -k -n -s src/main/java/ src/main/resources/POCJBSS.WSDL
+    $ rm -rf output
+
+
+Recent webservices uses bare type (not wrapped), so in order to match the service signature you have to transform the wrapper class in an object's array.
+
+    requestArray = new Object[] {
+    	request.getField1(),
+    	request.getField2(),
+    	request.getField3()
+    };
+
+### parameters
+
+  - URL = http url for WSDL
+  - endpoint = `location` of `soap:address`
+  - mode = `SYNC`
+  - interface = `name` of `portType`
+  - operation = `name` of `operation`
+  - namespace = `targetNamespace`
+
+# Email
+
+Test emails:
+
+[Fake SMTP server/client](https://nilhcem.github.io/FakeSMTP/)
+
+
+## Send Mail Task
+Configure at project level the WorkitemHandler:
+
+- Open Project Editor > Deployment Descriptor
+
+		new org.jbpm.process.workitem.email.EmailWorkItemHandler("localhost", "8086","me@localhost","password")
+
+## Human task notifications
+
+Detailed information in: [Human Tasks](human_tasks.md)
 
 # EJB
 

@@ -54,7 +54,11 @@ There are documents and samples.
 
  - [Webinar on simulation - BPMSim](https://www.youtube.com/watch?v=xNzM7A3MGJI&list=PLZPWJhPaP-K7u2cjmyhf2SknXX9HhyWrq)
 
- - [Business process management in a microservices world](https://onlinexperiences.com/scripts/Server.nxp?LASCmd=AI:4;F:QS!10100&ShowKey=34303)
+ - [Standards in Business Rules Space: Decision Model and Notation (DMN) and Other Standards](https://youtu.be/fXYD_HE7ufc)
+
+ - [Red Hat Business Automation primer: Vision and roadmap](https://youtu.be/oQCkA_HzYoU)
+
+ - [Building Business Applications with DMN and BPMN](https://youtu.be/C0u3ZDiH3ek)
 
 ### Books
 

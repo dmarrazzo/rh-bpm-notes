@@ -179,8 +179,15 @@ Audit
 
 [https://issues.jboss.org/browse/JBPM-5211]()
 
-JMS Audit
-===========================================================================
+## Log limit for variable 255
+
+It's possible to define the variable maximum length, e.g.:
+
+	<property name="org.jbpm.var.log.length" value="1000"/>
+
+DB Schema must be update accordingly.
+
+## JMS Audit
 
 setting system property
 

@@ -217,6 +217,13 @@ It's possible to override the default configuration of the image using the `conf
 - EAP [standalone.xml](https://github.com/jboss-openshift/cct_module/blob/sprint-23/os-eap-s2i/added/s2i/assemble#L96-L102)
 - Maven [setting.xml](https://github.com/jboss-openshift/cct_module/blob/sprint-23/os-eap-s2i/added/s2i/assemble#L26-L30)
 
+
+# Security
+
+It's possible to add a user on the fly using the BC settings (add the role `user`, `developer`, `process-admin`).
+Be aware the change will not survive after the pod restart.
+For production environments is to integrate the RH SSO.
+
 # Troubleshooting
 
 ## H2 password
@@ -227,7 +234,6 @@ if you change password you have delete previous h2 or rename
 ## Persistent Volume location
 
 	/mnt/sda1/var/lib/minishift/base/openshift.local.pv/pv0098/.niogit
-
 
 # OpenShift cheat sheet
 
