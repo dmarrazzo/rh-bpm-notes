@@ -26,7 +26,7 @@ https://github.com/jbossdemocentral/rhdm7-install-demo/blob/dm7ga/init.sh
     ./add-user.sh -a -u bpmsAdmin -p password --role admin,process-admin,developer,analyst,user,manager,rest-all,kie-server
 
 
-## Installing Red Hat BPM Suite
+## Installing Red Hat Process Automation Manager
 
 ### Installing on EAP 7
 
@@ -38,7 +38,7 @@ https://github.com/jbossdemocentral/rhdm7-install-demo/blob/dm7ga/init.sh
 - copy the content to the EAP7 home
 - add the users
 
-        ./add-user.sh -a -u bpmsAdmin -p password --role admin,developer,analyst,user,manager,kie-server,rest-all,Administrators
+        ./add-user.sh -a -u pamAdmin -p password --role admin,developer,analyst,user,manager,kie-server,rest-all,Administrators
 
 - add the roles
 - listen all interface:

@@ -155,6 +155,15 @@ If you want disregard some json properties, add the following annotation to the 
 
 This will say to the JSON mapper engine to ignore the JSON properties that are not present in the DTO, otherwise you'll get an exception.
 
+Add the following dependency:
+
+	<dependency>
+		<groupId>com.fasterxml.jackson.core</groupId>
+		<artifactId>jackson-databind</artifactId>
+		<scope>provided</scope>
+	</dependency>
+
+
 ## Dealing with the Content Type header property
 Usually, REST service should declare how they serialize the data through the Header property `Content-Type` that in most case will assume the following values:
 
@@ -171,6 +180,10 @@ Here you will found a modified version of the WIH that address the problem.
 [Improved REST WIH](./samples/wih/rest-wih/README.md)
 
 [Implementation](https://github.com/kiegroup/jbpm/tree/6.5.x/jbpm-workitems/src/main/java/org/jbpm/process/workitem/rest)
+
+### Issues with https
+
+[How do I use the REST Service Task for SSL enabled REST service in BPM Suite 6?](https://access.redhat.com/solutions/3433821)
 
 # Web Services
 
@@ -199,15 +212,6 @@ launch wsconsume.sh
     $ <EAP_HOME>/bin/wsconsume.sh -b jaxb-bindings.xml -k -n -s src/main/java/ src/main/resources/POCJBSS.WSDL
     $ rm -rf output
 
-
-Recent webservices uses bare type (not wrapped), so in order to match the service signature you have to transform the wrapper class in an object's array.
-
-    requestArray = new Object[] {
-    	request.getField1(),
-    	request.getField2(),
-    	request.getField3()
-    };
-
 ### parameters
 
   - URL = http url for WSDL
@@ -216,6 +220,22 @@ Recent webservices uses bare type (not wrapped), so in order to match the servic
   - interface = `name` of `portType`
   - operation = `name` of `operation`
   - namespace = `targetNamespace`
+
+### Not wrapped types
+
+Some webservices uses bare type (not wrapped), so in order to match the service signature you have to transform the wrapper class in an object's array.
+
+    requestArray = new Object[] {
+    	request.getField1(),
+    	request.getField2(),
+    	request.getField3()
+    };
+
+### self signed certificate problem
+
+Workaround?
+
+https://erikwramner.wordpress.com/2013/03/27/trust-self-signed-ssl-certificates-and-skip-host-name-verification-with-jax-ws/
 
 # Email
 

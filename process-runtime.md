@@ -106,7 +106,26 @@ Then you have to configure the *Persistence descriptor*:
 
     ![Persistence descriptor](imgs/persistable_03.png)
 
-3. By default the new persistence unit points to the same BPM datasource, this means that the table will be created in the same DB of the BPM engine. In order to separate the process specific information from the BPM engine ones, it's a good practice to define a new datasource targeting a different DB. The drawback of the latter configuration is that the BPM datasource and the new one must be XA compliant, with the performance implication that a distributed transaction brings on the table.
+3. Check the marchalling strategy
+
+	    <marshalling-strategies>
+	        <marshalling-strategy>
+	            <resolver>mvel</resolver>
+	            <identifier>new org.drools.persistence.jpa.marshaller.JPAPlaceholderResolverStrategy("com.myspace:processes:1.0.0", classLoader)</identifier>
+	            <parameters/>
+	        </marshalling-strategy>
+	    </marshalling-strategies>
+	 
+
+4. Add dependency
+
+		<dependency>
+			<groupId>javax.persistence</groupId>
+			<artifactId>persistence-api</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+
+5. By default the new persistence unit points to the same BPM datasource, this means that the table will be created in the same DB of the BPM engine. In order to separate the process specific information from the BPM engine ones, it's a good practice to define a new datasource targeting a different DB. The drawback of the latter configuration is that the BPM datasource and the new one must be XA compliant, with the performance implication that a distributed transaction brings on the table.
 
 ## References
 
@@ -219,7 +238,7 @@ Missing implementation:
 
 The process developer can fill the gap providing the implementation for this tasks through the standard work item handler registration mechanism.
 
-Dummy implementation:
+Dummy implementation: s
 
         <work-item-handler>
             <resolver>mvel</resolver>
@@ -271,3 +290,6 @@ Caused by: java.lang.ClassNotFoundException: org.slf4j.impl.Slf4jLogger
 	at org.drools.core.common.ProjectClassLoader.loadType(ProjectClassLoader.java:172)
 ```
 
+## IsImmediate property
+
+It's not used by the runtime engine.

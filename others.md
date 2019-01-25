@@ -9,6 +9,26 @@ In the 'Add Repository' dialog, enter this information and press 'OK':
 - Name: `ObjectAid UML Explorer`
 - URL: `http://www.objectaid.com/update/current`
 
+## JBoss EAP 7.x
+
+### Configure GMail
+
+**WARNING**: To use Gmail SMTP, you have to enable in your google account the flag "allow less secure app"
+
+Define the mail session:
+
+    <mail-session name="jbpmmail" jndi-name="java:jboss/mail/jbpmMailSession">
+        <smtp-server outbound-socket-binding-ref="gmail-smtp" ssl="true" username="user@gmail.com" password="secretpwd">
+        </smtp-server>
+    </mail-session>
+
+Configure outbound connection:
+
+	<outbound-socket-binding name="gmail-smtp">
+	    <remote-destination host="smtp.gmail.com" port="465"/>
+	</outbound-socket-binding>
+
+
 ## JBoss EAP 6.4
 
 ### Install

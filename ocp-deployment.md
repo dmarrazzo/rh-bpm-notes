@@ -57,12 +57,20 @@ delete all imagestream
 
 ## Create secret
 
-(Generate_a_SSL_Encryption_Key_and_Certificate)[]https://access.redhat.com/documentation/en-US/JBoss_Enterprise_Application_Platform/6.1/html-single/Security_Guide/index.html#Generate_a_SSL_Encryption_Key_and_Certificate]
+[Generate_a_SSL_Encryption_Key_and_Certificate](https://access.redhat.com/documentation/en-US/JBoss_Enterprise_Application_Platform/6.1/html-single/Security_Guide/index.html#Generate_a_SSL_Encryption_Key_and_Certificate)
 
 	keytool -genkeypair -alias jboss -keyalg RSA -keystore keystore.jks -storepass mykeystorepass --dname "CN=jsmith,OU=Engineering,O=mycompany.com,L=Raleigh,S=NC,C=US"
 	oc create secret generic kieserver-app-secret --from-file=keystore.jks
 	oc create secret generic businesscentral-app-secret --from-file=keystore.jks	
 
+### Optionally import a self signed certificate
+
+	keytool -import -v -trustcacerts -alias ALIAS_NAME -file CERT_FILE \
+		-keystore keystore.jks -keypass PASSWORD -storepass PASSWORD
+
+Replace the keystore:
+
+	oc create secret generic kieserver-app-secret --from-file=keystore.jks --dry-run -o yaml | oc replace -f -
 
 ## Create the app
 
@@ -269,3 +277,12 @@ List all
 	
 	oc log -f <pod-name>
 
+### get a file the container
+
+	oc rsync <existing db container with db archive>:/var/lib/mysql/data/db_archive_dir /tmp/
+ 
+## Openshift Useful links
+
+- [https://docs.openshift.com/container-platform/3.9/dev_guide/copy_files_to_container.html]()
+
+- [https://www.mankier.com/package/origin-clients]()

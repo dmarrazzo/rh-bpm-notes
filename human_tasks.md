@@ -58,8 +58,6 @@ DefaultUserInfo implements [UserInfo](https://github.com/kiegroup/droolsjbpm-kno
     String getLanguageForEntity (OrganizationalEntity entity);
 
 
-
-
 ## User Assignment
 
 Instead of using the task properties pane, user assignment can be done using Task input parameters:
@@ -79,6 +77,15 @@ This configuration can be changed using the following system properties:
 
 The user that started the process instance can be retrieved using the process variable `initiator`.
 In order to statically refer it, declare it in the process definition: `initiator` as `String`.
+
+## User Distribution
+
+it's possible to define a strategy for user distribution.
+One of the most common practice is distribute the task according the workload: the user with less task assigned will receive the new task.
+
+References:
+
+[http://mswiderski.blogspot.com/2017/01/distribute-tasks-wisely-pluggable-task.html]()
 
 ### References
 
