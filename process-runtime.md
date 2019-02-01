@@ -51,7 +51,7 @@ https://github.com/kiegroup/jbpm/blob/master/jbpm-services/jbpm-executor/src/tes
 
 
 Executor configuration
-===========================================================================
+============================================
 
 Executor can work with or without JMS.
 JMS is the preferred option but executor can work without it and it does for instance on Tomcat where there is no JMS provider out of the box.
@@ -64,7 +64,7 @@ you can disable JMS executor by system property `org.kie.executor.jms=false`
 3. Increase the JmsXA connection factory thread pool size
 
 Deployment Descriptor
-===========================================================================
+============================================
 
 While kmodule is mainly targeting on knowledge base and knowledge session basic configuration, deployment descriptors are considered more technical configuration. Following are the items available for configuration via deployment descriptors:
 
@@ -88,44 +88,78 @@ While kmodule is mainly targeting on knowledge base and knowledge session basic 
 [https://docs.jboss.org/jbpm/release/6.5.0.Final/jbpm-docs/html/ch14.html#d0e15405]()
 
 
-Custom variable persistence
-===========================================================================
+JPA variable persistence
+============================================
 
-It is possible store the process variable in a DBMS table.
-In order to achieve this result, you have to configure the *Data Object* as *Persistable*.
+RHPAM can store the process variable in a relational table leveraging JPA.
 
-![Create Data Object](imgs/persistable_01.png)
+**Warning** Business Central till version 7.1.1 lacks of some libraries that support the JPA variable persistence. In order to work around this you have to copy from kie-server libs the followings:
 
-Then you have to configure the *Persistence descriptor*:
+ - drools-persistence-api-7.11.0.Final-redhat-00004.jar
+ - drools-persistence-jpa-7.11.0.Final-redhat-00004.jar
 
-1. From the **Project Settings** open the *Persistence descriptor*.
 
-    ![Persistence descriptor](imgs/persistable_02.png)
+This is the procedure to achieve such result:
 
-2. Add all *Project persistable classes* to the persistence descriptor
+1. Configure the *Data Object* as *Persistable*.
 
-    ![Persistence descriptor](imgs/persistable_03.png)
+	![Create Data Object](imgs/persistable_01.png)
 
-3. Check the marchalling strategy
+	- **EXTRA CONFIGURATION** the data object MUST extend `org.drools.persistence.jpa.marshaller.VariableEntity`
 
-	    <marshalling-strategies>
-	        <marshalling-strategy>
-	            <resolver>mvel</resolver>
-	            <identifier>new org.drools.persistence.jpa.marshaller.JPAPlaceholderResolverStrategy("com.myspace:processes:1.0.0", classLoader)</identifier>
-	            <parameters/>
-	        </marshalling-strategy>
-	    </marshalling-strategies>
+
+2. Then you have to configure the *Persistence descriptor*:
+
+
+	- In the **Settings** section of the project, select the **Persistence** tab. 
+	
+	![](imgs/persistable_04.png)
+	
+	- Take note of the **Persistence Unit** name
+	- Make sure that the Data Object is enlisted among the **Pesistable Data Object**
+	- Add this class: `org.drools.persistence.jpa.marshaller.MappedVariable`
+
+	![](imgs/persistable_05.png)
+ 
+3. Edit the `kie-deployment-descriptor.xml`
+
+	- add the marchalling strategy JPAPlaceholderResolverStrategy. it requires 2 parameters the persistence unit name and the class loader.
+
+		<marshalling-strategies>
+		    <marshalling-strategy>
+		        <resolver>mvel</resolver>
+		        <identifier>new org.drools.persistence.jpa.marshaller.JPAPlaceholderResolverStrategy("com.myspace:processes:1.0.0", classLoader)</identifier>
+		        <parameters/>
+		    </marshalling-strategy>
+		</marshalling-strategies>
+		
+
 	 
-
-4. Add dependency
+		
+4. Add dependency to `drools-persistence-jpa` (unfortunately this cannot be done in business central since you have to add `provided` as scope)
 
 		<dependency>
-			<groupId>javax.persistence</groupId>
-			<artifactId>persistence-api</artifactId>
-			<version>1.0.2</version>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-persistence-jpa</artifactId>
+			<version>7.11.0.Final-redhat-00004</version>
+			<scope>provided</scope>
 		</dependency>
 
-5. By default the new persistence unit points to the same BPM datasource, this means that the table will be created in the same DB of the BPM engine. In order to separate the process specific information from the BPM engine ones, it's a good practice to define a new datasource targeting a different DB. The drawback of the latter configuration is that the BPM datasource and the new one must be XA compliant, with the performance implication that a distributed transaction brings on the table.
+
+**BE AWARE** the table that map the data object is in the same BPM datasource.
+
+*Final doubt:* In some example I found that the persisted data object are even declared remoteable classes in the `kie-deployment-descriptor.xml`. At the moment, I'm not aware of actual benefit of such configuration.
+
+    <remoteable-class>com.garanti.Customer</remoteable-class>
+	    <remoteable-class>com.garanti.Customer</remoteable-class>
+	    <remoteable-class>org.drools.persistence.jpa.marshaller.VariableEntity</remoteable-class>
+     </remoteable-classes>
+
+#### Troubleshooting
+
+If you find this error in the BC means that you lack the libraries (Check first point of the procedure).
+
+	warning `Could not compile mvel expression 'new org.drools.persistence.jpa.marshaller.JPAPlaceholderResolverStrategy("com.garanti:test-pers:1.0.0", classLoader)'. this can be due to invalid syntax of missing classes-[Error: Failed to link org/drools/persistence/jpa/marshaller/JPA...`
 
 ## References
 
@@ -133,8 +167,7 @@ Then you have to configure the *Persistence descriptor*:
 
 
 Advanced Queries
-===========================================================================
-
+============================================
 
 ## References
 
@@ -147,7 +180,7 @@ Advanced Queries
 
 
 Correlation Key
-===========================================================================
+============================================
 
 Technically you probably can create a correlation key afterwards, it's basically an entry in the database that links both.  But in the public api it's only exposed when starting a process.  Using internal apis you can probably create a CorrelationKeyInfo object and persist it.  
 
@@ -156,14 +189,15 @@ correct, you should be able to create it and persist, though that does not much 
 <https://github.com/kiegroup/jbpm/blob/d881f2a72bd4279d4277b294c2dbc6663d91c612/jbpm-persistence/jbpm-persistence-jpa/src/main/java/org/jbpm/persistence/processinstance/JPAProcessInstanceManager.java#L73-L91>
 
 Tracking the loops
-===========================================================================
+============================================
+
 -Djbpm.loop.level.disabled=true
 this loop level is to track different loops over the same constructs in your process. But it capable of tracking them if they are properly structured - so called structured loops.
 
 it’s enabled by default as when you do proper process design around loops this will allow you to isolate them and keep track on the engine level properly. Potential side effect is that it will trigger incorrect nodes if you do have structured loops in your process and multiple instances of given loop is active at the same time.
 
 Classloading
-===========================================================================
+============================================
 
 [Can we change a project classloading precedence in JBoss BPM Suite 6?](https://access.redhat.com/node/1414423/)
 
@@ -192,7 +226,7 @@ If that is not enough deployment descriptor allows to manually specify classes t
 With this all classes can be added to the JAXB context to properly marshal and unmarshal data types when interacting with jBPM remotely.
 
 Audit 
-===========================================================================
+============================================
 
 ## Separate Runtime and BAM data
 
@@ -227,7 +261,8 @@ Log producer:
 [https://github.com/kiegroup/jbpm/blob/master/jbpm-audit/src/main/java/org/jbpm/process/audit/jms/AsyncAuditLogProducer.java]()
 
 Task not implemented
-===========================================================================
+============================================
+
 Although the BPMN Editor has almost all BPMN task in the palette. Not all are implemented by the runtime.
 
 Missing implementation:
@@ -261,7 +296,8 @@ Dummy implementation: s
 
 
 Issues
-===========================================================================
+============================================
+
 
 ## PerProcessInstanceRuntimeManager
 
