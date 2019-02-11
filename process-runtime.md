@@ -44,6 +44,8 @@ The 2nd option is to register different instances of `AsyncWorkItemHandler` for 
 [Introduction to CDI Dependency Injection](https://dzone.com/articles/cdi-di-p1)
 [WorkItemHandlerProducer interface](https://github.com/kiegroup/droolsjbpm-knowledge/blob/master/kie-internal/src/main/java/org/kie/internal/runtime/manager/WorkItemHandlerProducer.java)
 
+[1]: https://github.com/droolsjbpm/jbpm/blob/master/jbpm-services/jbpm-executor/src/main/java/org/jbpm/executor/impl/wih/AsyncWorkItemHandler.java
+
 ## Registering Manually  
 
 In general, what is most likely happening is that you are registering handler manually via ksession and in case you use runtime manager and strategy other than singleton it will be not visible by other contexts. Looks like you are using per process instance strategy which would explain why it fails after starting subprocess - it gets new context - new ksession without handler being registered there. So you need to use RegisterableItemsFactory for registering handlers. That is set on RuntimeEnvironment used to create runtime manager, see here:
@@ -169,14 +171,67 @@ If you find this error in the BC means that you lack the libraries (Check first 
 Advanced Queries
 ============================================
 
+Register the dataset with the following query:
+
+	SELECT DISTINCT pil.PROCESSINSTANCEID, pil.DURATION, pil.USER_IDENTITY, pil.PROCESSINSTANCEDESCRIPTION, mv.MAPPEDVARID, mv.VARIABLETYPE, c.NAME, c.BIRTHYEAR, c.CITY
+	FROM PROCESSINSTANCELOG pil
+	INNER JOIN MAPPEDVARIABLE mv ON pil.PROCESSINSTANCEID = mv.PROCESSINSTANCEID
+	INNER JOIN CUSTOMER c ON c.ID = mv.VARIABLEID
+
+Queries using query definition identified by queryName. Maps the result to concrete objects based on provided mapper. Query is additional altered by the filter spec and/or builder.
+
+	POST 
+	/server/queries/definitions/{queryName}/filtered-data
+
+ - `queryName` : `f308d1f9-a456-47e1-8bb4-885766d69603`
+ - `mapper` : `ProcessInstancesWithCustomVariables`
+ - `body` : 
+
+		{
+		  "order-by" : "name",
+		  "order-asc" : false,
+		  "query-params" : [ ],
+		  "result-column-mapping" : {
+		    "name" : "string",
+		    "city" : "string",
+		    "birthyear" : "integer"
+		  }
+		}
+
+
+Curl form:
+
+	curl -X POST "http://localhost:8080/kie-server/services/rest/server/queries/definitions/f308d1f9-a456-47e1-8bb4-885766d69603/filtered-data?mapper=ProcessInstancesWithCustomVariables&page=0&pageSize=10" -H "accept: application/xml" -H "content-type: application/json" -d "{ \"order-by\" : \"name\", \"order-asc\" : false, \"query-params\" : [ ], \"result-column-mapping\" : { \"name\" : \"string\", \"city\" : \"string\", \"birthyear\" : \"integer\" }}"
+
+
+## Java API (kie client)
+
+Code example of a custom query in Java:
+
+    QueryServicesClient queryClient = client.getServicesClient(QueryServicesClient.class);
+
+    QueryFilterSpec filterSpec = new QueryFilterSpecBuilder().equalsTo("name", "donato")
+                                                             .addColumnMapping("name", "string")
+                                                             .addColumnMapping("city", "string")
+                                                             .addColumnMapping("birthyear", "integer")
+                                                             .get();
+	
+    List<ProcessInstance> piList = queryClient.query("f308d1f9-a456-47e1-8bb4-885766d69603", QueryServicesClient.QUERY_MAP_PI_WITH_CUSTOM_VARS,
+                      filterSpec, 0, 10, ProcessInstance.class);
+    
+    piList.stream().forEach(pi -> {
+        System.out.println(pi.getVariables().get("city"));
+    });
+
+
+
 ## References
 
 [Advanced Queries in jBPM](http://mswiderski.blogspot.it/2016/01/advanced-queries-in-jbpm-64.html)
 
 [Advanced queries in KIE Server](http://mswiderski.blogspot.it/2016/01/advanced-queries-in-kie-server.html)
 
-
-[1]: https://github.com/droolsjbpm/jbpm/blob/master/jbpm-services/jbpm-executor/src/main/java/org/jbpm/executor/impl/wih/AsyncWorkItemHandler.java
+[Data set editor for KIE Server custom queries](http://mswiderski.blogspot.com/2018/04/data-set-editor-for-kie-server-custom.html)
 
 
 Correlation Key
