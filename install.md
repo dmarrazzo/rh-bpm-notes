@@ -505,21 +505,24 @@ Add username/password in `~/.m2/settings.xml`
 Reference:
 [https://access.redhat.com/solutions/703423]()
 
-## Internal git ssh
+## Warning "Unable to load key store. Using password from configuration"
 
-to connect to an external ssh?
+You can disregard, it's an advanced configuration:
 
-     * org.uberfire.nio.git.ssh.cert.dir
+[https://access.redhat.com/solutions/3669631]()
 
-default working dir
+[https://docs.jboss.org/jbpm/release/7.10.0.Final/jbpm-docs/html_single/#_securing_password_using_key_store]()
 
-then .security
 
-there sha_id?
+## Clone an external repository via SSH protocol
 
-Configure the passphrase
+The PAM process needs access to **ssh certificates**:
 
-     * org.uberfire.nio.git.ssh.passphrase
+1. Configure the ssh directory, by default it's in the `<EAP>/bin/.security`, but you can update it with the following system property `org.uberfire.nio.git.ssh.cert.dir`
+
+2. Set the passphrase to read your ssh certificate with the following system property `org.uberfire.nio.git.ssh.passphrase`
+
+
 
 ## Internal git is not accessible
 
@@ -557,7 +560,7 @@ Old ssh does not accept `+`, so change with:
     HostKeyAlgorithms ssh-dss
 
 
-## inotify watches reached••••••••
+## inotify watches reached
 
 Exception:
 
