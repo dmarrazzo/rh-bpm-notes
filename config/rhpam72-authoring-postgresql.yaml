@@ -490,6 +490,23 @@ objects:
     annotations:
       description: All the KIE server web server's ports.
 ## Place to add database service
+## PostgreSQL service BEGIN
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: The database server's port.
+    labels:
+      application: ${APPLICATION_NAME}
+      service: "${APPLICATION_NAME}-postgresql"
+    name: ${APPLICATION_NAME}-postgresql
+  spec:
+    ports:
+    - port: 5432
+      targetPort: 5432
+    selector:
+      deploymentConfig: ${APPLICATION_NAME}-postgresql
+## PostgreSQL service END
 - kind: Route
   apiVersion: v1
   id: "${APPLICATION_NAME}-rhpamcentr-http"
@@ -804,10 +821,6 @@ objects:
           - name: kieserver-keystore-volume
             mountPath: "/etc/kieserver-secret-volume"
             readOnly: true
-## H2 volume mount BEGIN
-          - name: "${APPLICATION_NAME}-h2-pvol"
-            mountPath: "/opt/eap/standalone/data"
-## H2 volume mount END
           livenessProbe:
             exec:
               command:
@@ -847,22 +860,24 @@ objects:
             value: "${KIE_SERVER_PERSISTENCE_DS}"
           - name: RHPAM_JTA
             value: "true"
-## H2 driver settings BEGIN
+## PostgreSQL driver settings BEGIN
+          - name: RHPAM_DATABASE
+            value: "${KIE_SERVER_POSTGRESQL_DB}"
           - name: RHPAM_DRIVER
-            value: "h2"
+            value: "postgresql"
           - name: RHPAM_USERNAME
-            value: "${KIE_SERVER_H2_USER}"
+            value: "${KIE_SERVER_POSTGRESQL_USER}"
           - name: RHPAM_PASSWORD
-            value: "${KIE_SERVER_H2_PWD}"
-          - name: RHPAM_XA_CONNECTION_PROPERTY_URL
-            value: "jdbc:h2:/opt/eap/standalone/data/rhpam"
+            value: "${KIE_SERVER_POSTGRESQL_PWD}"
           - name: RHPAM_SERVICE_HOST
-            value: "dummy_ignored"
+            value: "${APPLICATION_NAME}-postgresql"
           - name: RHPAM_SERVICE_PORT
-            value: "12345"
+            value: "5432"
+          - name: TIMER_SERVICE_DATA_STORE
+            value: "${APPLICATION_NAME}-postgresql"
           - name: KIE_SERVER_PERSISTENCE_DIALECT
-            value: "org.hibernate.dialect.H2Dialect"
-## H2 driver settings END
+            value: "org.hibernate.dialect.PostgreSQLDialect"
+## PostgreSQL driver settings END
           - name: DROOLS_SERVER_FILTER_CLASSES
             value: "${DROOLS_SERVER_FILTER_CLASSES}"
           - name: KIE_ADMIN_USER
@@ -993,11 +1008,6 @@ objects:
         - name: kieserver-keystore-volume
           secret:
             secretName: "${KIE_SERVER_HTTPS_SECRET}"
-## H2 volume settings BEGIN
-        - name: "${APPLICATION_NAME}-h2-pvol"
-          persistentVolumeClaim:
-            claimName: "${APPLICATION_NAME}-h2-claim"
-## H2 volume settings END
 ## Place to add database deployment config
 - apiVersion: v1
   kind: PersistentVolumeClaim
@@ -1012,18 +1022,91 @@ objects:
     resources:
       requests:
         storage: "${BUSINESS_CENTRAL_VOLUME_CAPACITY}"
-## H2 persistent volume claim BEGIN
+## PostgreSQL deployment config BEGIN
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    name: "${APPLICATION_NAME}-postgresql"
+    labels:
+      application: "${APPLICATION_NAME}"
+      service: "${APPLICATION_NAME}-postgresql"
+    annotations:
+      template.alpha.openshift.io/wait-for-ready: "true"
+  spec:
+    strategy:
+      type: Recreate
+    triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - "${APPLICATION_NAME}-postgresql"
+        from:
+          kind: ImageStreamTag
+          namespace: "${POSTGRESQL_IMAGE_STREAM_NAMESPACE}"
+          name: "postgresql:${POSTGRESQL_IMAGE_STREAM_TAG}"
+    - type: ConfigChange
+    replicas: 1
+    selector:
+      deploymentConfig: "${APPLICATION_NAME}-postgresql"
+    template:
+      metadata:
+        name: "${APPLICATION_NAME}-postgresql"
+        labels:
+          deploymentConfig: "${APPLICATION_NAME}-postgresql"
+          application: "${APPLICATION_NAME}"
+          service: "${APPLICATION_NAME}-postgresql"
+      spec:
+        terminationGracePeriodSeconds: 60
+        containers:
+        - name: "${APPLICATION_NAME}-postgresql"
+          image: postgresql
+          imagePullPolicy: Always
+          livenessProbe:
+            exec:
+              command:
+              - "/usr/libexec/check-container"
+              - "--live"
+            initialDelaySeconds: 120
+            timeoutSeconds: 10
+          readinessProbe:
+            exec:
+              command:
+              - "/usr/libexec/check-container"
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+          ports:
+          - containerPort: 5432
+            protocol: TCP
+          volumeMounts:
+          - mountPath: "/var/lib/pgsql/data"
+            name: "${APPLICATION_NAME}-postgresql-pvol"
+          env:
+          - name: POSTGRESQL_USER
+            value: "${KIE_SERVER_POSTGRESQL_USER}"
+          - name: POSTGRESQL_PASSWORD
+            value: "${KIE_SERVER_POSTGRESQL_PWD}"
+          - name: POSTGRESQL_DATABASE
+            value: "${KIE_SERVER_POSTGRESQL_DB}"
+          - name: POSTGRESQL_MAX_PREPARED_TRANSACTIONS
+            value: "${POSTGRESQL_MAX_PREPARED_TRANSACTIONS}"
+        volumes:
+        - name: "${APPLICATION_NAME}-postgresql-pvol"
+          persistentVolumeClaim:
+            claimName: "${APPLICATION_NAME}-postgresql-claim"
+## PostgreSQL deployment config END
+## PostgreSQL persistent volume claim BEGIN
 - apiVersion: v1
   kind: PersistentVolumeClaim
   metadata:
-    name: "${APPLICATION_NAME}-h2-claim"
+    name: "${APPLICATION_NAME}-postgresql-claim"
     labels:
       application: "${APPLICATION_NAME}"
-      service: "${APPLICATION_NAME}-kieserver"
+      service: "${APPLICATION_NAME}-postgresql"
   spec:
     accessModes:
     - ReadWriteOnce
     resources:
       requests:
         storage: "${DB_VOLUME_CAPACITY}"
-## H2 persistent volume claim END
+## PostgreSQL persistent volume claim END
