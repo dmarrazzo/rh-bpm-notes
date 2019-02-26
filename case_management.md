@@ -117,6 +117,18 @@ In this way the previous condition can be expressed as:
 
     CaseData(data["ok"] == true)
 
+Handling complex data types:
+
+```java
+CaseData( $data : data["person1"] ) $p : Person( name == 'Jim' ) from $data
+```
+
+OOPath does not work since it's not reactive - AVOID this:
+
+```java
+CaseData( $p : data['person1'], $p#Person.name == "Jim" )
+```
+
 
 ## Roles
 
