@@ -1,8 +1,10 @@
 # Red Hat Process Automation Manager and Red Hat Decision Manager Usage notes
 
-This project collects my experiences on [Red Hat Process Automation Manager][1] and [Red Hat Decision Manager 7.0][2] (formerly known as JBoss BRMS).
+This project collects my experiences on [Red Hat Process Automation Manager][1] and [Red Hat Decision Manager][2] (formerly known as JBoss BRMS).
 
 There are documents and samples.
+
+**Business Optimizer** is an important capabilities of *Red Hat Decision Manager*, find here a dedicated [page](business-optimizer.md).
 
 **Disclaimer** 
 
