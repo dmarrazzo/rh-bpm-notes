@@ -200,7 +200,7 @@ The upload can be automated with following procedure (acknowledgements to Anton 
             <repository>
                 <id>guvnor-m2-repo</id>
                 <name>maven repo</name>
-                <url>http://10.64.4.78:8080/business-central/maven2/</url>
+                <url>http://localhost:8080/business-central/maven2/</url>
                 <layout>default</layout>
             </repository>
         </distributionManagement>

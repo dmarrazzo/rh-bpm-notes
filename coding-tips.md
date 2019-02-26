@@ -1,11 +1,14 @@
 Coding Tips
 ===========
 
-## MVEL
+MVEL
+-----------
+
 http://mvel.documentnode.com/
 
 
-## Variable substitution
+Variable substitution
+---------------------------------
 
 There are many place where you can place MVEL expressions.
 For example in human task subject field:
@@ -75,9 +78,11 @@ Otherwise, if you prefer have a proper debug session with your favourite java ID
 You can debug the process placing breakpoints on the event listeners.
 Another (simpler) option is to leverage a simple utility class, e.g.:
 
-	public static void debug(ProcessContext kcontext) {
-		System.out.println("Util.debug()");
-	}
+```java
+public static void debug(ProcessContext kcontext) {
+    System.out.println("Util.debug()");
+}
+```
 
 The designer place the method call in the "on entry" script of the task that he want to analyse (or "on exit" one).
 The designer sets a breakpoint in that method and when the method is reached he can inspect and the `kcontext` information.
@@ -85,6 +90,26 @@ The designer sets a breakpoint in that method and when the method is reached he 
 The latter technique has the drawback of being quite intrusive, because it requires an update of the process model. 
 
 **Warning:** the process runs in a transaction context with a default time out of 120 seconds, so if the debugging activities last more than that, you should incur in a runtime exception.
+
+Get the local classloader
+--------------------------------------------
+
+```java
+LocalKieContainerMain.class.getClassLoader()
+```
+
+
+LocalDateTime serializzation issues
+--------------------------------------------
+
+In order to serialize LocalDateTime you can configure the related property in this way:
+
+```java
+@JsonSerialize(using=LocalDateTimeSerializer.class)
+@JsonDeserialize(using=LocalDateTimeDeserializer.class)
+@JsonFormat(shape = Shape.STRING)
+private java.time.LocalDateTime startTime;
+```
 
 ### Check the generated code
 
