@@ -88,14 +88,10 @@ Article that describe the new capabilities:
           ]
 
 
-
-
-
 ## Process 
 
 - adhoc true
 - case id prefix
-
 
 ## Milestone
 
@@ -177,36 +173,38 @@ OPERATION=role1,role2,roleN
 
 Dependency:
 
-		<dependency>
-			<groupId>org.jbpm</groupId>
-			<artifactId>jbpm-services-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
+```xml
+<dependency>
+    <groupId>org.jbpm</groupId>
+    <artifactId>jbpm-services-api</artifactId>
+    <scope>provided</scope>
+</dependency>
+```
 
 Use the case APIs:
 
-    org.jbpm.casemgmt.api.CaseService caseService =  org.jbpm.services.api.service.ServiceRegistry.get().service(org.jbpm.services.api.service.ServiceRegistry.CASE_SERVICE);
-    caseService.triggerAdHocFragment(...);
-
+```java
+org.jbpm.casemgmt.api.CaseService caseService =  org.jbpm.services.api.service.ServiceRegistry.get().service(org.jbpm.services.api.service.ServiceRegistry.CASE_SERVICE);
+caseService.triggerAdHocFragment(...);
+```
 
 ## Case Rules
 
-    import org.kie.api.runtime.processorg.kie.api.runtime.process.CaseData.CaseData;
-    
-    rule "ask user for details"
-    
-    when 
+```java
+import org.kie.api.runtime.processorg.kie.api.runtime.process.CaseData.CaseData;
+
+rule "ask user for details"
+    when
         $caseData : CaseFileInstance()
         String(this == "AskForDetails") from $caseData.getData("decision")
-                  
-    then 
+    then
         $caseData.remove("decision");
         CaseService caseService = (CaseService) ServiceRegistry.get().service(ServiceRegistry.CASE_SERVICE);
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("reason", "How did it happen?");
-        caseService.addDynamicTask($corg.kie.api.runtime.process.CaseDataaseData.getCaseId(), caseService.newHumanTaskSpec("Please provide additional details", "Action", "insured", null, parameters));
-        
-    end
+        caseService.addDynamicTask($caseData.getCaseId(), caseService.newHumanTaskSpec("Please provide additional details", "Action", "insured", null, parameters));
+end
+```
 
 ## Accessing to the case data from scripts
 
@@ -214,22 +212,25 @@ Variables in the case (process) definition that are flagged as **Case File** are
 
 This the correct approach:
 
-	CaseData caseData = kcontext.getCaseData();
-	
-	Data data = (Data) caseData.getData("data");
-	data.setPrice(data.getPrice() + 10);
-	caseData.add("data", data);
+```java
+CaseData caseData = kcontext.getCaseData();
+
+Data data = (Data) caseData.getData("data");
+data.setPrice(data.getPrice() + 10);
+caseData.add("data", data);
+```
 
 **Pay attention:** `caseData.add("data", data)` update the **caseFile** variable, but it DOES NOT triggers the rules (e.g. the Milestone condition).
 
 To have a "full" caseFile update use the following snippet of code:
 
-	RuntimeDataService runtimeDataService = (RuntimeDataService) ServiceRegistry.get().service(ServiceRegistry.RUNTIME_DATA_SERVICE);
-	ProcessInstanceDesc processInstanceDesc = runtimeDataService.getProcessInstanceById(kcontext.getProcessInstance().getId());
-	String correlationKey = processInstanceDesc.getCorrelationKey();
-	CaseService caseService = (CaseService) ServiceRegistry.get().service(ServiceRegistry.CASE_SERVICE);
-	caseService.addDataToCaseFile(correlationKey, "data", data);
-
+```java
+RuntimeDataService runtimeDataService = (RuntimeDataService) ServiceRegistry.get().service(ServiceRegistry.RUNTIME_DATA_SERVICE);
+ProcessInstanceDesc processInstanceDesc = runtimeDataService.getProcessInstanceById(kcontext.getProcessInstance().getId());
+String correlationKey = processInstanceDesc.getCorrelationKey();
+CaseService caseService = (CaseService) ServiceRegistry.get().service(ServiceRegistry.CASE_SERVICE);
+caseService.addDataToCaseFile(correlationKey, "data", data);
+```
 
 # Case Management in BPM Suite version 6
 
@@ -285,8 +286,4 @@ workParams.put("Message", testVar);
 
 
 cmService.createDynamicWorkTask(kcontext.getProcessInstance().getId(), "Log", workParams);
-
-
-
-
 

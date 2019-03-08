@@ -1,7 +1,8 @@
 Other Related Products Information
 ==================================
 
-## Developing
+Developing
+------------------------------------
 
 ### eclipse UML visualizer: ObjectAid UML Explorer
 
@@ -9,7 +10,8 @@ In the 'Add Repository' dialog, enter this information and press 'OK':
 - Name: `ObjectAid UML Explorer`
 - URL: `http://www.objectaid.com/update/current`
 
-## JBoss EAP 7.x
+JBoss EAP 7.x
+------------------------------------
 
 ### Configure GMail
 
@@ -29,7 +31,9 @@ Configure outbound connection:
 	</outbound-socket-binding>
 
 
-## JBoss EAP 6.4
+JBoss EAP 6.4
+------------------------------------
+
 
 ### Install
 
@@ -219,7 +223,8 @@ EAP 7.0 - Hibernate 5.0.9
 
 [JBoss Enterprise Application Platform Component Details](https://access.redhat.com/articles/112673)
 
-## Internal repositories
+Internal repositories
+------------------------------------
 
 stored where eap is launched:
 
@@ -235,7 +240,9 @@ Default document implementation store files in the file system:
     .doc
     business-central.war/WEB-INF/tmp
 
-## Remote debug
+Remote debug
+------------------------------------
+
 **By default debug mode is disabled.**
 Launch:
 
@@ -250,7 +257,8 @@ In Eclipse create a new Debug configuration using the template `Remote Java Appl
 - Connection Type: Standard
 - Port: 8787 (standard port of JBoss EAP)
 
-## Database
+Databases
+------------------------------------
 
 ### H2
 
@@ -274,11 +282,21 @@ To remotely connect to a database using the TCP server, use the following driver
     JAVA_OPTS="$JAVA_OPTS -Dmysql.host.port=3306"
     JAVA_OPTS="$JAVA_OPTS -Dmysql.bpms.schema=bpms"
 
-# CI/CD
+CI/CD
+==================================
 
 the post-commit hook script check if the commit touched the POM file, and if it's the case you could also check if it was a version bump, then the script pushes the changes triggering the pipeline.
 
-# Interesting information
+Further Interesting information
+==================================
 
 - [Simian (Similarity Analyser) identifies duplication in code and rules](https://www.harukizaemon.com/simian/index.html)
 - [Bridge Java and .net](http://jni4net.com/)
+
+Security
+------------------------------------
+
+- [OAuth 2.0 and OpenID Connect (in plain English)](https://www.youtube.com/watch?v=996OiexHze0&t=1s)
+
+
+

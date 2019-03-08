@@ -85,50 +85,33 @@ Replace the keystore:
 
 ## Create the app
 
-	oc new-app -f rhpam71-authoring-postgres-custom.yaml \
+	oc new-app -f rhpam72-authoring-postgresql.yaml \
 		-p BUSINESS_CENTRAL_HTTPS_SECRET=businesscentral-app-secret \
 		-p KIE_SERVER_HTTPS_SECRET=kieserver-app-secret \
 		-p KIE_ADMIN_PWD=password \
 		-p KIE_SERVER_PWD=password \
 		-p KIE_SERVER_CONTROLLER_PWD=password
 
-Version 7.2 example:
+### Other parameters
 
-	OPENSHIFT_TEMPLATE_NAME=rhpam72-authoring
-	PROJECT_NAME=pam72
-	BUSINESS_CENTRAL_USER=pamAdmin
-	BUSINESS_CENTRAL_PASSWORD=password
-	KIE_SERVER_DATABASE_USER=h2user
-	KIE_SERVER_DATABASE_PASSWORD=password
-	BUSINESS_CENTRAL_MAVEN_USER=maven
-	BUSINESS_CENTRAL_MAVEN_PASSWORD=mavenpassword
-	BUSINESS_CENTRAL_HTTPS_PASSWORD=mykeystorepass
-	KIE_SERVER_USER=kieserver
-	KIE_SERVER_PASSWORD=password
-	KIE_SERVER_CONTROLLER_USER=controllerUser
-	KIE_SERVER_CONTROLLER_PASSWORD=password
-	KIE_SERVER_HTTPS_PASSWORD=mykeystorepass
-	IMAGE_STREAM_NAMESPACE=openshift
-	
-	oc new-app -f ${OPENSHIFT_TEMPLATE_NAME}.yaml \
-	   -p APPLICATION_NAME=${PROJECT_NAME} \
-	   -p KIE_ADMIN_USER=${BUSINESS_CENTRAL_USER} \
-	   -p KIE_ADMIN_PWD=${BUSINESS_CENTRAL_PASSWORD} \
-	   -p KIE_SERVER_H2_USER=${KIE_SERVER_DATABASE_USER} \
-	   -p KIE_SERVER_H2_PWD=${KIE_SERVER_DATABASE_PASSWORD} \
-	   -p BUSINESS_CENTRAL_MAVEN_USERNAME=${BUSINESS_CENTRAL_MAVEN_USER} \
-	   -p BUSINESS_CENTRAL_MAVEN_PASSWORD=${BUSINESS_CENTRAL_MAVEN_PASSWORD} \
-	   -p BUSINESS_CENTRAL_HTTPS_PASSWORD=${BUSINESS_CENTRAL_HTTPS_PASSWORD} \
-	   -p BUSINESS_CENTRAL_HTTPS_SECRET=businesscentral-app-secret \
-	   -p BUSINESS_CENTRAL_HTTPS_NAME=jboss \
-	   -p KIE_SERVER_USER=${KIE_SERVER_USER} \
-	   -p KIE_SERVER_PWD=${KIE_SERVER_PASSWORD} \
-	   -p KIE_SERVER_CONTROLLER_USER=${KIE_SERVER_CONTROLLER_USER} \
-	   -p KIE_SERVER_CONTROLLER_PWD=${KIE_SERVER_CONTROLLER_PASSWORD} \
-	   -p KIE_SERVER_HTTPS_PASSWORD=${KIE_SERVER_HTTPS_PASSWORD} \
-	   -p KIE_SERVER_HTTPS_SECRET=kieserver-app-secret \
-	   -p KIE_SERVER_HTTPS_NAME=jboss \
-	   -p IMAGE_STREAM_NAMESPACE=${IMAGE_STREAM_NAMESPACE}
+```sh
+ -p OPENSHIFT_TEMPLATE_NAME=rhpam72-authoring \
+ -p PROJECT_NAME=pam72 \
+ -p BUSINESS_CENTRAL_USER=pamAdmin \
+ -p BUSINESS_CENTRAL_PASSWORD=password \
+ -p KIE_SERVER_DATABASE_USER=h2user \
+ -p KIE_SERVER_DATABASE_PASSWORD=password \
+ -p BUSINESS_CENTRAL_MAVEN_USER=maven \
+ -p BUSINESS_CENTRAL_MAVEN_PASSWORD=mavenpassword \
+ -p BUSINESS_CENTRAL_HTTPS_PASSWORD=mykeystorepass \
+ -p KIE_SERVER_USER=kieserver \
+ -p KIE_SERVER_PASSWORD=password \
+ -p KIE_SERVER_CONTROLLER_USER=controllerUser \
+ -p KIE_SERVER_CONTROLLER_PASSWORD=password \
+ -p KIE_SERVER_HTTPS_PASSWORD=mykeystorepass \
+ -p IMAGE_STREAM_NAMESPACE=openshift
+```
+
  
 ### Change readiness probe
 
@@ -359,6 +342,18 @@ Procedure to raise the PAM log level for the Web Services handler (ephemeral cha
 4. Close the remote shell
 
 		sh-4.2$ exit
+
+### Memory issues
+
+Environment variables:
+
+	CONTAINER_HEAP_PERCENT = 0.5
+	INITIAL_HEAP_PERCENT = 0.5
+	
+
+Metaspace (works out of S2I?): 
+
+	GC_MAX_METASPACE_SIZE = 512
 
 
 ## Openshift Useful links

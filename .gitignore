@@ -1,7 +1,17 @@
-.classpath
-.project
-.settings/
-/bin/
-/target/
-*.jpage
+# eclipse
+**/.classpath
+**/.project
+**/.settings
+**/*.jpage
+**/.factorypath
+
+# maven
+**/bin/
+**/target/
+
+# ghostwriter
 *.backup
+
+#vscode
+.vscode
+
