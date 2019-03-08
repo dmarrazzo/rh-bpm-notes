@@ -1,5 +1,12 @@
 # Install RHPAM in OpenShift
 
+## Login
+
+Login as system admin:
+
+	oc login -u system:admin
+  oc project openshift
+
 ## Registry auth
 
 Create credential:
@@ -7,41 +14,28 @@ Create credential:
 	oc create secret docker-registry red-hat-container-registry --docker-server=https://registry.redhat.io   --docker-username="$REGISTRY_REDHAT_IO_USERNAME"   --docker-password="$REGISTRY_REDHAT_IO_PASSWORD"  --docker-email="$REGISTRY_REDHAT_IO_USERNAME"
 	oc secrets link builder red-hat-container-registry --for=pull
 
-Not sure (???):
-
-	oc create secret docker-registry rh-registry --docker-server=registry.redhat.io --docker-username="$REGISTRY_REDHAT_IO_USERNAME" --docker-password="$REGISTRY_REDHAT_IO_PASSWORD" --docker-email="$REGISTRY_REDHAT_IO_USERNAME"
-
-Manually import image:
-
-	oc import-image rhpam71-businesscentral-openshift:1.1
-	oc import-image rhpam71-kieserver-openshift:1.1
-
-#### Other tips
-
-	oreg_user=<your RHN username>
-	oreg_pass=<your RHN password>
-	oc create secret docker-registry rhcc --docker-server=registry.redhat.io --docker-username=$oreg_user --docker-password=$oreg_pass
-	secret/rhcc created
+#### Alternative credentials
 
 You can also create a service account for Red Hat's registry instead of using your RHN credentials. See	[https://access.redhat.com/terms-based-registry/]()
-	
+
 This is actually the recommended way.  Using your RHN login may or may not work if load is high in RHN however the terms based registry tokens always work.
 
-
-## Image streams
-
-Login as system admin:
-
-	oc login -u system:admin
-    oc project openshift
+## Image streams definition
 
 Create the images:
 
-	oc create -f rhpam71-image-streams.yaml
+	oc create -f rhpam72-image-streams.yaml
 
 List the images:
 
-	oc get imagestreams.image.openshift.io | grep rhpam71
+	oc get imagestreams.image.openshift.io | grep rhpam72
+
+### Import image
+
+Manually import image:
+
+	oc import-image rhpam72-businesscentral-openshift:1.1
+	oc import-image rhpam72-kieserver-openshift:1.1
 
 ## Import templates
 
@@ -53,13 +47,13 @@ Optionally, you can import template the templates in order to enrich the catalog
 
 ## Delete imagestreams
 
-if you need to delete a previous version
+If you need to delete a previous version
 
-	oc delete imagestreams.image.openshift.io/rhpam71-smartrouter-openshift	
+	oc delete imagestreams.image.openshift.io/rhpam72-smartrouter-openshift	
 
 delete all imagestream
 
-	oc get imagestreams.image.openshift.io | grep rhpam71 | awk '{print "is/"$1}' |xargs oc delete 
+	oc get imagestreams.image.openshift.io | grep rhpam72 | awk '{print "is/"$1}' |xargs oc delete 
 
 ## Login as developer
 
@@ -85,6 +79,22 @@ Replace the keystore:
 
 ## Create the app
 
+### Authoring environment
+
+```bash
+oc new-app -f rhpam72-authoring.yaml \
+ -p BUSINESS_CENTRAL_HTTPS_SECRET=businesscentral-app-secret \
+ -p KIE_SERVER_HTTPS_SECRET=kieserver-app-secret \
+ -p KIE_ADMIN_PWD=password \
+ -p KIE_SERVER_PWD=password \
+ -p KIE_SERVER_CONTROLLER_PWD=password
+```
+
+### Authoring environment with postgresql
+
+If you want to use Postgress instead of H2 database, you have to customize the template.
+See [Modifying the template](https://access.redhat.com/documentation/en-us/red_hat_process_automation_manager/7.2/html-single/deploying_a_red_hat_process_automation_manager_authoring_environment_on_red_hat_openshift_container_platform/index#environment-authoring-single-modify-proc)
+
 	oc new-app -f rhpam72-authoring-postgresql.yaml \
 		-p BUSINESS_CENTRAL_HTTPS_SECRET=businesscentral-app-secret \
 		-p KIE_SERVER_HTTPS_SECRET=kieserver-app-secret \
@@ -92,9 +102,9 @@ Replace the keystore:
 		-p KIE_SERVER_PWD=password \
 		-p KIE_SERVER_CONTROLLER_PWD=password
 
-### Other parameters
+### Other Environment variables
 
-```sh
+```bash
  -p OPENSHIFT_TEMPLATE_NAME=rhpam72-authoring \
  -p PROJECT_NAME=pam72 \
  -p BUSINESS_CENTRAL_USER=pamAdmin \
@@ -105,7 +115,7 @@ Replace the keystore:
  -p BUSINESS_CENTRAL_MAVEN_PASSWORD=mavenpassword \
  -p BUSINESS_CENTRAL_HTTPS_PASSWORD=mykeystorepass \
  -p KIE_SERVER_USER=kieserver \
- -p KIE_SERVER_PASSWORD=password \
+ -p KIE_SERVER_PWD=password \
  -p KIE_SERVER_CONTROLLER_USER=controllerUser \
  -p KIE_SERVER_CONTROLLER_PASSWORD=password \
  -p KIE_SERVER_HTTPS_PASSWORD=mykeystorepass \
@@ -117,13 +127,9 @@ Replace the keystore:
 
 In minishift or environment with low resources, it's better to raise the readiness timeout.
 
-
-
 ## PostgreSQL Template
 
-
-[Template custom for PostgreSQL](config/rhpam71-authoring-postgresql-custom.yaml)
- 
+[Template custom for PostgreSQL](config/rhpam72-authoring-postgresql-custom.yaml)
 
 ## Expose git ssh
 
@@ -169,7 +175,7 @@ References:
 
 2) oc create configmap settings.xml --from-file settings.xml
 
-3) vi rhpam71-trial-ephemeral.yaml (new sections are 'volume' and 'volumeMounts')
+3) vi rhpam72-trial-ephemeral.yaml (new sections are 'volume' and 'volumeMounts')
 
 ```
 - kind: DeploymentConfig
@@ -203,7 +209,7 @@ References:
           <!-- ... snip ...-->
 ```
 
-4) Deploy the app from the modified rhpam71-trial-ephemeral.yaml
+4) Deploy the app from the modified rhpam72-trial-ephemeral.yaml
 
 5) Navigate to the running kieserver pod and access the Terminal tab (or use `$ oc rsh <pod name>`)
 
@@ -291,9 +297,18 @@ List all
 
 	oc get secrets businesscentral-app-secret -o=yaml
 
+### get details in yaml
+
+	oc get bc cakephp-mysql-example -o yaml | less
+
 ### delete the application
 
-	oc delete all -l app=rhpam71-authoring
+	oc delete all -l app=rhpam72-authoring
+
+### delete all the project
+
+	oc delete all -l application=pam72
+
 
 ### server log
 	
@@ -321,10 +336,12 @@ Procedure to raise the PAM log level for the Web Services handler (ephemeral cha
 
 1. Login in your OCP and get pod name for the kie-server
 
-		oc login -u <user>
-		oc project <project>
-		oc get pods
-		[...]
+```bash
+oc login -u <user>
+oc project <project>
+oc get pods
+[...]
+```
 
 2. Open a shell in the pod:
 
