@@ -55,10 +55,12 @@ delete all imagestream
 
 	oc get imagestreams.image.openshift.io | grep rhpam72 | awk '{print "is/"$1}' |xargs oc delete 
 
-## Login as developer
+## Create a project
+
+Login as developer
 
 	oc login -u developer
-	oc project myproject
+	oc project pam721
 
 ## Create secret
 
@@ -87,7 +89,21 @@ oc new-app -f rhpam72-authoring.yaml \
  -p KIE_SERVER_HTTPS_SECRET=kieserver-app-secret \
  -p KIE_ADMIN_PWD=password \
  -p KIE_SERVER_PWD=password \
- -p KIE_SERVER_CONTROLLER_PWD=password
+ -p KIE_SERVER_CONTROLLER_PWD=password \
+ -p GC_MAX_METASPACE_SIZE=512
+```
+
+If the image streams are not defined in the openshift namespace, it's possible to override it with this parameter `IMAGE_STREAM_NAMESPACE`.
+
+```bash
+oc new-app -f rhpam72-authoring.yaml \
+ -p IMAGE_STREAM_NAMESPACE=pam721 \
+ -p BUSINESS_CENTRAL_HTTPS_SECRET=businesscentral-app-secret \
+ -p KIE_SERVER_HTTPS_SECRET=kieserver-app-secret \
+ -p KIE_ADMIN_PWD=password \
+ -p KIE_SERVER_PWD=password \
+ -p KIE_SERVER_CONTROLLER_PWD=password \
+ -p GC_MAX_METASPACE_SIZE=512
 ```
 
 ### Authoring environment with postgresql
