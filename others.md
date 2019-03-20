@@ -240,6 +240,29 @@ Default document implementation store files in the file system:
     .doc
     business-central.war/WEB-INF/tmp
 
+### Webhooks
+
+In order to configure git hook in the business central, add the following system property to point the script folder.
+
+```xml
+<property name="org.uberfire.nio.git.hooks" value="/home/donato/apps/rhpam-73/standalone/data/kie/git/hooks"/>
+```
+
+Create the *post-commit* `script`:
+
+```bash
+#!/bin/bash
+
+java -jar -Dsync.mode=on_sync -Dbc.url=myapp-rhpamcentr-rhpam-user1.apps.rotterdam-a2a2.openshiftworkshop.com:8001 -Dgh.username={your-user} -Dgh.password={your-password-or-token} /opt/eap/standalone/data/kie/git/hooks/bc-github-githook-1.0.0-Beta1.jar
+```
+
+To test webhooks, there is a really useful utility:
+[Ngrok](http://ngrok.com/)
+
+ngrok command line for tcp connections:
+
+    ngrok tcp 8001
+
 Remote debug
 ------------------------------------
 
