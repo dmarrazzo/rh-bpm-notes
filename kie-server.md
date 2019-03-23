@@ -144,27 +144,13 @@ There are 3 extension types:
 
 ## jBPM Services
 
-	object	KModuleDeploymentService  (id=648)	
-	object	BPMN2DataServiceImpl  (id=655)	
-	object	ProcessServiceImpl  (id=14234)	
+**org.jbpm.services.api.RuntimeDataService** provides an interface to retrieve data about the runtime, including the following:
 
-	org.jbpm.services.api.ProcessService
-	- startProcess(String, String)
+- process instances
+- process definitions
+- node instance information
+- variable information
 
-
-	object	UserTaskServiceImpl  (id=14237)	
-	
-	object	RuntimeDataServiceImpl  (id=14187)	
-	org.jbpm.services.api.RuntimeDataService
-	This service provides an interface to retrieve data about the runtime, including the following:
-	 * <ul>
-	 * 	<li>process instances</li>
-	 * 	<li>process definitions</li>
-	 * 	<li>node instance information</li>
-	 * 	<li>variable information</li>
-	 * </ul>
-	
-	
 
 	object	ExecutorServiceImpl  (id=14171)	
 	Entry point of the executor component. Application should always talk
@@ -241,10 +227,12 @@ Self documentation (Swagger):
 
 Initial variables:
 
+```java
     private static final String URL = "http://localhost:8080/kie-server/services/rest/server";
     private static final String user = "";
     private static final String password = "";
     private static final String CONTAINER = "atti";
+```
 
 List tasks of a process instance:
 
