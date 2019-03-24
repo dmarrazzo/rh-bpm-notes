@@ -1,4 +1,4 @@
-Install
+Install and configure
 ======================================
 
 ## Graphical Installation BPM Suite
@@ -584,3 +584,50 @@ Exception:
 Add the following system property:
 
     <property name="org.uberfire.nio.git.ssh.algorithm" value="RSA"/>
+
+## Performance troubleshooting
+
+Check EAP heap memory usage: `/core-service=platform-mbean/type=memory:read-attribute(name=heap-memory-usage)`
+
+Java tracing [Byteman](http://byteman.jboss.org/)
+
+[How to enable access logging for JBoss EAP 7?](https://access.redhat.com/solutions/2423311)
+
+In order to measure the kieserver response time, it's possible to instrument the server with **Byteman**:
+
+- add the following line in `standalone.conf` file:
+
+  ```bash
+  JAVA_OPTS="$JAVA_OPTS -javaagent:<byteman_home>/lib/byteman.jar=script:<path_to>/kierule.btm,sys:<byteman_home>/lib/byteman.jar -Dorg.jboss.byteman.transform.all=true"
+  ```
+
+- create `kierule.btm` with the following rule:
+
+  ```ruby
+  RULE org.kie.server.remote.rest.jbpm.ProcessResource#startProcess - START
+  CLASS org.kie.server.remote.rest.jbpm.ProcessResource
+  METHOD startProcess
+  AT ENTRY
+  BIND
+      this:Object = $0;
+      timerCreated:boolean = createTimer(this.toString()+"startProcess");
+  IF TRUE
+      DO System.out.println("[BYTEMAN] " + this.toString() + " startProcess called");
+  ENDRULE
+
+  RULE org.kie.server.remote.rest.jbpm.ProcessResource#startProcess - END
+  CLASS org.kie.server.remote.rest.jbpm.ProcessResource
+  METHOD startProcess
+  AT EXIT
+  BIND
+      this:Object = $0;
+      timeSpent:long = getElapsedTimeFromTimer(this.toString()+"startProcess");
+  IF TRUE
+      DO System.out.println("[BYTEMAN] " + this.toString() + " startProcess took " + timeSpent + " ms");deleteTimer(this.toString()+"startProcess");
+  ENDRULE
+  ```
+
+### Byteman References
+
+- [Byteman homepage](http://byteman.jboss.org/)
+- [Using Byteman to troubleshoot Java issues](https://access.redhat.com/solutions/31283)
