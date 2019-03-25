@@ -453,6 +453,25 @@ Additional you need to define the system property jbpm.usergroup.callback.proper
 [Video](https://youtu.be/0UpT92-GIxc) and [configuration](https://github.com/BalakrishnanBalasubramanian/ldap-jbpm-auth)
 
 
+## Audit log cleanup
+
+The PAM database is an online transactional DB, it should be cleaned up regularly. Depending on the use case, you can decide the history you want to keep online (e.g. 3 months).
+The history of the processes and tasks is kept in the audit log tables:
+
+- ProcessInstanceLog
+- NodeInstanceLog
+- VariableInstanceLog
+- AuditTaskImpl
+- TaskEvent
+- CaseFileDataLog
+- CaseRoleAssignmentLog
+
+The product provides a set of command to clean the DB.
+
+[log cleanup](https://access.redhat.com/documentation/en-us/red_hat_jboss_bpm_suite/6.4/html/administration_and_configuration_guide/chap_logging#configuring_logging3)
+
+In order to archive data, it's possible to use DB utility to clone those tables.
+
 Problems
 ============================================================================
 
