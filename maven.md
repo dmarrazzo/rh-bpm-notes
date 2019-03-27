@@ -10,7 +10,7 @@ Bill of Material:
 			<dependency>
 				<groupId>com.redhat.ba</groupId>
 				<artifactId>ba-platform-bom</artifactId>
-				<version>${version}</version>
+				<version>${ba.version}</version>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
@@ -20,7 +20,7 @@ Bill of Material:
 Version property:
 
 	<properties>
-		<version>7.1.1.GA-redhat-00001</version>
+		<ba.version>7.1.1.GA-redhat-00001</ba.version>
 	</properties>
 
 | Product version | BOM Version            |
@@ -29,7 +29,7 @@ Version property:
 | 7.1.1           | 7.1.1.GA-redhat-00001  |
 | 7.2.0           | 7.2.0.GA-redhat-00002  |
 | 7.2.1           | 7.2.1.GA-redhat-00002  |
-
+| 7.3.0           | 7.3.0.GA-redhat-00002 |
 
 ## Dependencies
 
