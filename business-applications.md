@@ -1,6 +1,17 @@
 Business Applications
 ============================================================
 
+Generate the project structure
+------------------------------------------------------------
+
+1. Wizard in [start.jbpm.org]()
+2. CLI: https://www.npmjs.com/package/jba-cli
+3. JHipster: https://www.npmjs.com/package/generator-jba
+4. VSC (ide): https://marketplace.visualstudio.com/items?itemName=tsurdilovic.jbavsc
+
+Business Central for monitoring
+------------------------------------------------------------
+
 Run unmanaged
 
 ```bash
@@ -66,3 +77,10 @@ In order to set up the websocket protocol in the business application:
     ```bash
     kieserver.controllers=ws://localhost:8080/business-central/websocket/controller
     ```
+
+Resources
+------------------------------------------------------------
+
+- [youtube videos](https://www.youtube.com/user/tsurdilovic/videos?view_as=subscriber)
+- [example](https://github.com/BootstrapJBPM)
+- [jBPM Documentation](https://docs.jboss.org/jbpm/release/7.19.0.Final/jbpm-docs/html_single/#_businessappoverview)
