@@ -9,8 +9,47 @@ Generate the project structure
 3. JHipster: https://www.npmjs.com/package/generator-jba
 4. VSC (ide): https://marketplace.visualstudio.com/items?itemName=tsurdilovic.jbavsc
 
+### Archetype
+
+
+```bash
+mvn archetype:generate -B -DarchetypeGroupId=org.kie -DarchetypeArtifactId=kie-model-archetype -DarchetypeVersion=7.18.0.Final-redhat-00002 -DgroupId=com.company -DartifactId=test-model -Dversion=1.0-SNAPSHOT -Dpackage=com.company.model
+
+mvn archetype:generate -B -DarchetypeGroupId=org.kie -DarchetypeArtifactId=kie-kjar-archetype -DarchetypeVersion=7.18.0.Final-redhat-00002 -DgroupId=com.company -DartifactId=test-kjar -Dversion=1.0-SNAPSHOT -Dpackage=com.company
+
+mvn archetype:generate -B -DarchetypeGroupId=org.kie -DarchetypeArtifactId=kie-service-spring-boot-archetype -DarchetypeVersion=7.18.0.Final-redhat-00002 -DgroupId=com.company -DartifactId=test-service -Dversion=1.0-SNAPSHOT -Dpackage=com.company.service -DappType=bpm
+```
+
+Business Central for development
+------------------------------------------------------------
+
+Configure the properties in  `business-application-service/src/main/resources/application-dev.properties`
+
+```bash
+kieserver.controllers=http://localhost:8080/business-central/rest/controller
+```
+
+Start:
+
+```bash
+mvn clean package
+./launch-dev.sh
+```
+
+Otherwise in one single line:
+
+```bash
+./launch-dev.sh clean package
+```
+
 Business Central for monitoring
 ------------------------------------------------------------
+
+Configure the properties in  `business-application-service/src/main/resources/application.properties`
+
+```bash
+kieserver.controllers=http://<bc-service-name>:8080/business-central/rest/controller
+```
 
 Run unmanaged
 
@@ -75,8 +114,65 @@ In order to set up the websocket protocol in the business application:
 - change the controller url
 
     ```bash
-    kieserver.controllers=ws://localhost:8080/business-central/websocket/controller
+    kieserver.controllers=ws://<bc-service-name>:8080/business-central/websocket/controller
     ```
+
+Running in OpenShift
+------------------------------------------------------------
+
+Create docker file:
+
+```ruby
+FROM fabric8/java-jboss-openjdk8-jdk
+ENV JAVA_OPTIONS="-Dkie.maven.settings.custom=/opt/jboss/.m2/settings.xml -Dorg.guvnor.m2repo.dir=/opt/jboss/.m2/repository" M2_HOME=/opt/jboss/.m2
+EXPOSE 8090
+COPY maven /tmp/50170706-2718-4275-881f-69b4606fc3f4/
+USER root
+RUN chown -R jboss:jboss /tmp/50170706-2718-4275-881f-69b4606fc3f4 && cp -rp /tmp/50170706-2718-4275-881f-69b4606fc3f4/* / && rm -rf /tmp/50170706-2718-4275-881f-69b4606fc3f4
+RUN chgrp -Rf root /opt/jboss && chmod -Rf g+w /opt/jboss
+RUN chgrp -Rf root /deployments && chmod -Rf g+w /deployments
+```
+
+Change `pom.xml`:
+
+```xml
+<env>
+    <M2_HOME>/opt/jboss/.m2</M2_HOME>
+    <JAVA_OPTIONS>-Dkie.maven.settings.custom=/opt/jboss/.m2/settings.xml -Dorg.guvnor.m2repo.dir=/opt/jboss/.m2/repository</JAVA_OPTIONS>
+</env>
+<ports>
+    <port>8090</port>
+</ports>
+<runCmds>
+    <run>chgrp -Rf root /opt/jboss &amp;&amp; chmod -Rf g+w /opt/jboss</run>
+    <run>chgrp -Rf root /deployments &amp;&amp; chmod -Rf g+w /deployments</run>
+</runCmds>
+```
+
+Create a new build for your application:
+
+```sh
+$ oc new-build --strategy docker --binary --name myapp
+```
+
+Start a binary build using the local directory’s content:
+
+```bash
+$ oc start-build myapp --from-dir . --follow
+```
+
+Deploy the application using new-app, then create a route for it:
+
+```bash
+$ oc new-app myapp
+$ oc expose svc/myapp
+```
+
+Get the host name for your route and navigate to it:
+
+```bash
+$ oc get route myapp
+```
 
 Resources
 ------------------------------------------------------------
