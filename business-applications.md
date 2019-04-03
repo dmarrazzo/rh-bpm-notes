@@ -120,19 +120,6 @@ In order to set up the websocket protocol in the business application:
 Running in OpenShift
 ------------------------------------------------------------
 
-Create docker file:
-
-```ruby
-FROM fabric8/java-jboss-openjdk8-jdk
-ENV JAVA_OPTIONS="-Dkie.maven.settings.custom=/opt/jboss/.m2/settings.xml -Dorg.guvnor.m2repo.dir=/opt/jboss/.m2/repository" M2_HOME=/opt/jboss/.m2
-EXPOSE 8090
-COPY maven /tmp/50170706-2718-4275-881f-69b4606fc3f4/
-USER root
-RUN chown -R jboss:jboss /tmp/50170706-2718-4275-881f-69b4606fc3f4 && cp -rp /tmp/50170706-2718-4275-881f-69b4606fc3f4/* / && rm -rf /tmp/50170706-2718-4275-881f-69b4606fc3f4
-RUN chgrp -Rf root /opt/jboss && chmod -Rf g+w /opt/jboss
-RUN chgrp -Rf root /deployments && chmod -Rf g+w /deployments
-```
-
 Change `pom.xml`:
 
 ```xml
@@ -149,30 +136,71 @@ Change `pom.xml`:
 </runCmds>
 ```
 
+Note: in order to define the maven repository location, regardless the user running the application make sure that this properties are passed:
+
+```bash
+-Dkie.maven.settings.custom=/opt/jboss/.m2/settings.xml -Dorg.guvnor.m2repo.dir=/opt/jboss/.m2/repository
+```
+
+Running
+
+```sh
+./launch.sh clean install -Popenshift,h2
+```
+
+It creates a Dockerfile in `./target/docker/apps/business-application-service/1.0-SNAPSHOT/build/Dockerfile`:
+
+```ruby
+FROM fabric8/java-jboss-openjdk8-jdk
+ENV JAVA_OPTIONS="-Dkie.maven.settings.custom=/opt/jboss/.m2/settings.xml -Dorg.guvnor.m2repo.dir=/opt/jboss/.m2/repository" M2_HOME=/opt/jboss/.m2
+EXPOSE 8090
+COPY maven /
+RUN chgrp -Rf root /opt/jboss && chmod -Rf g+w /opt/jboss
+RUN chgrp -Rf root /deployments && chmod -Rf g+w /deployments
+USER jboss:jboss:jboss
+```
+
+Modify to add the `root` user:
+
+```ruby
+FROM fabric8/java-jboss-openjdk8-jdk
+ENV JAVA_OPTIONS="-Dkie.maven.settings.custom=/opt/jboss/.m2/settings.xml -Dorg.guvnor.m2repo.dir=/opt/jboss/.m2/repository" M2_HOME=/opt/jboss/.m2
+EXPOSE 8090
+COPY maven /
+USER root
+RUN chgrp -Rf root /opt/jboss && chmod -Rf g+w /opt/jboss
+RUN chgrp -Rf root /deployments && chmod -Rf g+w /deployments
+USER jboss:jboss:jboss
+```
+
 Create a new build for your application:
 
 ```sh
-$ oc new-build --strategy docker --binary --name myapp
+$ oc new-build --strategy docker --binary --name busapp
 ```
 
 Start a binary build using the local directory’s content:
 
 ```bash
-$ oc start-build myapp --from-dir . --follow
+$ oc start-build busapp --from-dir . --follow
 ```
 
 Deploy the application using new-app, then create a route for it:
 
 ```bash
-$ oc new-app myapp
-$ oc expose svc/myapp
+$ oc new-app busapp
+$ oc expose svc/busapp
 ```
 
 Get the host name for your route and navigate to it:
 
 ```bash
-$ oc get route myapp
+$ oc get route busapp
 ```
+
+https://docs.openshift.com/container-platform/3.11/creating_images/guidelines.html
+https://docs.okd.io/latest/dev_guide/dev_tutorials/binary_builds.html
+
 
 Resources
 ------------------------------------------------------------
@@ -180,3 +208,5 @@ Resources
 - [youtube videos](https://www.youtube.com/user/tsurdilovic/videos?view_as=subscriber)
 - [example](https://github.com/BootstrapJBPM)
 - [jBPM Documentation](https://docs.jboss.org/jbpm/release/7.19.0.Final/jbpm-docs/html_single/#_businessappoverview)
+
+https://github.com/BootstrapJBPM/jbpm-bootstrap-service/blob/master/pom.xml#L257-L260
