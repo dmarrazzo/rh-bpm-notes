@@ -142,13 +142,26 @@ Note: in order to define the maven repository location, regardless the user runn
 -Dkie.maven.settings.custom=/opt/jboss/.m2/settings.xml -Dorg.guvnor.m2repo.dir=/opt/jboss/.m2/repository
 ```
 
-Running
+Run this command to deploy in OpenShift:
 
 ```sh
 ./launch.sh clean install -Popenshift,h2
 ```
 
-It creates a Dockerfile in `./target/docker/apps/business-application-service/1.0-SNAPSHOT/build/Dockerfile`:
+Stop it when you see this line:
+
+```bash
+[INFO] F8: Starting Build business-application-service-s2i
+```
+
+Behind the scenes, it runs `fabric8` to create a Dockerfile and the content of the image.
+
+You can find the Dockerfile in `./target/docker/apps/business-application-service/1.0-SNAPSHOT/build/Dockerfile`.
+The image will contains:
+
+- the service jar that contains the kieserver runtime
+- a standalone local maven repository with the kjar and other supporting jars
+- the kieserver configuration in business-application-service.xml (a good alternative is to bind this file with a configmap)
 
 ```ruby
 FROM fabric8/java-jboss-openjdk8-jdk
@@ -160,7 +173,7 @@ RUN chgrp -Rf root /deployments && chmod -Rf g+w /deployments
 USER jboss:jboss:jboss
 ```
 
-Modify to add the `root` user:
+Unfortunately, as is, it's not working, so you have to modify to add the `root` user:
 
 ```ruby
 FROM fabric8/java-jboss-openjdk8-jdk
@@ -198,8 +211,13 @@ Get the host name for your route and navigate to it:
 $ oc get route busapp
 ```
 
-https://docs.openshift.com/container-platform/3.11/creating_images/guidelines.html
-https://docs.okd.io/latest/dev_guide/dev_tutorials/binary_builds.html
+Related informations:
+
+[https://docs.openshift.com/container-platform/3.11/creating_images/guidelines.html]()
+[https://docs.okd.io/latest/dev_guide/dev_tutorials/binary_builds.html]()
+
+Workaround for user recognition problem:
+[https://github.com/RHsyseng/container-rhel-examples/blob/master/starter-arbitrary-uid/Dockerfile]()
 
 
 Resources
