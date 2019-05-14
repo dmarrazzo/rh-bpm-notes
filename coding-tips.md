@@ -279,7 +279,23 @@ Service Registry must be used in a kie-server (CDI not allowed):
 
 [ServiceRegistry](https://github.com/kiegroup/jbpm/blob/master/jbpm-services/jbpm-services-api/src/main/java/org/jbpm/services/api/service/ServiceRegistry.java)
 
+Dependency:
+
+```xml
+<dependency>
+    <groupId>org.jbpm</groupId>
+    <artifactId>jbpm-services-api</artifactId>
+    <scope>provided</scope>
+</dependency>
+```
+
 Usage example:
 
-    RuntimeDataService runtimeDataService = (RuntimeDataService) ServiceRegistry.get().service(ServiceRegistry.RUNTIME_DATA_SERVICE);
+```java
+RuntimeDataService runtimeDataService = (RuntimeDataService) ServiceRegistry.get()
+        .service(ServiceRegistry.RUNTIME_DATA_SERVICE);
 
+UserTaskAdminService userTaskAdminService = (UserTaskAdminService) ServiceRegistry.get()
+        .service(ServiceRegistry.USER_TASK_ADMIN_SERVICE);
+
+```

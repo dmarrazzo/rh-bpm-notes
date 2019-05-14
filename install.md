@@ -401,6 +401,8 @@ TO BE INVESTIGATED
  * org.kie.example.repositories: Folder from where demo repositories will be cloned. The demo repositories need to have been obtained and placed in this folder. Demo repositories can be obtained from the kie-wb-6.1.0-SNAPSHOT-example-repositories.zip artifact. This System Property takes precedence over org.kie.demo and org.kie.example. Default: Not used.
  * org.kie.demo: Enables external clone of a demo application from GitHub. This System Property takes precedence over org.kie.example. Default: true
  * org.kie.example: Enables example structure composed by Repository, Organization Unit and Project. Default: false
+ * org.kie.server.mode: development / production
+
 
 ## LDAP
 

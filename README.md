@@ -50,6 +50,8 @@ There are documents and samples.
 
 - [Effective Case Management within a BPM Framework](https://middlewareblog.redhat.com/2018/06/19/effective-case-management-within-a-bpm-framework/)
 
+- [Using sidecars to analyze and debug network traffic in OpenShift and Kubernetes pods](https://developers.redhat.com/blog/2019/02/27/sidecars-analyze-debug-network-traffic-kubernetes-pod/)
+
 ### Video and Webinars
 
  - [Understand the kieserver REST APIs, monitoring the Java APIs traffic](https://youtu.be/v7Td4PsT1O8)

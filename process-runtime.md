@@ -103,14 +103,23 @@ RHPAM can store the process variable in a relational table leveraging JPA.
 
 This is the procedure to achieve such result:
 
-1. Configure the *Data Object* as *Persistable*.
+1. Add dependency to `drools-persistence-jpa` (unfortunately this cannot be done in business central since you have to add `provided` as scope)
+
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-persistence-jpa</artifactId>
+			<version>7.11.0.Final-redhat-00004</version>
+			<scope>provided</scope>
+		</dependency>
+
+2. Configure the *Data Object* as *Persistable*.
 
 	![Create Data Object](imgs/persistable_01.png)
 
 	- **EXTRA CONFIGURATION** the data object MUST extend `org.drools.persistence.jpa.marshaller.VariableEntity`
 
 
-2. Then you have to configure the *Persistence descriptor*:
+3. Then you have to configure the *Persistence descriptor*:
 
 
 	- In the **Settings** section of the project, select the **Persistence** tab. 
@@ -123,7 +132,7 @@ This is the procedure to achieve such result:
 
 	![](imgs/persistable_05.png)
  
-3. Edit the `kie-deployment-descriptor.xml`
+4. Edit the `kie-deployment-descriptor.xml`
 
 	- add the marchalling strategy JPAPlaceholderResolverStrategy. it requires 2 parameters the persistence unit name and the class loader.
 
@@ -133,19 +142,7 @@ This is the procedure to achieve such result:
 		        <identifier>new org.drools.persistence.jpa.marshaller.JPAPlaceholderResolverStrategy("com.myspace:processes:1.0.0", classLoader)</identifier>
 		        <parameters/>
 		    </marshalling-strategy>
-		</marshalling-strategies>
-		
-
-	 
-		
-4. Add dependency to `drools-persistence-jpa` (unfortunately this cannot be done in business central since you have to add `provided` as scope)
-
-		<dependency>
-			<groupId>org.drools</groupId>
-			<artifactId>drools-persistence-jpa</artifactId>
-			<version>7.11.0.Final-redhat-00004</version>
-			<scope>provided</scope>
-		</dependency>
+		</marshalling-strategies>		
 
 
 **BE AWARE** the table that map the data object is in the same BPM datasource.
@@ -162,6 +159,24 @@ This is the procedure to achieve such result:
 If you find this error in the BC means that you lack the libraries (Check first point of the procedure).
 
 	warning `Could not compile mvel expression 'new org.drools.persistence.jpa.marshaller.JPAPlaceholderResolverStrategy("com.garanti:test-pers:1.0.0", classLoader)'. this can be due to invalid syntax of missing classes-[Error: Failed to link org/drools/persistence/jpa/marshaller/JPA...`
+
+If you get this error at deployment time, it could be caused by an wrong persistence description.
+
+```java
+ERROR [org.kie.server.services.jbpm.JbpmKieServerExtension] (default task-21) Error when creating container XYZ by extension jBPM KIE Server extension: java.lang.RuntimeException: [Error: could not create constructor: null]
+[Near : {... new org.drools.persistence.jpa.mar ....}]
+                 ^
+[Line: 1, Column: 5]
+	at org.jbpm.kie.services.impl.KModuleDeploymentService.deploy(KModuleDeploymentService.java:214)
+```
+
+E.g. you have a one to many relationship not defined.
+
+```java
+@ElementCollection // <- this create a side table with suppliers (orderid, supplier)
+private java.util.List<java.lang.String> suppliersList;
+```
+
 
 ## References
 

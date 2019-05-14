@@ -164,7 +164,7 @@ The image will contains:
 - the kieserver configuration in business-application-service.xml (a good alternative is to bind this file with a configmap)
 
 ```ruby
-FROM fabric8/java-jboss-openjdk8-jdk
+FROM redhat-openjdk-18/openjdk18-openshift
 ENV JAVA_OPTIONS="-Dkie.maven.settings.custom=/opt/jboss/.m2/settings.xml -Dorg.guvnor.m2repo.dir=/opt/jboss/.m2/repository" M2_HOME=/opt/jboss/.m2
 EXPOSE 8090
 COPY maven /
@@ -176,8 +176,8 @@ USER jboss:jboss:jboss
 Unfortunately, as is, it's not working, so you have to modify to add the `root` user:
 
 ```ruby
-FROM fabric8/java-jboss-openjdk8-jdk
-ENV JAVA_OPTIONS="-Dkie.maven.settings.custom=/opt/jboss/.m2/settings.xml -Dorg.guvnor.m2repo.dir=/opt/jboss/.m2/repository" M2_HOME=/opt/jboss/.m2
+FROM redhat-openjdk-18/openjdk18-openshift
+ENV JAVA_OPTIONS="-Dkie.maven.settings.custom=/opt/jboss/.m2/settings.xml -Dorg.guvnor.m2repo.dir=/opt/jboss/.m2/repository" M2_HOME=/opt/jboss/.m2 GC_MAX_METASPACE_SIZE = 512
 EXPOSE 8090
 COPY maven /
 USER root
@@ -189,36 +189,44 @@ USER jboss:jboss:jboss
 Create a new build for your application:
 
 ```sh
-$ oc new-build --strategy docker --binary --name busapp
+oc new-build --strategy docker --binary --name busapp
 ```
 
 Start a binary build using the local directory’s content:
 
 ```bash
-$ oc start-build busapp --from-dir . --follow
+oc start-build busapp --from-dir . --follow
 ```
 
 Deploy the application using new-app, then create a route for it:
 
 ```bash
-$ oc new-app busapp
-$ oc expose svc/busapp
+oc new-app busapp
+oc expose svc/busapp
 ```
 
 Get the host name for your route and navigate to it:
 
 ```bash
-$ oc get route busapp
+oc get route busapp
 ```
 
-Related informations:
+Related information:
 
 [https://docs.openshift.com/container-platform/3.11/creating_images/guidelines.html]()
 [https://docs.okd.io/latest/dev_guide/dev_tutorials/binary_builds.html]()
+[OpenJDK image gor openshift](https://access.redhat.com/documentation/en-us/red_hat_jboss_middleware_for_openshift/3/html-single/red_hat_java_s2i_for_openshift/index)
 
 Workaround for user recognition problem:
 [https://github.com/RHsyseng/container-rhel-examples/blob/master/starter-arbitrary-uid/Dockerfile]()
 
+ConfigMap
+------------------------------------------------------------
+
+```bash
+oc create configmap business-application-service --from-file=repo/
+??? oc volume dc/busapp --add --name=busapp-cfg -m /deployment/repo -t configmap --configmap-name=business-application-service
+```
 
 Resources
 ------------------------------------------------------------

@@ -24,18 +24,18 @@ This is actually the recommended way.  Using your RHN login may or may not work 
 
 Create the images:
 
-	oc create -f rhpam72-image-streams.yaml
+	oc create -f rhpam73-image-streams.yaml
 
 List the images:
 
-	oc get imagestreams.image.openshift.io | grep rhpam72
+	oc get imagestreams.image.openshift.io | grep rhpam73
 
 ### Import image
 
 Manually import image:
 
-	oc import-image rhpam72-businesscentral-openshift:1.1
-	oc import-image rhpam72-kieserver-openshift:1.1
+	oc import-image rhpam73-businesscentral-openshift:1.0
+	oc import-image rhpam73-kieserver-openshift:1.0
 
 ## Import templates
 
@@ -59,8 +59,16 @@ delete all imagestream
 
 Login as developer
 
-	oc login -u developer
-	oc project pam721
+	oc login -u developer -p dev
+	oc new-project pam73
+
+If the project already exists:
+
+	oc project pam73
+
+To delete the project:
+
+	oc delete project pam73
 
 ## Create secret
 
@@ -84,26 +92,26 @@ Replace the keystore:
 ### Authoring environment
 
 ```bash
-oc new-app -f rhpam72-authoring.yaml \
+oc new-app -f rhpam73-authoring.yaml \
+ -p APPLICATION_NAME=pam-dev \
  -p BUSINESS_CENTRAL_HTTPS_SECRET=businesscentral-app-secret \
  -p KIE_SERVER_HTTPS_SECRET=kieserver-app-secret \
- -p KIE_ADMIN_PWD=password \
- -p KIE_SERVER_PWD=password \
- -p KIE_SERVER_CONTROLLER_PWD=password \
- -p GC_MAX_METASPACE_SIZE=512
+ -p KIE_ADMIN_PWD=r3dhat1! \
+ -p KIE_SERVER_PWD=r3dhat1! \
+ -p KIE_SERVER_CONTROLLER_PWD=r3dhat1!
 ```
 
 If the image streams are not defined in the openshift namespace, it's possible to override it with this parameter `IMAGE_STREAM_NAMESPACE`.
 
 ```bash
-oc new-app -f rhpam72-authoring.yaml \
- -p IMAGE_STREAM_NAMESPACE=pam721 \
+oc new-app -f rhpam73-authoring.yaml \
+ -p APPLICATION_NAME=pam-dev \
+ -p IMAGE_STREAM_NAMESPACE=pam73 \
  -p BUSINESS_CENTRAL_HTTPS_SECRET=businesscentral-app-secret \
  -p KIE_SERVER_HTTPS_SECRET=kieserver-app-secret \
- -p KIE_ADMIN_PWD=password \
- -p KIE_SERVER_PWD=password \
- -p KIE_SERVER_CONTROLLER_PWD=password \
- -p GC_MAX_METASPACE_SIZE=512
+ -p KIE_ADMIN_PWD=r3dhat1! \
+ -p KIE_SERVER_PWD=r3dhat1! \
+ -p KIE_SERVER_CONTROLLER_PWD=r3dhat1!
 ```
 
 ### Authoring environment with postgresql
@@ -111,12 +119,14 @@ oc new-app -f rhpam72-authoring.yaml \
 If you want to use Postgress instead of H2 database, you have to customize the template.
 See [Modifying the template](https://access.redhat.com/documentation/en-us/red_hat_process_automation_manager/7.2/html-single/deploying_a_red_hat_process_automation_manager_authoring_environment_on_red_hat_openshift_container_platform/index#environment-authoring-single-modify-proc)
 
-	oc new-app -f rhpam72-authoring-postgresql.yaml \
-		-p BUSINESS_CENTRAL_HTTPS_SECRET=businesscentral-app-secret \
-		-p KIE_SERVER_HTTPS_SECRET=kieserver-app-secret \
-		-p KIE_ADMIN_PWD=password \
-		-p KIE_SERVER_PWD=password \
-		-p KIE_SERVER_CONTROLLER_PWD=password
+```
+oc new-app -f rhpam72-authoring-postgresql.yaml \
+ -p BUSINESS_CENTRAL_HTTPS_SECRET=businesscentral-app-secret \
+ -p KIE_SERVER_HTTPS_SECRET=kieserver-app-secret \
+ -p KIE_ADMIN_PWD=r3dhat1! \
+ -p KIE_SERVER_PWD=r3dhat1! \
+ -p KIE_SERVER_CONTROLLER_PWD=r3dhat1!
+```
 
 ### Other Environment variables
 
@@ -326,6 +336,11 @@ List all
 	oc delete all -l application=pam72
 
 
+### scale up and down
+
+  oc scale dc/pam-dev-rhpamcentr --replicas=0
+  oc scale dc/pam-dev-kieserver --replicas=0
+
 ### server log
 	
 	oc log -f <pod-name>
@@ -376,18 +391,28 @@ oc get pods
 
 		sh-4.2$ exit
 
-### Memory issues
+# Fine tunining
+
+## System properties
+
+Add custom system properties
+
+	JAVA_OPTS_APPEND=-Dkubernetes.websocket.timeout=10000
+
+## Memory issues
 
 Environment variables:
 
 	CONTAINER_HEAP_PERCENT = 0.5
 	INITIAL_HEAP_PERCENT = 0.5
 	
-
 Metaspace (works out of S2I?): 
 
 	GC_MAX_METASPACE_SIZE = 512
 
+## timeout
+
+	kubernetes.websocket.timeout
 
 ## Openshift Useful links
 

@@ -20,6 +20,16 @@ Roles are defined in the following file:
 
     <EAP_HOME>/standalone/configuration/application-roles.properties
 
+It's possible to override the authenticated user, performing all task operation declaring a different users than the authenticated.
+The following property affect the kieserver:
+
+```xml
+    <property name="org.kie.server.bypass.auth.user" value="true"/> 
+```
+
+In such way, the authentication is bypassed and the userid can be overridden.
+
+
 ## Custom UserGroupCallback
 
 User/group information obtained via callbacks
