@@ -378,6 +378,39 @@ TO BE INVESTIGATED
 
 [SSO Tison article](https://github.com/jboss-gpe-ref-archs/bpms_rhsso/blob/master/doc/bpms_rhsso.adoc)
 
+# Smart Router
+
+The Smart Router exposes most of the capabilities of the KIE Server over HTTP. It comes with two main responsibilities:
+
+- proxy to the actual KIE Server instance based on contextual information - container id or alias
+- aggregator of data - to collect information from all distinct server instances in single client reques
+
+It's a standalone java program and distributed as a jar file in the package `rhpam-7.x.x-add-ons.zip`.
+Launch it:
+
+```bash
+java -jar rhpam-7.3-smart-router.jar
+```
+
+In order to make aware the kieserver of the smart router  existence, you have to add this system property `org.kie.server.router` (it accept a comma separated list of endpoints).
+
+When the kieserver startup, it calls the smart router endpoint and registers itself in the in-memory routing table.
+
+E.g.
+
+```xml
+      <property name="org.kie.server.router" value="http://localhost:9000" />
+```
+
+Example of kieserver API:
+
+- `http://localhost:8080/kie-server/services/rest/server/containers/order-management_1.1-SNAPSHOT/processes/instances?page=0&pageSize=10&sortOrder=true`
+
+Equivalent smart router API:
+
+- `http://localhost:9000/containers/order-management_1.1-SNAPSHOT/processes/instances?page=0&pageSize=10&sortOrder=true`
+
+
 # System properties
 
  * org.uberfire.nio.git.dir: Location of the directory .niogit. Default: working directory
