@@ -365,6 +365,31 @@ Dummy implementation: s
 [Send Task and Receive Task of a BPMN2 process do not work when they are used in different processes as the latter process seems to be waiting for the message to arrive](https://access.redhat.com/solutions/1243573)
 
 
+Quartz
+============================================
+
+RHPAM uses quartz to manage timers in a cluster environment (the other option is to use EJB timers in a EAP cluster).
+
+The following query extract the quartz jobs linked to a specific process instance id:
+
+```sql
+select processId, count(*)
+from (
+select substr(job_name, 10, 6) processId
+from bpms.qrtz_triggers)
+group by processId
+having count(*) > 1
+order by processId
+```
+
+
+References
+--------------------------------------------
+
+[Configuring the business application for a cluster using Quartz](https://access.redhat.com/documentation/en-us/red_hat_process_automation_manager/7.3/html-single/creating_red_hat_process_automation_manager_business_applications_with_spring_boot/index#bus-app-quartz_business-applications)
+
+[QuartzSchedulerService](https://github.com/kiegroup/jbpm/blob/master/jbpm-flow/src/main/java/org/jbpm/process/core/timer/impl/QuartzSchedulerService.java#L99)
+
 Issues
 ============================================
 

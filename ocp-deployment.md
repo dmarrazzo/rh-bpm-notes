@@ -5,7 +5,7 @@
 Login as system admin:
 
 	oc login -u system:admin
-  oc project openshift
+	oc project openshift
 
 ## Registry auth
 

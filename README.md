@@ -52,6 +52,10 @@ There are documents and samples.
 
 - [Using sidecars to analyze and debug network traffic in OpenShift and Kubernetes pods](https://developers.redhat.com/blog/2019/02/27/sidecars-analyze-debug-network-traffic-kubernetes-pod/)
 
+- [Demo monitoring PAM](https://github.com/jbossdemocentral/rhpam7-monitoring-addon)
+
+- [Detecting credit card fraud with Red Hat Decision Manager 7](https://developers.redhat.com/blog/2018/07/26/detecting-credit-card-fraud-with-red-hat-decision-manager-7/)
+
 ### Video and Webinars
 
  - [Understand the kieserver REST APIs, monitoring the Java APIs traffic](https://youtu.be/v7Td4PsT1O8)
@@ -63,6 +67,10 @@ There are documents and samples.
  - [Red Hat Business Automation primer: Vision and roadmap](https://youtu.be/oQCkA_HzYoU)
 
  - [Building Business Applications with DMN and BPMN](https://youtu.be/C0u3ZDiH3ek)
+
+ - [Monitoring Prometheus Graphana Rules DMN- 7.4](https://youtu.be/huKP9KhCD2k)
+
+ - [Monitoring Prometheus Graphana Optaplanner- 7.4](https://youtu.be/q0mSR36Xnmkk)
 
 ### Books
 

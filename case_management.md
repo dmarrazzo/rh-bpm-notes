@@ -232,6 +232,10 @@ CaseService caseService = (CaseService) ServiceRegistry.get().service(ServiceReg
 caseService.addDataToCaseFile(correlationKey, "data", data);
 ```
 
+## References
+
+- [How to generate a custom case id](https://github.com/kiegroup/droolsjbpm-integration/tree/master/kie-server-parent/kie-server-tests/kie-server-integ-tests-case-id-generator)
+
 # Case Management in BPM Suite version 6
 
 In order to design a case you have to set **AdHoc** property to **true**.
