@@ -48,7 +48,7 @@ The 2nd option is to register different instances of `AsyncWorkItemHandler` for 
 
 ## Registering Manually  
 
-In general, what is most likely happening is that you are registering handler manually via ksession and in case you use runtime manager and strategy other than singleton it will be not visible by other contexts. Looks like you are using per process instance strategy which would explain why it fails after starting subprocess - it gets new context - new ksession without handler being registered there. So you need to use RegisterableItemsFactory for registering handlers. That is set on RuntimeEnvironment used to create runtime manager, see here:
+In general, what is most likely happening is that you are registering handler manually via kie session and in case you use runtime manager and strategy other than singleton it will be not visible by other contexts. Looks like you are using per process instance strategy which would explain why it fails after starting subprocess - it gets new context - new kie session without handler being registered there. So you need to use RegisterableItemsFactory for registering handlers. That is set on RuntimeEnvironment used to create runtime manager, see here:
 https://github.com/kiegroup/jbpm/blob/master/jbpm-services/jbpm-executor/src/test/java/org/jbpm/executor/impl/wih/AsyncContinuationSupportTest.java#L155-L169
 
 
@@ -64,6 +64,16 @@ you can disable JMS executor by system property `org.kie.executor.jms=false`
 1. Increase the number of maxSession for the executor MDB (JmsAvailableJobsExecutor) in business-central.war/WEB-INF/ejb-jar.xml, the mdb pool size and also the number of connections for the connection for JmsXA connection factory.
 2. Increase the EJB pool size for MDBs
 3. Increase the JmsXA connection factory thread pool size
+
+Kie session persistence
+--------------------------------------------
+
+The persistence of the kie session (ksession) is determined by the runtime strategy chosen:
+
+- `SINGLETON` (default): there is only one kie session per container in the KIE Server. The kie session is stored in the DBMS but the kie session identifier is stored in a file.
+- `PER_REQUEST`: every request/transaction to a KIE Server gets a new kie session, which is disposed of at the end of the request/transaction.
+- `PER_PROCESS_INSTANCE`: a kie session is bound to the lifetime of the process instance, and persisted to the database.
+- `PER_CASE_INSTANCE`: the kie session is shared across multiple process instances that compose a case instance (the life cycle follow the case instance one) 
 
 Deployment Descriptor
 ============================================
