@@ -249,7 +249,7 @@ The following configuration set the **JDK level** and **exclude** unwanted files
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.7.0</version>
+        <version>3.8.1</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
@@ -461,28 +461,30 @@ Optionally, it's possible to override configuration adding following parameters:
 # Build a jar with all dependencies
 
 ```
-<!-- single jar with dep: mvn assembly:assembly -->
+<!-- single jar with dep: mvn assembly:single -->
 <plugin>
-  <artifactId>maven-assembly-plugin</artifactId>
-  <executions>
-    <execution>
-      <phase>package</phase>
-      <goals>
-        <goal>single</goal>
-      </goals>
-    </execution>
-  </executions>
-  <configuration>
-    <descriptorRefs>
-      <descriptorRef>jar-with-dependencies</descriptorRef>
-    </descriptorRefs>
-    <archive>
-      <manifest>
-        <mainClass>dm.app.PrevMain</mainClass>
-      </manifest>
-    </archive>
-  </configuration>
-</plugin>
+	<artifactId>maven-assembly-plugin</artifactId>
+	<version>3.1.1</version>
+	<executions>
+		<execution>
+		<id>make-assembly</id> <!-- this is used for inheritance merges -->
+		<phase>package</phase> <!-- bind to the packaging phase -->
+		<goals>
+			<goal>single</goal>
+		</goals>
+		</execution>
+	</executions>
+	<configuration>
+		<descriptorRefs>
+			<descriptorRef>jar-with-dependencies</descriptorRef>
+		</descriptorRefs>
+		<archive>
+			<manifest>
+				<mainClass>client.EmbedMain</mainClass>
+			</manifest>
+		</archive>
+	</configuration>
+</plugin>		
 ```
 
 Former Information

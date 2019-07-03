@@ -109,9 +109,22 @@ oc new-app -f rhpam73-authoring.yaml \
  -p IMAGE_STREAM_NAMESPACE=pam73 \
  -p BUSINESS_CENTRAL_HTTPS_SECRET=businesscentral-app-secret \
  -p KIE_SERVER_HTTPS_SECRET=kieserver-app-secret \
- -p KIE_ADMIN_PWD=r3dhat1! \
- -p KIE_SERVER_PWD=r3dhat1! \
- -p KIE_SERVER_CONTROLLER_PWD=r3dhat1!
+ -p KIE_ADMIN_PWD=J2NDavi0 \
+ -p KIE_SERVER_PWD=J2NDavi0 \
+ -p KIE_SERVER_CONTROLLER_PWD=J2NDavi0
+```
+
+Decision Manager
+
+```bash
+oc new-app -f rhdm73-authoring.yaml \
+ -p APPLICATION_NAME=dm-dev \
+ -p IMAGE_STREAM_NAMESPACE=dm73 \
+ -p DECISION_CENTRAL_HTTPS_SECRET=businesscentral-app-secret  \
+ -p KIE_SERVER_HTTPS_SECRET=kieserver-app-secret \
+ -p KIE_ADMIN_PWD=J2NDavi0 \
+ -p KIE_SERVER_PWD=J2NDavi0 \
+ -p KIE_SERVER_CONTROLLER_PWD=J2NDavi0
 ```
 
 ### Authoring environment with postgresql
@@ -389,7 +402,29 @@ oc get pods
 
 4. Close the remote shell
 
-		sh-4.2$ exit
+	sh-4.2$ exit
+
+### force a new deployment
+
+You can start a new deployment process manually using the web console, or from the CLI:
+
+	oc rollout latest dc/<name>
+
+### reset the internal git repo
+
+Log in the pod and issue the following commands:
+
+```sh
+rm -rf /opt/eap/standalone/data/kie/.niogit
+```
+
+### kill forcefully the pod
+
+	# oc delete pod example-pod-1 -n name --grace-period=0
+
+or 
+
+	# oc delete pod example-pod-1 -n name --grace-period=0 --force
 
 # Fine tunining
 
@@ -398,6 +433,8 @@ oc get pods
 Add custom system properties
 
 	JAVA_OPTS_APPEND=-Dkubernetes.websocket.timeout=10000
+
+	JAVA_OPTS_APPEND=-XX:MetaspaceSize=512M
 
 ## Memory issues
 
