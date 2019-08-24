@@ -1,9 +1,33 @@
 Maven survival guide
 ====================
 
-Bill of Material:
+## Manage the dependency version
 
-## Red Hat Process Automation Manager v7.1 Bill of Material (BOM)
+In order to keep your POM clean and tidy, it's useful to introduce the bill of material and the properties to control the versions.
+
+  - Add the following section to the POM file:
+
+		<properties>
+			<ba.version>7.4.1.GA-redhat-00001</ba.version>
+			<version.org.kie>7.23.0.Final-redhat-00003</version.org.kie>
+		</properties>
+
+Here the mapping of the product version with the dependency versions:
+
+| Product version | BOM Version            | Library version           |
+|-----------------|------------------------|---------------------------|
+| 7.1.0           | 7.1.0.GA-redhat-00003  | 7.11.0.Final-redhat-00003 |
+| 7.1.1           | 7.1.1.GA-redhat-00001  | 7.11.0.Final-redhat-00004 |
+| 7.2.0           | 7.2.0.GA-redhat-00002  | 7.14.0.Final-redhat-00002 |
+| 7.2.1           | 7.2.1.GA-redhat-00002  | 7.14.0.Final-redhat-00004 |
+| 7.3.0           | 7.3.0.GA-redhat-00002  | 7.18.0.Final-redhat-00002 |
+| 7.3.1           | 7.3.1.GA-redhat-00002  | 7.18.0.Final-redhat-00004 |
+| 7.4.0           | 7.4.0.GA-redhat-00002  | 7.23.0.Final-redhat-00002 |
+| 7.4.1           | 7.4.1.GA-redhat-00001  | 7.23.0.Final-redhat-00003 |
+
+### Red Hat Process Automation Manager v7.1 Bill of Material (BOM)
+
+The BOM is a way to manage the version in a single place, add to the POM file:
 
 	<dependencyManagement>
 		<dependencies>
@@ -17,24 +41,40 @@ Bill of Material:
 		</dependencies>
 	</dependencyManagement>
 
-Version property:
+### The KIE plugin
 
-	<properties>
-		<ba.version>7.3.1.GA-redhat-00002</ba.version>
-	</properties>
+This is used to build the kjar package.
 
-| Product version | BOM Version            |
-|-----------------|------------------------|
-| 7.1.0           | 7.1.0.GA-redhat-00003  |
-| 7.1.1           | 7.1.1.GA-redhat-00001  |
-| 7.2.0           | 7.2.0.GA-redhat-00002  |
-| 7.2.1           | 7.2.1.GA-redhat-00002  |
-| 7.3.0           | 7.3.0.GA-redhat-00002  |
-| 7.3.1           | 7.3.1.GA-redhat-00002  |
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.kie</groupId>
+				<artifactId>kie-maven-plugin</artifactId>
+				<version>${version.org.kie}</version>
+				<extensions>true</extensions>
+			</plugin>
+		</plugins>
+	</build>
 
-## Dependencies
+##### Error Missing parameter for pluginExecutionFilter
 
-### Basic lib
+Eclipse has a problem with the version 7.1 of the plugin:
+
+[https://issues.jboss.org/browse/DROOLS-3236]()
+
+Work around: use a previous release
+
+	<plugin>
+		<groupId>org.kie</groupId>
+		<artifactId>kie-maven-plugin</artifactId>
+		<version>7.9.0.Final</version>
+		<extensions>true</extensions>
+	</plugin>
+
+
+### Add all the product libraries without the version information
+
+E.g. Some basic lib
 
     	<dependency>
     		<groupId>org.kie</groupId>
@@ -48,15 +88,14 @@ Version property:
     	</dependency>
 
 
-### DMN
+#### DMN
 
 		<dependency>
 			<groupId>org.kie</groupId>
 			<artifactId>kie-dmn-core</artifactId>
 		</dependency>
 
-### Business Optimizer dependencies
-
+#### Business Optimizer dependencies
 
 	<dependencies>
 		<dependency>
@@ -87,7 +126,7 @@ Version property:
 		</dependency>
 	</dependencies>
 
-### Logging
+#### Logging
 
 it is important for all Java plain execution:
 
@@ -103,7 +142,7 @@ it is important for all Java plain execution:
 		</dependency>
 
 
-### JPA
+#### JPA
 
     	<dependency>
     		<groupId>org.jbpm</groupId>
@@ -111,21 +150,21 @@ it is important for all Java plain execution:
     		<scope>provided</scope>
     	</dependency>
 
-### JBPM Testing
+#### JBPM Testing
 
     <dependency>
         	<groupId>org.jbpm</groupId>
         	<artifactId>jbpm-test</artifactId>
     </dependency>
 
-### Human Task
+#### Human Task
 
     <dependency>
       <groupId>org.jbpm</groupId>
       <artifactId>jbpm-human-task-core</artifactId>
     </dependency>
 
-### Kie runtime services
+#### Kie runtime services
 
     <dependency>
       <groupId>org.jbpm</groupId>
@@ -144,22 +183,9 @@ it is important for all Java plain execution:
       <artifactId>jbpm-services-ejb-impl</artifactId>
     </dependency>
 
-### kie plugin
+### Example of other dependencies
 
-This is used to build the kjar package
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.kie</groupId>
-				<artifactId>kie-maven-plugin</artifactId>
-				<version>6.4.0.Final-redhat-3</version>
-				<extensions>true</extensions>
-			</plugin>
-		</plugins>
-	</build>
-
-### Java EE 
+#### Java EE 
 
 **Warning: do not use in bpm project**
 
@@ -168,23 +194,6 @@ This is used to build the kjar package
       <artifactId>javaee-api</artifactId>
       <version>6.0</version>
     </dependency>
-
-
-### Error Missing parameter for pluginExecutionFilter
-
-Eclipse has a problem with the version 7.1 of the plugin:
-
-()[https://issues.jboss.org/browse/DROOLS-3236]
-
-Work around: use a previous release
-
-	<plugin>
-		<groupId>org.kie</groupId>
-		<artifactId>kie-maven-plugin</artifactId>
-		<version>7.9.0.Final</version>
-		<extensions>true</extensions>
-	</plugin>
-
 
 ## BPM Internal Maven repository
 
