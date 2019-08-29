@@ -1,3 +1,26 @@
+Track SLA
+===========================================================================
+
+From RHPAM 7.0.2
+
+Each task and the overall process have a new property: `SLA Due Date`
+
+Example of date expression:
+
+- 5m 
+
+SLA compliance levels:
+
+  - N/A - when there is no SLA due date (integer value 0)
+  - Pending - when instance is active with due date set (integer value 1)
+  - Met - when instance was completed before SLA due date (integer value 2)
+  - Violated - when instance was not completed/aborted before SLA due date (integer value 3)
+  - Aborted - when instance was aborted before SLA due date (integer value 4)
+
+### References:
+
+- [Track your processes and activities with SLA](http://mswiderski.blogspot.com/2018/02/track-your-processes-and-activities.html)
+
 Process Instances Migration
 ===========================================================================
 
@@ -146,23 +169,33 @@ This is the procedure to achieve such result:
 
 	- add the marchalling strategy JPAPlaceholderResolverStrategy. it requires 2 parameters the persistence unit name and the class loader.
 
+    ```xml
 		<marshalling-strategies>
 		    <marshalling-strategy>
 		        <resolver>mvel</resolver>
 		        <identifier>new org.drools.persistence.jpa.marshaller.JPAPlaceholderResolverStrategy("com.myspace:processes:1.0.0", classLoader)</identifier>
 		        <parameters/>
 		    </marshalling-strategy>
-		</marshalling-strategies>		
+		</marshalling-strategies>
+    ```
 
 
 **BE AWARE** the table that map the data object is in the same BPM datasource.
 
 *Final doubt:* In some example I found that the persisted data object are even declared remoteable classes in the `kie-deployment-descriptor.xml`. At the moment, I'm not aware of actual benefit of such configuration.
 
-    <remoteable-class>com.garanti.Customer</remoteable-class>
-	    <remoteable-class>com.garanti.Customer</remoteable-class>
-	    <remoteable-class>org.drools.persistence.jpa.marshaller.VariableEntity</remoteable-class>
-     </remoteable-classes>
+```xml
+<remoteable-classes>
+  <remoteable-class>com.sample.Customer</remoteable-class>
+  <remoteable-class>org.drools.persistence.jpa.marshaller.VariableEntity</remoteable-class>
+</remoteable-classes>
+```
+
+**Configuration for form rendering:** Using a JPA Variable in a form lead to a problem when it's used in a form. The user get the following exception: `com.thoughtworks.xstream.security.ForbiddenClassException`. **Solution:** add the following system property:
+
+```xml
+    <property name="org.kie.server.xstream.enabled.packages" value="org.drools.persistence.jpa.marshaller.*"/>
+```
 
 #### Troubleshooting
 
