@@ -40,6 +40,36 @@ Run the process and you'll see the following log output:
 
 It work as designed!
 
+## Call a reusable subprocess from other project
+
+1. Create a Reusable Project, which will include Reusable sub process. Make sure that the `kbase` and `ksession` configured for this project will not be default.
+   
+   `kmodule.xml`
+
+   ```xml
+   <kmodule xmlns="http://jboss.org/kie/6.0.0/kmodule"; xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">;
+       <kbase name="kbase" default="false" eventProcessingMode="stream" equalsBehavior="identity" packages="*">
+           <ksession name="ksession" type="stateful" default="false" clockType="realtime"/>
+       </kbase>
+   </kmodule>
+   ```
+
+2. Create Parent Project, which will include Parent process, make sure that the kbase and ksession configured for this project will be default.
+
+   `kmodule.xml`
+
+   ```xml
+   <kmodule xmlns="http://jboss.org/kie/6.0.0/kmodule"; xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">;
+     <kbase name="kbase-top" default="true" eventProcessingMode="stream" equalsBehavior="identity" packages="*" includes="kbase">
+       <ksession name="ksession-top" type="stateful" default="true" clockType="realtime"/>
+     </kbase>
+   </kmodule>
+   ```
+
+3. Edit pom.xml of this Parent project and add dependency of the ReUsable project.
+
+4. Alter `kmodule.xml` of Parent project so it includes the knowledge base of the ReUsable project - please notice the keyword `includes` in the above `kmodule.xml`
+
 ### Reference
 [http://mswiderski.blogspot.it/2015/01/multiinstance-characteristic-example.html]()
 
