@@ -16,9 +16,10 @@ Init MVEL parameters:
         taskService
         runtimeManager
         classLoader
-        entityManagerFactory
+        entityManagerFactory (no?)
         kieContainer
 
+**Source:** KModuleRegisterableItemsFactory
 
 ### Custom icons for WIH
 
