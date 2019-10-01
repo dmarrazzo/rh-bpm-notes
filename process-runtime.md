@@ -225,6 +225,37 @@ private java.util.List<java.lang.String> suppliersList;
 
 [jBPM 6 - store your process variables anywhere](http://mswiderski.blogspot.it/2014/02/jbpm-6-store-your-process-variables.html)
 
+Signals
+============================================
+
+To enable the external signals:
+
+1. Enable `KIE.SERVER.SIGNAL.QUEUE` in `kie-server.war/META-INF/kie-server-jms.xml`
+2. Enable ejb `org.jbpm.process.workitem.jms.JMSSignalReceiver` in `kie-server.war/WEB-INF/ejb-jar.xml`
+3. In the project add the following dependency:
+   ```xml
+    <dependency>
+      <groupId>org.jbpm</groupId>
+      <artifactId>jbpm-workitems-jms</artifactId>
+      <version>7.23.0.Final-redhat-00003</version>
+      <scope>provided</scope>
+    </dependency>
+   ```
+
+4. In the `kie-deployment-descriptor` add the work item handler definition:
+
+   ```xml
+    <work-item-handler>
+        <resolver>mvel</resolver>
+        <identifier>new org.jbpm.process.workitem.jms.JMSSendTaskWorkItemHandler("java:/JmsXA", "java:jboss/exported/jms/queue/KIE.SERVER.SIGNAL")</identifier>
+        <parameters/>
+        <name>External Send Task</name>
+    </work-item-handler>
+   ```
+
+## References
+
+[Improved Signaling](http://mswiderski.blogspot.com/2015/09/improved-signaling-in-jbpm-63.html)
 
 Advanced Queries
 ============================================
