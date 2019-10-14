@@ -17,7 +17,8 @@ The following step can be performed as normal user (developer)
 
 1. Create kafka cluster
 
-- create the following yaml and create the cluster
+- create the following yaml and name it `mycluster.yaml`
+
 ```yaml
 apiVersion: kafka.strimzi.io/v1beta1
 kind: Kafka
@@ -49,13 +50,17 @@ spec:
     userOperator: {}
 ```
 
+- create the cluster with the following command: `oc apply -f mycluster.yaml`
+
 2. Add kafka topics:
 
 ```sh
+cd kafka-topics
 oc apply -f control.yaml 
 oc apply -f events.yaml 
 oc apply -f kiesessioninfos.yaml 
-oc apply -f snapshot.yaml 
+oc apply -f snapshot.yaml
+cd ..
 ```
 
 3. Build the pods (skip?)
@@ -81,18 +86,16 @@ mvn clean install -DskipTests
     oc new-build --binary --strategy=docker --name openshift-kie-springboot
     oc start-build openshift-kie-springboot --from-dir=. --follow
     ```
-
-    - Assign Service Account
-
-    ```sh
-    oc patch dc/openshift-kie-springboot --patch '{"spec":{"template":{"spec":{"serviceAccountName": "openshift-kie-springboot"}}}}'
-    ```
-
-    - Scale to 3
+    
+    - Get the image name
 
     ```sh
-    oc scale dc/openshift-kie-springboot --replicas=3
+    oc get is/openshift-kie-springboot -o template --template='{{range .status.tags}}{{range .items}}{{.dockerImageReference}}{{end}}{{end}}'
     ```
+
+    - Open the deployment yaml and replace existing image URL with the result of the previous command trimming the tail after `@` symbol then add `:latest`. 
+      E.g. `image: image-registry.openshift-image-registry.svc:5000/hacep/openshift-kie-springboot:latest`
+
 
 Run the client sample (events injector)
 ------------------------------------------
