@@ -64,7 +64,7 @@ The following step can be performed as normal user (developer)
 
     - otherwise in one line: `ls kafka-topics/*yaml |xargs -l1 oc apply -f `
 
-3. Build the pods (skip?)
+3. Build all the projects business logic
 
     ```sh
     mvn clean install -DskipTests
