@@ -9,7 +9,7 @@ To install the AMQ Streams Operator (v1.2):
 
 - Open **Operators > OperatorHub**
 - Select **AMQ Streams**
-- Left all the default options and click **install** 
+- Leave all the default options and click **install** 
 
 Prepare the Kafka infrastructure
 ------------------------------------------
