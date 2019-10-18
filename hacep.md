@@ -1,23 +1,30 @@
 Installing HACEP Sample in OpenShift v4
 ==========================================
 
-Prepare the Cluster
+Enable AMQ Stream
 ------------------------------------------
 
-As Cluster administrator, you have to install the AMQ Streams operator (v1.2)
+This activity is the only one that requires the cluster administration privileges (`cluster-admin`).
+To install the AMQ Streams Operator (v1.2):
 
 - Open **Operators > OperatorHub**
 - Select **AMQ Streams**
-- Click **install**
+- Left all the default options and click **install** 
 
-Install the Decision Server
+Prepare the Kafka infrastructure
 ------------------------------------------
 
-The following step can be performed as normal user (developer)
+The following steps can be performed as normal user (developer)
 
-1. Choose your project or create a new one then create the **kafka cluster** in that project.
+1. Create `hacep` project or choose another name.
 
-    - The following command create the kafka cluster assuming `hacep` as destination project name. 
+    ```sh
+    oc new-project hacep
+    ```
+
+2. Choose your project or create a new one then create the.
+
+    - The following command create the Kafka cluster assuming `hacep` as destination project name. 
 
       ```sh
       cat << EOF | oc apply -f -
@@ -51,7 +58,7 @@ The following step can be performed as normal user (developer)
       EOF
       ```
 
-2. Add kafka topics:
+3. Add the Kafka topics:
 
     ```sh
     cd kafka-topics
@@ -64,28 +71,35 @@ The following step can be performed as normal user (developer)
 
     - otherwise in one line: `ls kafka-topics/*yaml |xargs -l1 oc apply -f `
 
-3. Build all the projects business logic
+
+Deploy the Rule Engine
+------------------------------------------
+
+1. Build all the projects business logic
 
     ```sh
     mvn clean install -DskipTests
     ```
 
-4. Deploy the Decision Server in Spring Boot
+2. Create the Rule Engine image packaged as Spring Boot application
 
-    - Enter in the springboot directory
-    - In order grant the access to the ConfigMaps run the following OCP definitions:
+    - Switch to `springboot` folder
+    - Create the binary image
+
+      ```sh
+      oc new-build --binary --strategy=docker --name openshift-kie-springboot
+      oc start-build openshift-kie-springboot --from-dir=. --follow
+      ```
+
+3. Deploy the Rule Engine
+
+    - The following steps are performed from the `springboot` folder
+    - Create a service account with privileges to manage the ConfigMaps. A ConfigMap is used for the leader election.
 
       ```sh
       oc create -f kubernetes/service-account.yaml
       oc create -f kubernetes/role.yaml
       oc create -f kubernetes/role-binding.yaml
-      ```
-
-    - Create the image
-
-      ```sh
-      oc new-build --binary --strategy=docker --name openshift-kie-springboot
-      oc start-build openshift-kie-springboot --from-dir=. --follow
       ```
     
     - Get the image name
@@ -103,12 +117,8 @@ The following step can be performed as normal user (developer)
       oc apply -f kubernetes/deployment.yaml
       ```
 
-
-
 Run the client sample (events injector)
 ------------------------------------------
-
-WIP
 
 1. Configure the SSL communication
 
@@ -162,10 +172,10 @@ WIP
     mvn exec:java -Dexec.mainClass="org.kie.hacep.sample.client.ClientProducerDemo"
     ```
 
-Check the results on the Decision Server
+Check the results on the Rule Engine
 ------------------------------------------
 
-1. Identify the Decision Server leader 
+1. Identify the Rule Engine leader 
 
     ```sh
     oc get cm/default-leaders -o template --template='{{range $k,$v := .data}}{{if eq $k "leader.pod.null"}}{{printf "%s\n" $v}}{{end}}{{end}}'
@@ -173,14 +183,16 @@ Check the results on the Decision Server
 
 2. Inspect the log of the leader pod. E.g. `oc logs -f openshift-kie-springboot-c8b9c6545-2p8x4`
 
-3. Check the presence of this information: `Price for RHT is 81.0 `
+3. Check the presence of this information: `Price for RHT is <...> `
 
 
 
 Issues
 ------------------------------------------
 
-Problem to load properties:
-https://github.com/kiegroup/openshift-drools-hacep/blob/master/sample-hacep-project/sample-hacep-project-client/src/main/java/org/kie/hacep/sample/client/ClientProducerDemo.java#L53
+- The following warning on client side could be caused by an erroneous server host configuration, make sure that hostnames are resolved and the correct port is defined (443).
 
+  ```
+  WARN  o.a.kafka.clients.NetworkClient - [Consumer clientId=consumer-1, groupId=drools] Connection to node -1 (my-cluster-kafka-bootstrap-hacep.apps-crc.testing/192.168.130.11:9094) could not be established. Broker may not be available.
+  ```
 
