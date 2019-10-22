@@ -87,6 +87,21 @@ Article that describe the new capabilities:
             "category" : "Cases"
           ]
 
+## Show case application
+
+The show case application is a sample application to explore the case management capabilities.
+
+To enable it:
+
+- from `rhpam-7.4.0-add-ons.zip` extract `rhpam-7.4-case-mgmt-showcase-eap7-deployable.zip`
+- deploy the war in your application server
+
+It's possible to enable a direct link from BC to the show case app adding this property:
+
+```java
+org.jbpm.wb.forms.renderer.ext=true
+```
+The link will be available in the right top corner in the *grid* icon.
 
 ## Process 
 
