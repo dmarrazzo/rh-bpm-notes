@@ -101,7 +101,10 @@ It's possible to enable a direct link from BC to the show case app adding this p
 ```java
 org.jbpm.wb.forms.renderer.ext=true
 ```
+
 The link will be available in the right top corner in the *grid* icon.
+
+The user must have the `Administrators` role.
 
 ## Process 
 
