@@ -22,55 +22,60 @@ The following steps can be performed as normal user (developer)
     oc new-project hacep
     ```
 
-2. Choose your project or create a new one then create the.
-
-    - The following command create the Kafka cluster assuming `hacep` as destination project name. 
-
-      ```sh
-      cat << EOF | oc apply -f -
-      apiVersion: kafka.strimzi.io/v1beta1
-      kind: Kafka
-      metadata:
-        name: my-cluster
-        namespace: hacep
-      spec:
-        kafka:
-          version: 2.2.1
-          replicas: 3
-          listeners:
-            external:
-              type: route
-            plain: {}
-          config:
-            offsets.topic.replication.factor: 3
-            transaction.state.log.replication.factor: 3
-            transaction.state.log.min.isr: 2
-            log.message.format.version: '2.2'
-          storage:
-            type: ephemeral
-        zookeeper:
-          replicas: 3
-          storage:
-            type: ephemeral
-        entityOperator:
-          topicOperator: {}
-          userOperator: {}
-      EOF
-      ```
-
-3. Add the Kafka topics:
+2. Create the Kafka cluster named `my-cluster`
 
     ```sh
-    cd kafka-topics
-    oc apply -f control.yaml 
-    oc apply -f events.yaml 
-    oc apply -f kiesessioninfos.yaml 
-    oc apply -f snapshot.yaml
-    cd ..
+    cat << EOF | oc apply -f -
+    apiVersion: kafka.strimzi.io/v1beta1
+    kind: Kafka
+    metadata:
+      name: my-cluster
+    spec:
+      kafka:
+        version: 2.2.1
+        replicas: 3
+        listeners:
+          external:
+            type: route
+          plain: {}
+        config:
+          offsets.topic.replication.factor: 3
+          transaction.state.log.replication.factor: 3
+          transaction.state.log.min.isr: 2
+          log.message.format.version: '2.2'
+        storage:
+          type: ephemeral
+      zookeeper:
+        replicas: 3
+        storage:
+          type: ephemeral
+      entityOperator:
+        topicOperator: {}
+        userOperator: {}
+    EOF
     ```
 
-    - otherwise in one line: `ls kafka-topics/*yaml |xargs -l1 oc apply -f `
+3. Enter in the **hacep** project folder: `openshift-drools-hacep`
 
+4. Crete the Kafka topics to support the hacep execution:
+
+    ```sh
+    ls kafka-topics/*yaml |xargs -l1 oc apply -f
+    ```
+
+Check that the Kafka cluster is ready:
+
+```sh
+oc get pods
+NAME                                          READY   STATUS    RESTARTS   AGE
+my-cluster-entity-operator-584655864b-4nrwc   3/3     Running   0          5m28s
+my-cluster-kafka-0                            2/2     Running   0          6m2s
+my-cluster-kafka-1                            2/2     Running   0          6m2s
+my-cluster-kafka-2                            2/2     Running   0          6m2s
+my-cluster-zookeeper-0                        2/2     Running   0          7m33s
+my-cluster-zookeeper-1                        2/2     Running   0          7m33s
+my-cluster-zookeeper-2                        2/2     Running   0          7m33s
+```
 
 Deploy the Rule Engine
 ------------------------------------------
@@ -178,7 +183,7 @@ Check the results on the Rule Engine
 1. Identify the Rule Engine leader 
 
     ```sh
-    oc get cm/default-leaders -o template --template='{{range $k,$v := .data}}{{if eq $k "leader.pod.null"}}{{printf "%s\n" $v}}{{end}}{{end}}'
+    oc get cm/default-leaders -o template --template='{{range $k,$v := .data}}{{if eq $k "leader.pod.null"}}{{printf "leader pod: %s\n" $v}}{{end}}{{end}}'
     ```
 
 2. Inspect the log of the leader pod. E.g. `oc logs -f openshift-kie-springboot-c8b9c6545-2p8x4`
