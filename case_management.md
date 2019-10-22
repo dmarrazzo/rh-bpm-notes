@@ -99,7 +99,7 @@ To enable it:
 It's possible to enable a direct link from BC to the show case app adding this property:
 
 ```java
-org.jbpm.wb.forms.renderer.ext=true
+org.jbpm.casemgmt.showcase.url=/rhpam-case-mgmt-showcase
 ```
 
 The link will be available in the right top corner in the *grid* icon.
