@@ -10,6 +10,13 @@ In the 'Add Repository' dialog, enter this information and press 'OK':
 - Name: `ObjectAid UML Explorer`
 - URL: `http://www.objectaid.com/update/current`
 
+### Web UI development
+
+ReactJS is a great library to develop modern UIs:
+
+- [React Tutorial - Learn React - React Crash Course](https://www.youtube.com/watch?v=Ke90Tje7VS0)
+
+
 JBoss EAP 7.x
 ------------------------------------
 
