@@ -260,59 +260,192 @@ To enable the external signals:
 Advanced Queries
 ============================================
 
-Register the dataset with the following query:
+Register an Advanced Query through the Business Central
+-------------------------------------------------------
 
-	SELECT DISTINCT pil.PROCESSINSTANCEID, pil.DURATION, pil.USER_IDENTITY, pil.PROCESSINSTANCEDESCRIPTION, mv.MAPPEDVARID, mv.VARIABLETYPE, c.NAME, c.BIRTHYEAR, c.CITY
-	FROM PROCESSINSTANCELOG pil
-	INNER JOIN MAPPEDVARIABLE mv ON pil.PROCESSINSTANCEID = mv.PROCESSINSTANCEID
-	INNER JOIN CUSTOMER c ON c.ID = mv.VARIABLEID
+Advanced Queries can be registered directly from Business Central:
 
-Queries using query definition identified by queryName. Maps the result to concrete objects based on provided mapper. Query is additional altered by the filter spec and/or builder.
+1. Open **Settings** (the top right wheel gear)
+2. Select **Data Sets** tile
+3. Click **New Data Set**
+4. Select **Execution Server** as *provider type*
+5. In the **Data Set Creation Wizard** fill in the following data
 
-	POST 
-	/server/queries/definitions/{queryName}/filtered-data
+   - name: `getAllProcesses`
+   - server configuration: `default-server` (this name depends on the execution server configuration discovered)
+   - query target: `PROCESS`
+   - query: `select * from PROCESSINSTANCELOG`
 
- - `queryName` : `f308d1f9-a456-47e1-8bb4-885766d69603`
- - `mapper` : `ProcessInstancesWithCustomVariables`
- - `body` : 
+6. Take note of the UUID (e.g. `93456998-d4aa-4a53-a9b5-4cfd4b3cf03a`)
+7. Click **Test** to see the query result
 
-		{
-		  "order-by" : "name",
-		  "order-asc" : false,
-		  "query-params" : [ ],
-		  "result-column-mapping" : {
-		    "name" : "string",
-		    "city" : "string",
-		    "birthyear" : "integer"
-		  }
-		}
+Use the Advanced Query through a REST client
+-------------------------------------------------------
 
+The simpler way to test the Kie Server APIs is using the Swagger UI, reachable at the following address: `http://localhost:8080/kie-server/docs`
 
-Curl form:
+1. Look for the section **Custom queries**
+2. Expand **GET** `/server/queries/definitions/{queryName}/data`
+3. Click **Try it out** and fill with following data:
 
-	curl -X POST "http://localhost:8080/kie-server/services/rest/server/queries/definitions/f308d1f9-a456-47e1-8bb4-885766d69603/filtered-data?mapper=ProcessInstancesWithCustomVariables&page=0&pageSize=10" -H "accept: application/xml" -H "content-type: application/json" -d "{ \"order-by\" : \"name\", \"order-asc\" : false, \"query-params\" : [ ], \"result-column-mapping\" : { \"name\" : \"string\", \"city\" : \"string\", \"birthyear\" : \"integer\" }}"
+   - queryName: the UUID generated previously (e.g. `93456998-d4aa-4a53-a9b5-4cfd4b3cf03a`)
+   - mapper: `ProcessInstances`
 
+4. Click **Execute**
 
-## Java API (kie client)
+Valid input for **mapper** : `ProcessInstances`, `ProcessInstancesWithVariables`, `ProcessInstancesWithCustomVariables`, `UserTasks`, `UserTasksWithVariables`, `RawList`, `TaskSummaries`, `UserTasksWithCustomVariables`, `ExecutionErrors`, `UserTasksWithModifications`, `UserTasksWithPotOwners`, `ProcessInstancesCustom`;
 
-Code example of a custom query in Java:
+Use the Advanced Query through a Java REST client
+-------------------------------------------------------
 
-    QueryServicesClient queryClient = client.getServicesClient(QueryServicesClient.class);
+Create a Java project and add the following dependencies:
 
-    QueryFilterSpec filterSpec = new QueryFilterSpecBuilder().equalsTo("name", "donato")
-                                                             .addColumnMapping("name", "string")
-                                                             .addColumnMapping("city", "string")
-                                                             .addColumnMapping("birthyear", "integer")
-                                                             .get();
-	
-    List<ProcessInstance> piList = queryClient.query("f308d1f9-a456-47e1-8bb4-885766d69603", QueryServicesClient.QUERY_MAP_PI_WITH_CUSTOM_VARS,
-                      filterSpec, 0, 10, ProcessInstance.class);
-    
-    piList.stream().forEach(pi -> {
-        System.out.println(pi.getVariables().get("city"));
-    });
+```xml
+		<dependency>
+			<groupId>org.kie.server</groupId>
+			<artifactId>kie-server-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jbpm</groupId>
+			<artifactId>jbpm-kie-services</artifactId>
+		</dependency>
+```
 
+A full demo of an Advanced Query client project is available here:
 
+https://github.com/dmarrazzo/rhpam7-order-management-demo-collaterals
+
+The code to retrieve the process instance list:
+
+```java
+List<ProcessInstance> piList = queryClient.query("f49bc778-4883-4295-b391-6454fe64e42b",
+					QueryServicesClient.QUERY_MAP_PI, 0, 10, ProcessInstance.class);
+```
+
+Embed the Advanced Query in the Project
+-------------------------------------------------------
+
+It's possible to deploy one or more advanced queries along with the project (kjar):
+
+1. Create a *JSON* file in this project location `src/main/resources/query-definitions.json` with the following content
+
+    ```json
+    [
+        {
+          "query-name": "getAllProcessesEmbedded",
+          "query-source": "${org.kie.server.persistence.ds}",
+          "query-expression": "select * from PROCESSINSTANCELOG",
+          "query-target": "PROCESS",
+          "query-columns": {}
+        }
+    ]
+    ```
+    In case of doubt about the content, it's possible to retrieve existing query definition via REST APIs.
+
+2. Deploy the Project
+
+**Note** in the server log you should see the following information:
+
+```log
+16:09:42,383 INFO  [org.jbpm.kie.services.impl.query.persistence.PersistDataSetListener] (default task-15) Data set getAllProcessesEmbedded saved in db storage
+16:09:42,384 INFO  [org.kie.server.services.jbpm.JbpmKieServerExtension] (default task-15) Data source expression ${org.kie.server.persistence.ds} resolved to java:jboss/datasources/ExampleDS
+16:09:42,384 INFO  [org.jbpm.kie.services.impl.query.QueryServiceImpl] (default task-15) Registered getAllProcessesEmbedded query successfully
+```
+
+Usage Examples
+-------------------------------------------------------
+
+The following examples are based on the following PAM v7.5 project:
+
+[Red Had Process Automation Manager - Order Management Demo](https://github.com/jbossdemocentral/rhpam7-order-management-demo-repo)
+
+This project has a JPA Persisted Process Variable that can be used to filter processes and tasks.
+
+The table mapping the variable is **OrderInfo** with these columns: orderId, item, category, urgency, price, managerApproval, rejectionReason, targetPrice.
+ 
+**MAPPEDVARIABLE** is a bridge table to link task instances and process instances to the variable id.
+
+Here the mapping column: 
+
+- MAPPEDVARID: unique id (generated - do not use for join)
+- PROCESSINSTANCEID: process instance id
+- TASKID: task instance id
+- VARIABLEID: variable instance id
+- VARIABLETYPE: class name of the Java class
+- OPTLOCK: used internally
+- WORKITEMID: workitem instance id 
+- MAP_VAR_ID: unique id = VARIABLEID (?)
+
+### Processes with a custom variable
+
+- Register the following advanced query:
+
+  ```sql
+  SELECT DISTINCT pil.PROCESSINSTANCEID, pil.PROCESSID, pil.START_DATE, pil.END_DATE, pil.STATUS, pil.PARENTPROCESSINSTANCEID, pil.OUTCOME, pil.DURATION, pil.USER_IDENTITY, pil.PROCESSVERSION,pil.PROCESSNAME, pil.CORRELATIONKEY, pil.EXTERNALID, pil.PROCESSINSTANCEDESCRIPTION, pil.SLA_DUE_DATE, pil.SLACOMPLIANCE, oi.item, oi.category, oi.urgency, oi.price, oi.managerApproval, oi.rejectionReason oi.targetPrice
+  FROM PROCESSINSTANCELOG pil
+  INNER JOIN MAPPEDVARIABLE mv ON pil.PROCESSINSTANCEID = mv.PROCESSINSTANCEID
+  INNER JOIN ORDERINFO oi ON oi.ID = mv.VARIABLEID
+  ```
+
+- Extract all processes with related process variable:
+
+  ```java
+  QueryFilterSpec spec = new QueryFilterSpecBuilder().addColumnMapping("ITEM", "string")
+                                                     .addColumnMapping("CATEGORY", "string")
+                                                     .addColumnMapping("PRICE", "double")
+                                                     .get();
+  List<ProcessInstance> piList = queryClient.query("08c36362-9c71-4327-aab7-680573d1fdb2",
+          QueryServicesClient.QUERY_MAP_PI_WITH_CUSTOM_VARS, spec, 0, 10, ProcessInstance.class);
+  piList.forEach(pi -> { System.out.format("pi %s vars: %s", pi, pi.getVariables()); });
+  ```
+  
+  Queries using query definition identified by queryName. Maps the result to concrete objects based on provided mapper. Query is additional altered by the filter spec and/or builder.
+
+- Plain REST request
+  
+  POST request to `http://localhost:8080/kie-server/services/rest/server/queries/definitions/08c36362-9c71-4327-aab7-680573d1fdb2/filtered-data?mapper=ProcessInstancesWithCustomVariables&page=0&pageSize=10`
+  
+  Payload:
+  
+  ```json
+  {
+    "order-by" : null,
+    "order-asc" : false,
+    "query-params" : null,
+    "result-column-mapping" : {
+      "ITEM" : "string",
+      "PRICE" : "double",
+      "CATEGORY" : "string"
+    },
+    "order-by-clause" : null
+  }
+  ```
+
+### Retrieving list of tasks with process variables
+
+In general, a task should contain all the context information that are needed to be performed, so it's reasonable that from user perspective is usually enough to search tasks based on their input variable (input assignment in the process designer). 
+Nevertheless, there is an extremely flexible way to en-query the database getting just RAW data:
+
+Create the following advanced query:
+
+```sql
+select distinct t.id, t.name,  oi.item, oi.category, oi.urgency, oi.price, oi.targetprice
+from Task t inner join (select mv.map_var_id, mv.processinstanceid from MappedVariable mv) mv 
+on (mv.processinstanceid = t.processinstanceid) inner join OrderInfo oi on (oi.id = mv.map_var_id)
+```
+
+From java rest client:
+
+```java
+			List<List> rawList = queryClient.query("fe375037-8da7-43c3-a0d9-28051c39fb9c",
+					QueryServicesClient.QUERY_MAP_RAW, 0, 10, List.class);
+```
+
+Curl:
+
+```sh
+curl -X GET "http://localhost:8080/kie-server/services/rest/server/queries/definitions/fe375037-8da7-43c3-a0d9-28051c39fb9c/data?mapper=RawList&page=0&pageSize=10" -H "accept: application/json"
+```
 
 ## References
 
