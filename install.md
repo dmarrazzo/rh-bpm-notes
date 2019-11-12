@@ -639,6 +639,10 @@ Add the following system property:
 
     <property name="org.uberfire.nio.git.ssh.algorithm" value="RSA"/>
 
+## Warning "Unable to load key store. Using password from configuration"
+
+[https://access.redhat.com/solutions/3669631]()
+
 ## Performance troubleshooting
 
 Check EAP heap memory usage: `/core-service=platform-mbean/type=memory:read-attribute(name=heap-memory-usage)`
