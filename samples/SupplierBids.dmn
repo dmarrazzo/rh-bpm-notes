@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<semantic:definitions xmlns:semantic="http://www.omg.org/spec/DMN/20151101/dmn.xsd" xmlns="http://www.trisotech.com/definitions/_312e3045-9155-4011-92be-40ab063e2210" xmlns:feel="http://www.omg.org/spec/FEEL/20140401" xmlns:tc="http://www.omg.org/spec/DMN/20160719/testcase" xmlns:triso="http://www.trisotech.com/2015/triso/modeling" xmlns:trisofeed="http://trisotech.com/feed" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" exporter="DMN Modeler" exporterVersion="5.2.14.2" id="_312e3045-9155-4011-92be-40ab063e2210" name="SupplierBids" namespace="http://www.trisotech.com/definitions/_312e3045-9155-4011-92be-40ab063e2210" triso:logoChoice="Default">
+  <semantic:extensionElements/>
+  <semantic:itemDefinition label="tBid" name="tBid">
+    <semantic:itemComponent id="_cc402227-6f4c-4f5c-b847-7e089347fd99" name="id">
+      <semantic:typeRef>feel:string</semantic:typeRef>
+    </semantic:itemComponent>
+    <semantic:itemComponent id="_7328bb1c-0c23-4bb5-a41c-3469bbfad06c" name="quotation">
+      <semantic:typeRef>feel:number</semantic:typeRef>
+    </semantic:itemComponent>
+    <semantic:itemComponent id="_570dcf10-6560-42ac-8e0d-1285352cfb23" name="deliveryTime">
+      <semantic:typeRef>feel:number</semantic:typeRef>
+    </semantic:itemComponent>
+  </semantic:itemDefinition>
+  <semantic:itemDefinition isCollection="true" label="tBids" name="tBids">
+    <semantic:typeRef>tBid</semantic:typeRef>
+  </semantic:itemDefinition>
+  <semantic:inputData id="_579a66d7-9114-47bc-9012-9a019c46f086" name="Suppliers bids">
+    <semantic:variable id="_7a2f8b5f-5189-4964-89a8-c179a10bface" name="Suppliers bids" typeRef="tBids"/>
+  </semantic:inputData>
+  <semantic:decision id="_13a80de9-ae52-4864-b55d-8b9e9f2e85bb" name="Lower quotation">
+    <semantic:variable id="_01004837-983a-4b95-aabe-7a7ce0cf4d4d" name="Lower quotation"/>
+    <semantic:informationRequirement>
+      <semantic:requiredInput href="#_579a66d7-9114-47bc-9012-9a019c46f086"/>
+    </semantic:informationRequirement>
+    <semantic:context id="_5d6e9f26-a053-498e-94f4-10f83558563a">
+      <semantic:contextEntry>
+        <semantic:variable id="_bfc41bdf-a1f8-40e2-9305-779a64778883" name="lower quotation"/>
+        <semantic:literalExpression expressionLanguage="http://www.omg.org/spec/FEEL/20140401" id="_42c6e3ec-73ee-4a9b-a138-5687620c01e6" triso:unparsed="false">
+          <semantic:text>min(Suppliers bids.quotation)</semantic:text>
+        </semantic:literalExpression>
+      </semantic:contextEntry>
+      <semantic:contextEntry>
+        <semantic:variable id="_49e7a884-e5d0-41a1-ac10-61b8b393556b" name="id of the lower quotation"/>
+        <semantic:literalExpression id="_d4977722-af03-4086-9211-f92d59780e11">
+          <semantic:text>Suppliers bids[ quotation = lower quotation].id</semantic:text>
+        </semantic:literalExpression>
+      </semantic:contextEntry>
+      <semantic:contextEntry>
+        <semantic:literalExpression id="_ac4eeec9-ea65-403d-94da-a9d840c184a1">
+          <semantic:text>id of the lower quotation</semantic:text>
+        </semantic:literalExpression>
+      </semantic:contextEntry>
+    </semantic:context>
+  </semantic:decision>
+</semantic:definitions>
