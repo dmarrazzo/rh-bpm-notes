@@ -304,6 +304,12 @@ if you change password you have delete previous h2 or rename
 
 	/mnt/sda1/var/lib/minishift/base/openshift.local.pv/pv0098/.niogit
 
+## Get the server config
+
+Retrive the configuration xml:
+
+	oc rsync <pod-name>:/opt/eap/standalone/configuration/standalone-openshift.xml .
+
 # OpenShift cheat sheet
 
 ### new project
