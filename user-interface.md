@@ -58,6 +58,17 @@ Authoring view and edit the `kie-deployment-descriptor.xml` file located on `<yo
 
 [https://docs.jboss.org/jbpm/release/6.5.0.Final/jbpm-docs/html/ch13.html#sect-formmodeler-attachments]()
 
+From version 7.x, to manage Document Collections (`org.jbpm.document.service.impl.DocumentCollectionImpl`)
+
+```xml
+    <marshalling-strategies>
+        <marshalling-strategy>
+            <resolver>mvel</resolver>
+            <identifier>new org.jbpm.document.marshalling.DocumentCollectionImplMarshallingStrategy(new org.jbpm.document.marshalling.DocumentMarshallingStrategy())</identifier>
+        </marshalling-strategy>
+    </marshalling-strategies>
+```
+
 ### Dependencies
 
 Add the dependencies to the project:
