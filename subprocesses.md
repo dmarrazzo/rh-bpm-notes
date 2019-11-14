@@ -40,6 +40,14 @@ Run the process and you'll see the following log output:
 
 It work as designed!
 
+## Call a subprocess dynamically from a script
+
+```java
+kcontext.getKieRuntime().startProcess(processId, params);
+```
+
+[Full example](https://github.com/dmarrazzo/rhpam-dynamic-subprocesses)
+
 ## Call a reusable subprocess from other project
 
 1. Create a Reusable Project, which will include Reusable sub process. Make sure that the `kbase` and `ksession` configured for this project will not be default.
