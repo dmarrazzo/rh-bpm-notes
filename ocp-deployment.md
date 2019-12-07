@@ -457,6 +457,12 @@ Metaspace (works out of S2I?):
 
 	kubernetes.websocket.timeout
 
+## Docker image hacking
+
+docker run -ti quay.io/rhpam_rhdm/rhpam-businesscentral-rhel8-cm-showcase:7.5.0 /bin/sleep infinity
+
+config directory: `/opt/eap/bin/launch`
+
 ## Openshift Useful links
 
 - [https://docs.openshift.com/container-platform/3.9/dev_guide/copy_files_to_container.html]()
