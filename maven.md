@@ -7,10 +7,12 @@ In order to keep your POM clean and tidy, it's useful to introduce the bill of m
 
   - Add the following section to the POM file:
 
-		<properties>
-			<ba.version>7.5.0.redhat-00004</ba.version>
-			<version.org.kie>7.26.0.Final-redhat-00005</version.org.kie>
-		</properties>
+```xml
+  <properties>
+    <ba.version>7.5.1.redhat-00001</ba.version>
+    <version.org.kie>7.26.0.Final-redhat-00006</version.org.kie>
+  </properties>
+```
 
 Here the mapping of the product version with the dependency versions:
 
@@ -25,11 +27,13 @@ Here the mapping of the product version with the dependency versions:
 | 7.4.0           | 7.4.0.GA-redhat-00002  | 7.23.0.Final-redhat-00002 |
 | 7.4.1           | 7.4.1.GA-redhat-00001  | 7.23.0.Final-redhat-00003 |
 | 7.5             | 7.5.0.redhat-00004     | 7.26.0.Final-redhat-00005 |
+| 7.5.1           | 7.5.1.redhat-00001     | 7.26.0.Final-redhat-00006 |
 
 ### Red Hat Process Automation Manager v7.1 Bill of Material (BOM)
 
 The BOM is a way to manage the version in a single place, add to the POM file:
 
+```xml
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -41,6 +45,7 @@ The BOM is a way to manage the version in a single place, add to the POM file:
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+```
 
 ### The KIE plugin
 
