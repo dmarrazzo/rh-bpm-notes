@@ -421,6 +421,31 @@ Here the mapping column:
   }
   ```
 
+- To filter the results leverage the `QueryFilterSpecBuilder` in the following way:
+
+  ```java
+  QueryFilterSpec spec = new QueryFilterSpecBuilder().equalsTo("CATEGORY", "basic")
+                                                     .between("PRICE", 800, 1200)
+                                                     .get();
+  ```
+
+### Task with input variable
+
+taskId,
+status,
+activationTime,
+name,
+description,
+priority,
+actualOwner,
+createdBy,
+deploymentId,
+processId,
+processInstanceId,
+createdOn,
+dueDate
+workItemId
+
 ### Retrieving list of tasks with process variables
 
 In general, a task should contain all the context information that are needed to be performed, so it's reasonable that from user perspective is usually enough to search tasks based on their input variable (input assignment in the process designer). 
