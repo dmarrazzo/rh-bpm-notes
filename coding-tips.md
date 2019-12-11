@@ -219,6 +219,14 @@ Import dependencies using `provided` for the scope.
     KieRuntime kruntime = ((ProcessInstance) getProcessInstance()).getKnowledgeRuntime();
     RuntimeManager manager = (RuntimeManager) kruntime.getEnvironment().get(EnvironmentName.RUNTIME_MANAGER);
 
+## Retrieve the deployment id
+
+Leveraging `kcontext`:
+
+```java
+    String deploymentId = (String) kcontext.getKieRuntime().getEnvironment().get(EnvironmentName.DEPLOYMENT_ID);
+```
+
 ## Insert Variable in Working Memory of a Process 
 
 Example
