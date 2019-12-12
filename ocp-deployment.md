@@ -410,6 +410,13 @@ oc get pods
 
 	sh-4.2$ exit
 
+*From version 7.5* It's possible to add the logging via environment variables: 
+
+LOGGER_CATEGORIES=org.kie:DEBUG, org.drools:DEBUG, org.jbpm:DEBUG
+
+More info: https://github.com/jboss-container-images/jboss-eap-modules/blob/EAP_724_OPENJDK11_CR2/os-eap7-launch/added/launch/configure_logger_category.sh
+
+
 ### force a new deployment
 
 You can start a new deployment process manually using the web console, or from the CLI:
@@ -468,3 +475,5 @@ config directory: `/opt/eap/bin/launch`
 - [https://docs.openshift.com/container-platform/3.9/dev_guide/copy_files_to_container.html]()
 
 - [https://www.mankier.com/package/origin-clients]()
+
+- [Learn OpenShift interactively](https://learn.openshift.com/)
