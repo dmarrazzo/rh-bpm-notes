@@ -209,7 +209,8 @@ caseService.triggerAdHocFragment(...);
 ## Case Rules
 
 ```java
-import org.kie.api.runtime.processorg.kie.api.runtime.process.CaseData.CaseData;
+import org.jbpm.casemgmt.api.model.instance.CaseFileInstance;
+
 
 rule "ask user for details"
     when
@@ -279,6 +280,18 @@ In the designer the user has possibility to set 'AdHocOrdering' property for Ad 
 Nevertheless, core engine only supports parallel execution, property should be hidden in designer.
 
 ## Dependencies
+
+Version 7.x:
+
+```xml
+    <dependency>
+      <groupId>org.jbpm</groupId>
+      <artifactId>jbpm-case-mgmt-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+```
+
+Version 6:
 
 DO NOT import jbpm-case-mgmt in the pom but copy it in WEB-INF/lib!
 
