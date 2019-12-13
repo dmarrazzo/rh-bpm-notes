@@ -122,6 +122,37 @@ While kmodule is mainly targeting on knowledge base and knowledge session basic 
 
 [https://docs.jboss.org/jbpm/release/6.5.0.Final/jbpm-docs/html/ch14.html#d0e15405]()
 
+Signals
+============================================
+
+To enable the external signals:
+
+1. Enable `KIE.SERVER.SIGNAL.QUEUE` in `kie-server.war/META-INF/kie-server-jms.xml`
+2. Enable ejb `org.jbpm.process.workitem.jms.JMSSignalReceiver` in `kie-server.war/WEB-INF/ejb-jar.xml`
+3. In the project add the following dependency:
+   ```xml
+    <dependency>
+      <groupId>org.jbpm</groupId>
+      <artifactId>jbpm-workitems-jms</artifactId>
+      <version>7.23.0.Final-redhat-00003</version>
+      <scope>provided</scope>
+    </dependency>
+   ```
+
+4. In the `kie-deployment-descriptor` add the work item handler definition:
+
+   ```xml
+    <work-item-handler>
+        <resolver>mvel</resolver>
+        <identifier>new org.jbpm.process.workitem.jms.JMSSendTaskWorkItemHandler("java:/JmsXA", "java:jboss/exported/jms/queue/KIE.SERVER.SIGNAL")</identifier>
+        <parameters/>
+        <name>External Send Task</name>
+    </work-item-handler>
+   ```
+
+## References
+
+[Improved Signaling](http://mswiderski.blogspot.com/2015/09/improved-signaling-in-jbpm-63.html)
 
 JPA variable persistence
 ============================================
@@ -225,38 +256,6 @@ private java.util.List<java.lang.String> suppliersList;
 ## References
 
 [jBPM 6 - store your process variables anywhere](http://mswiderski.blogspot.it/2014/02/jbpm-6-store-your-process-variables.html)
-
-Signals
-============================================
-
-To enable the external signals:
-
-1. Enable `KIE.SERVER.SIGNAL.QUEUE` in `kie-server.war/META-INF/kie-server-jms.xml`
-2. Enable ejb `org.jbpm.process.workitem.jms.JMSSignalReceiver` in `kie-server.war/WEB-INF/ejb-jar.xml`
-3. In the project add the following dependency:
-   ```xml
-    <dependency>
-      <groupId>org.jbpm</groupId>
-      <artifactId>jbpm-workitems-jms</artifactId>
-      <version>7.23.0.Final-redhat-00003</version>
-      <scope>provided</scope>
-    </dependency>
-   ```
-
-4. In the `kie-deployment-descriptor` add the work item handler definition:
-
-   ```xml
-    <work-item-handler>
-        <resolver>mvel</resolver>
-        <identifier>new org.jbpm.process.workitem.jms.JMSSendTaskWorkItemHandler("java:/JmsXA", "java:jboss/exported/jms/queue/KIE.SERVER.SIGNAL")</identifier>
-        <parameters/>
-        <name>External Send Task</name>
-    </work-item-handler>
-   ```
-
-## References
-
-[Improved Signaling](http://mswiderski.blogspot.com/2015/09/improved-signaling-in-jbpm-63.html)
 
 Advanced Queries
 ============================================
@@ -450,6 +449,9 @@ workItemId
 ### Retrieving list of tasks with process variables
 
 In general, a task should contain all the context information that are needed to be performed, so it's reasonable that from user perspective is usually enough to search tasks based on their input variable (input assignment in the process designer). 
+
+#### Raw query
+
 Nevertheless, there is an extremely flexible way to en-query the database getting just RAW data:
 
 Create the following advanced query:
@@ -471,6 +473,36 @@ Curl:
 
 ```sh
 curl -X GET "http://localhost:8080/kie-server/services/rest/server/queries/definitions/fe375037-8da7-43c3-a0d9-28051c39fb9c/data?mapper=RawList&page=0&pageSize=10" -H "accept: application/json"
+```
+
+#### Typed Query to get process variables along with task instances
+
+- Register the following query
+
+```sql
+SELECT T.TASKID, T.STATUS, T.ACTIVATIONTIME, T.NAME, T.DESCRIPTION, T.PRIORITY, T.ACTUALOWNER, T.CREATEDBY, T.DEPLOYMENTID, T.PROCESSID, T.PROCESSINSTANCEID, T.CREATEDON, T.DUEDATE, TRA.ACCOUNT, TRA.SOURCE, TRA.AMOUNT
+FROM AUDITTASKIMPL T
+INNER JOIN MAPPEDVARIABLE MPV ON MPV.PROCESSINSTANCEID = T.PROCESSINSTANCEID
+INNER JOIN TRANSACTION TRA ON TRA.ID = MPV.VARIABLEID
+WHERE MPV.VARIABLETYPE = 'com.example.Transaction'
+```
+
+- Kie Client API:
+
+
+
+```java
+// tested with XSTREAM Marshalling
+
+QueryFilterSpec spec = new QueryFilterSpecBuilder().equalsTo("STATUS", "Created")
+                                                   .addColumnMapping("ACCOUNT", "string")
+                                                   .addColumnMapping("SOURCE", "string")
+                                                   .addColumnMapping("AMOUNT", "double")
+                                                   .get();
+
+// UserTasksWithCustomVariables
+List<TaskInstance> tiList = queryClient.query(QUERY_ID, QueryServicesClient.QUERY_MAP_TASK_WITH_CUSTOM_VARS,
+        spec, 0, 10, TaskInstance.class);
 ```
 
 ## References
