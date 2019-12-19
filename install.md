@@ -264,7 +264,7 @@ Raw
 
 ### Persistent H2 store
 
-    <connection-url>jdbc:h2:h2-filestore;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</connection-url>
+    <connection-url>jdbc:h2:file:~/h2-filestore;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</connection-url>
 
 **TCP variant**
 
