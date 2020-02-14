@@ -55,5 +55,17 @@ Some important dependencies:
 
 [1]:https://github.com/droolsjbpm/jbpm/blob/738d191d338dab3e8baceeaf6fe31556b81fe07f/jbpm-flow/src/main/java/org/jbpm/workflow/instance/node/RuleSetNodeInstance.java
 
+# Conditional Start Node
 
+It's a nice way to trigger process logic based on rule logic.
+
+Unfortunately, there's no way to get the object that matched the rule:
+
+Usual start node:
+
+https://github.com/kiegroup/jbpm/blob/master/jbpm-flow-builder/src/main/java/org/jbpm/compiler/ProcessBuilderImpl.java#L518
+
+But for conditional start nodes, no input mappings are set, basically we're not calling addTriggerWithInputMapping here:
+
+https://github.com/kiegroup/jbpm/blob/master/jbpm-bpmn2/src/main/java/org/jbpm/bpmn2/xml/StartEventHandler.java#L92
 
