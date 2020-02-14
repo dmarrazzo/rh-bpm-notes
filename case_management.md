@@ -87,6 +87,8 @@ Article that describe the new capabilities:
             "category" : "Cases"
           ]
 
+- add the case management project nature: in the root folder an empty file `.caseproject`
+
 ## Show case application
 
 The show case application is a sample application to explore the case management capabilities.
@@ -197,6 +199,11 @@ Dependency:
     <artifactId>jbpm-services-api</artifactId>
     <scope>provided</scope>
 </dependency>
+<dependency>
+    <groupId>org.jbpm</groupId>
+    <artifactId>jbpm-case-mgmt-api</artifactId>
+    <scope>provided</scope>
+</dependency>
 ```
 
 Use the case APIs:
@@ -249,6 +256,43 @@ ProcessInstanceDesc processInstanceDesc = runtimeDataService.getProcessInstanceB
 String correlationKey = processInstanceDesc.getCorrelationKey();
 CaseService caseService = (CaseService) ServiceRegistry.get().service(ServiceRegistry.CASE_SERVICE);
 caseService.addDataToCaseFile(correlationKey, "data", data);
+```
+
+Here an alternative approach to retrieve the case id from the context:
+
+```java
+String caseId = (String) kcontext.getCaseData().getData("caseId");
+```
+
+## Case Role Assignment
+
+Programmatically:
+
+
+```java
+import org.jbpm.services.task.impl.model.GroupImpl;
+import org.jbpm.services.task.impl.model.UserImpl;
+
+
+caseService.assignToCaseRole(HR_CASE_ID, "contact", new UserImpl("mary"));
+caseService.assignToCaseRole(HR_CASE_ID, "contact", new GroupImpl("HR"));
+```
+
+Assign the case owner to case role:
+
+```java
+CaseAssignment caseAssignment = kcontext.getCaseAssignment();
+
+Collection<OrganizationalEntity> entities = caseAssignment.getAssignments("owner");
+
+OrganizationalEntity owner = entities.iterator()
+                                     .next();
+
+CaseService caseService = (CaseService) ServiceRegistry.get()
+                                                       .service(ServiceRegistry.CASE_SERVICE);
+String caseId = ((CaseFileInstance)kcontext.getCaseData()).getCaseId();
+caseService.assignToCaseRole(caseId, "consult", owner);
+caseService.assignToCaseRole(caseId, "business", owner);
 ```
 
 ## References
