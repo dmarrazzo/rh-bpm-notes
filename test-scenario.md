@@ -38,3 +38,36 @@ mvn -Dmaven.surefire.debug test
 - `results` contains the list of execution tests
 - `results[i].factMappingValue.rawValue` shows the expected value
 - `results[i].resultValue` shows the actual value
+
+## Troubleshooting
+
+```
+org.drools.scenariosimulation.backend.runner.IndexedScenarioException: #3: null(/home/donato/git/demo/rhdm-qlb-loan/qlb-loan-application-repo/target/test-classes/com/redhat/demo/qlb/loan_application/eligibility-test.scesim)
+	at org.drools.scenariosimulation.backend.runner.AbstractScenarioRunner.singleRunScenario(AbstractScenarioRunner.java:112)
+```
+
+Lack of dependecy 
+
+```xml
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-decisiontables</artifactId>
+      <version>7.30.0.Final-redhat-00003</version>
+      <scope>test</scope>
+    </dependency>
+```
+
+### Error
+
+```
+ Unknown resource type: ResourceType = 'jBPM BPMN2 Language'
+```
+
+Lack of dependecy 
+
+```xml
+    <dependency>
+      <groupId>org.jbpm</groupId>
+      <artifactId>jbpm-bpmn2</artifactId>
+    </dependency>
+```
