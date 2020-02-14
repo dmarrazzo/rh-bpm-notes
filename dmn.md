@@ -12,9 +12,27 @@ For a first introduction to the DMN here some resources:
 - [Standards in Business Rules Space: Decision Model and Notation (DMN) and Other Standards](https://youtu.be/fXYD_HE7ufc)
 - [Building Business Applications with DMN and BPMN](https://youtu.be/C0u3ZDiH3ek)
 
-# FEEL Language
+## Project dependencies
 
-## Data Types
+```xml
+<!-- Required for the DMN runtime API -->
+<dependency>
+  <groupId>org.kie</groupId>
+  <artifactId>kie-dmn-core</artifactId>
+  <version>${drools.version}</version>
+</dependency>
+
+<!-- Required if not using classpath KIE container -->
+<dependency>
+  <groupId>org.kie</groupId>
+  <artifactId>kie-ci</artifactId>
+  <version>${drools.version}</version>
+</dependency>
+```
+
+## FEEL Language
+
+### Data Types
 
 Basic data types: string, Boolean, Number, date, time and duration
 
@@ -55,7 +73,7 @@ In the previous example there are:
 3. `Suppliers bids` is a variable defined as `tBids`
 
 
-## Path Expressions
+### Path Expressions
 
 FEEL is able to query data in a sophisticated way with constructs that recall closely XPATH 2.0.
 
@@ -142,7 +160,7 @@ Other list function manipulate the list.
   </tr>
 </table>
 
-# Boxed Function implemented in Java
+## Boxed Function implemented in Java
 
 A Boxed Function Definition is the way to define function in DMN. 
 In the Trisotech editor, it is "Function (Expression)".
@@ -153,7 +171,7 @@ This is the way to define a Java function:
 
 ![dmn_boxed_function](imgs/dmn_boxed_function.png)
 
-# Time handling
+## Time handling
 
 FEEL extension to evaluate time:
 
@@ -164,7 +182,7 @@ FEEL extension to evaluate time:
 **Warning** Using this functions in different point of a decision could give different results base on the real evaluation execution time.
 
 
-## Duration
+### Duration
 
 Subtracting two dates gives a duration:
 
@@ -178,7 +196,7 @@ Example: days between two dates
 
 	(date1 - date2).days
 
-# Debugging
+## Debugging
 
 logs (tipo org.kie=DEBUG)
  
@@ -189,10 +207,3 @@ logs (tipo org.kie=DEBUG)
 add to DMNRuntime
 
 	DMNRuntime.addListener( DMNRuntimeEventListenerImpl )
-
-
-
-
-
-
-
