@@ -281,7 +281,8 @@ since version 6 timers can be configured with valid ISO8601 date format that sup
 
 [Wikipedia duration standard format](https://en.wikipedia.org/wiki/ISO_8601#Durations)
 
-# Service Registry
+Service Registry
+---------------------------------------------------------------------------------------------
 
 Service Registry must be used in a kie-server (CDI not allowed):
 
@@ -306,4 +307,14 @@ RuntimeDataService runtimeDataService = (RuntimeDataService) ServiceRegistry.get
 UserTaskAdminService userTaskAdminService = (UserTaskAdminService) ServiceRegistry.get()
         .service(ServiceRegistry.USER_TASK_ADMIN_SERVICE);
 
+```
+
+Local Container
+---------------------------------------------------------------------------------------------
+
+Retrieve the kieContainer from the classpath
+
+```java
+    private static KieServices ks = KieServices.Factory.get();
+    private static KieContainer kieContainer = ks.getKieClasspathContainer(BKM.class.getClassLoader());
 ```
