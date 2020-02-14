@@ -505,6 +505,20 @@ List<TaskInstance> tiList = queryClient.query(QUERY_ID, QueryServicesClient.QUER
         spec, 0, 10, TaskInstance.class);
 ```
 
+**Warning**
+Even though QUERY_MAP_TASK_WITH_CUSTOM_VARS mapper returns a list of `UserTaskInstanceWithVarsDesc`,
+`org.kie.server.services.jbpm.ConvertUtils` changes the results in a list of TaskInstance because to simplify the serializzation.
+
+#### Raw Variable Values 
+
+```sql
+SELECT V.ID, V.VARIABLEINSTANCEID, V.VALUE, T.TASKID, T.STATUS, T.ACTIVATIONTIME, T.NAME, T.DESCRIPTION, T.PRIORITY, T.ACTUALOWNER, T.CREATEDBY, T.DEPLOYMENTID, T.PROCESSID, T.PROCESSINSTANCEID, T.CREATEDON, T.DUEDATE
+FROM VARIABLEINSTANCELOG AS V
+LEFT JOIN VARIABLEINSTANCELOG AS V2 ON ( V.VARIABLEINSTANCEID = V2.VARIABLEINSTANCEID AND V.PROCESSINSTANCEID=V2.PROCESSINSTANCEID AND V.ID < V2.ID )
+INNER JOIN AUDITTASKIMPL AS T ON T.PROCESSINSTANCEID = V.PROCESSINSTANCEID
+WHERE V2.ID IS NULL
+```
+
 ## References
 
 [Advanced Queries in jBPM](http://mswiderski.blogspot.it/2016/01/advanced-queries-in-jbpm-64.html)

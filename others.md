@@ -136,6 +136,10 @@ configuration in JBoss console:
 - Core -> Logging -> Log categories
 - add the package
 
+Command line:
+
+    /subsystem=logging/logger=package.name:change-log-level(level=NEW_LOGGING_LEVEL)
+
 usage in the code (it's possible to inject it):
 
     import org.slf4j.Logger;

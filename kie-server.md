@@ -236,7 +236,7 @@ Initial variables:
 
 List tasks of a process instance:
 
-        
+```java 
 	KieServicesConfiguration config = KieServicesFactory.newRestConfiguration(URL, user, password);
 	
 	// Marshalling configuration
@@ -251,6 +251,27 @@ List tasks of a process instance:
 	status.add(Status.Ready.toString());
 	List<TaskSummary> tasksSummaries = taskServicesClient.findTasksAssignedAsPotentialOwner("donato", status, 0, 10);
 	tasksSummaries.forEach((ts)->System.out.println(ts.getDescription()));
+```
+
+## JSON Marshalling
+
+By default the kieserver expects a JSON representation with an explicit reference to the Java class, e.g.
+
+```json
+{
+  "transaction" : {
+    "com.demo.Transactio" : {
+      "id" : "1234"
+    }
+  }
+}
+```
+
+A way to circumvent this is to use the following java system property `-Dorg.drools.server.filter.classes=true`.
+
+*See also:*
+
+[KIE Server marshaling error when executing a DMN](https://issues.redhat.com/browse/JBPM-9024)
 
 ## Retrieve all the facts
 

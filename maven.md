@@ -9,8 +9,8 @@ In order to keep your POM clean and tidy, it's useful to introduce the bill of m
 
 ```xml
   <properties>
-    <ba.version>7.5.1.redhat-00001</ba.version>
-    <version.org.kie>7.26.0.Final-redhat-00006</version.org.kie>
+    <ba.version>7.6.0.redhat-00004</ba.version>
+    <version.org.kie>7.30.0.Final-redhat-00003</version.org.kie>
   </properties>
 ```
 
@@ -28,6 +28,7 @@ Here the mapping of the product version with the dependency versions:
 | 7.4.1           | 7.4.1.GA-redhat-00001  | 7.23.0.Final-redhat-00003 |
 | 7.5             | 7.5.0.redhat-00004     | 7.26.0.Final-redhat-00005 |
 | 7.5.1           | 7.5.1.redhat-00001     | 7.26.0.Final-redhat-00006 |
+| 7.6             | 7.6.0.redhat-00004     | 7.30.0.Final-redhat-00003 |
 
 ### Red Hat Process Automation Manager v7.1 Bill of Material (BOM)
 
