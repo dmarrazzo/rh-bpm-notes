@@ -146,6 +146,33 @@ Do it even of the server where you installed through the Dashbuilder console, ju
 
     Or restart the application server
 
+#### PostgreSQL
+
+module add --name=org.postgresql --resources=/home/donato/apps/jdbc/postgresql-42.2.9.jar --dependencies=javax.api,javax.transaction.api
+
+
+```xml
+            <datasource jndi-name="java:jboss/PostgresDS" pool-name="PostgresDS">
+               <connection-url>jdbc:postgresql://localhost/test</connection-url>
+               <driver>postgresql</driver>
+               <security>
+                  <user-name>donato</user-name>
+                  <password>donato</password>
+               </security>
+               <validation>
+                  <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker" />
+                  <validate-on-match>true</validate-on-match>
+                  <background-validation>false</background-validation>
+                  <exception-sorter class-name="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLExceptionSorter" />
+               </validation>
+            </datasource>
+            <drivers>
+               <driver name="postgresql" module="org.postgresql">
+                  <xa-datasource-class>org.postgresql.xa.PGXADataSource</xa-datasource-class>
+               </driver>
+            </drivers>
+```
+
 #### Load the DDL
 
 Download Red Hat JBoss BPM Suite 6.4.0 Supplementary Tools.
