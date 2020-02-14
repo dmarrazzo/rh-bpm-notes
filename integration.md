@@ -1,5 +1,20 @@
 # Work Item Handler (WIH)
 
+## Create a WIH v7 procedure
+
+```sh
+mvn archetype:generate \
+-DarchetypeGroupId=org.jbpm \
+-DarchetypeArtifactId=jbpm-workitems-archetype \
+-DarchetypeVersion=7.30.0.Final-redhat-00003 \
+-Dversion=1.0.0-SNAPSHOT \
+-DgroupId=com.redhat \
+-DartifactId=wokitem-sql \
+-DclassPrefix=SQLWorkItem
+```
+
+## Create a WIH legacy procedure
+
 Using the Service registry to define a WIH:
 
 [https://docs.jboss.org/jbpm/release/6.5.0.Final/jbpm-docs/html_single/#d0e29362]()
