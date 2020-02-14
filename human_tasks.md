@@ -374,6 +374,17 @@ Business calendar deployment configured in `<environment-entries>` section of `k
     </environment-entries>
 
 
+## Troubleshooting
+
+Runtime error when completing a task:
+
+```
+ERROR [org.jbpm.runtime.manager.impl.error.ExecutionErrorHandlerImpl] (default task-21) Unexpected error during processing : com.thoughtworks.xstream.io.StreamException:
+(...)
+Caused by: org.xmlpull.v1.XmlPullParserException: only whitespace content allowed before start tag (...)
+```
+
+This error can be caused by a wrong data output association. E.g. String -> Complex type 
 
 Form modeller
 =============================================================================
