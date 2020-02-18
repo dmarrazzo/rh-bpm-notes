@@ -196,14 +196,28 @@ Example: days between two dates
 
 	(date1 - date2).days
 
-## Debugging
 
-logs (tipo org.kie=DEBUG)
- 
- 	DMNRuntimeEventListener
+## Listeners
+
+It's possible to add event listeners: `DMNRuntimeEventListener`
 
 [https://github.com/kiegroup/drools/blob/master/kie-dmn/kie-dmn-api/src/main/java/org/kie/dmn/api/core/event/DMNRuntimeEventListener.java#L21-L31]()
 
-add to DMNRuntime
+Programmatically, add it to DMNRuntime:
 
-	DMNRuntime.addListener( DMNRuntimeEventListenerImpl )
+```java
+dmnRuntime.addListener( new DMNRuntimeEventListener() {
+  @Override
+  public void afterEvaluateBKM(AfterEvaluateBKMEvent event) {
+    System.out.println(">>> " + event.getResult().getContext());
+  }
+});
+```
+
+Add listeners to the kie server using the property via kmodule.xml or system property: `org.kie.dmn.runtime.listeners.$NAME`.
+
+Details described here: [https://issues.redhat.com/browse/DROOLS-4488]()
+
+## Debugging
+
+logs (tipo org.kie=DEBUG)
