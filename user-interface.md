@@ -81,6 +81,27 @@ Add the dependencies to the project:
 
 **REMINDER:** Add the `jbpm-document-<release>.jar` to your kieserver libs.
 
+### Client API to deal with Documents
+
+Kie client API init:
+
+```java
+documentClient = client.getServicesClient(DocumentServicesClient.class);
+```
+
+Create a document
+
+```java
+document = DocumentInstance.builder()
+        .name("first document")
+        .size(contentBytes.length)
+        .lastModified(new Date())
+        .content(contentBytes)
+        .build();
+```
+
+**Further code samples:** [https://github.com/kiegroup/droolsjbpm-integration/blob/master/kie-server-parent/kie-server-tests/kie-server-integ-tests-jbpm/src/test/java/org/kie/server/integrationtests/jbpm/DocumentServiceIntegrationTest.java]()
+
 ## Articles
 
 [https://www.linkedin.com/pulse/does-bpm-need-head-donato-marrazzo]()
