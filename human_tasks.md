@@ -239,6 +239,87 @@ In version 7, the runtime is hosted in the kieserver:
     return usersgroups;
 ```
 
+## Database authentication
+
+1. Create a custom tables to store user data :
+
+You need to create custom table which will store the user details like password and roles/groups.
+Please find below sample create table query which I have used.
+
+```sql
+create table USERS (username varchar(20), password varchar(20));
+create table ROLES (username varchar(20), user_role varchar(20));
+```
+2. Create a custom security domain :
+
+You need to create your custom security domain which will fetch the user details from the database.
+Please add below custom security domain in your standalone*.xml file.
+
+```xml
+<security-domain name="testDB">
+<authentication>
+<login-module code="Database" flag="required">
+<module-option name="dsJndiName" value="java:/MySqlDS"/>
+<module-option name="principalsQuery" value="select password from USERS where username=?"/>
+<module-option name="rolesQuery" value="select user_role, 'Roles' from ROLES where username=?"/>
+</login-module>
+<login-module name="KieLoginModule" code="org.kie.security.jaas.KieLoginModule" flag="optional" module="deployment.business-central.war"/>
+</authentication>
+</security-domain>
+```
+
+Once you add this security domain, then add the security domain mapping in the jboss-web.xml file in both business-central.war and kie-server.war file.
+You can find the jboss-web.xml file at path : `JBOSS_HOME/standalone/deployments/business-central.war/WEB-INF/jboss-web.xml` and
+`JBOSS_HOME/standalone/deployments/kie-server.war/WEB-INF/jboss-web.xml`
+
+Please refer below example with respect to above security domain.
+```xml
+<security-domain>testDB</security-domain>
+```
+
+By default the value for this is "other". You need to change it to your custom security domain name. Please make sure you will keep only one security domain configuration in jboss-web.xml file.
+Also add the username and password for process server in standalone*.xml. This user should have the kie-server role assigned.
+Add below system properties in you standalone*.xml file.
+
+```xml
+<property name="org.kie.server.controller.user" value="testUser"/>
+<property name="org.kie.server.controller.pwd" value="admin@123"/>
+```
+My testUser has the admin and kie-server role already assigned.
+
+3. Add JNDI and user fetching details for user info :
+
+This configuration is required as we are making the custom authentication so it will help us to get the user details while task assignment.
+You need to add the datasource JNDI and user query in `JBOSS_HOME/standalone/deployments/kie-server.war/WEB-INF/classes/jbpm.user.info.properties`.
+Add below properties in `jbpm.user.info.properties` file.
+
+```s
+db.ds.jndi.name=java:/MySqlDS
+db.group.mem.query=select user_role, 'Roles' from ROLES where username = ?
+```
+
+This jndi value should be the same value which you used in custom security domain.
+
+4. Configure user group callback 
+
+set system property `-Dorg.jbpm.ht.callback=db`
+create file named `jbpm.usergroup.callback.properties` in the root of the class path (/JBOSS_HOME/standalone/deployments/kie-server.war/WEB-INF/classes/)
+define your queries and data source:
+
+- db.ds.jndi.name - JNDI name of the data source to be used for connections</li>
+- db.user.query - query used to verify existence of the user (case sensitive, expects a single parameter on position 1)
+- db.roles.query - query user to check group existence (case sensitive, expects single parameter on position 1)
+- db.user.roles.query - query used to collect group for given user (case sensitive, expects single parameter on position 1, retrieves group name from position 1 of returned result set)
+
+
+4. Add bypass user authentication and usergroup call back property in standalone-full.xml :
+
+```xml
+<property name="org.jbpm.ht.callback" value="DB"/>
+<property name="org.kie.server.bypass.auth.user " value="true"/>
+```
+
+
 ## Assignment Rules
 
 Assignment rules are rules executed automatically when a Human Task is created or completed. This mechanism can be used, for example, to assign a Human Task automatically to a particular user of a group or prevent a user from completing a Task if data is missing.
