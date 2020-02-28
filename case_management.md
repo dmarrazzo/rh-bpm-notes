@@ -95,7 +95,7 @@ The show case application is a sample application to explore the case management
 
 To enable it:
 
-- from `rhpam-7.4.0-add-ons.zip` extract `rhpam-7.4-case-mgmt-showcase-eap7-deployable.zip`
+- from `rhpam-<version>-add-ons.zip` extract `rhpam-<version>-case-mgmt-showcase-eap7-deployable.zip`
 - deploy the war in your application server
 
 It's possible to enable a direct link from BC to the show case app adding this property:
@@ -107,6 +107,35 @@ org.jbpm.casemgmt.showcase.url=/rhpam-case-mgmt-showcase
 The link will be available in the right top corner in the *grid* icon.
 
 The user must have the `Administrators` role.
+
+### Deploy Show case application in different EAP
+
+- user registry should be the same of the kieserver
+- add the following properties:
+
+```xml
+<property name="org.kie.server.location" value="http://localhost:8080/kie-server/services/rest/server" />
+<property name="org.kie.server.user" value="controllerUser" />
+<property name="org.kie.server.pwd" value="controllerUser1234;" />
+<property name="org.kie.server.id" value="default-kieserver" />
+```
+
+- configure the KieLoginModule
+
+```xml
+<subsystem xmlns="urn:jboss:domain:security:2.0">
+    <security-domains>
+        <security-domain name="other" cache-type="default">
+            <authentication>
+                <login-module code="Remoting" flag="optional">
+                    <module-option name="password-stacking" value="useFirstPass"/>
+                </login-module>
+                <login-module code="RealmDirect" flag="required">
+                    <module-option name="password-stacking" value="useFirstPass"/>
+                </login-module>
+                <login-module code="org.kie.security.jaas.KieLoginModule" flag="optional" module="deployment.rhpam-case-mgmt-showcase.war" />
+            </authentication>
+```
 
 ## Process 
 
