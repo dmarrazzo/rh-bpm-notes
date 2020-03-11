@@ -114,13 +114,10 @@ The user must have the `Administrators` role.
     
 - make sure that the user has the role `user` defined
 
-- add the following properties:
+- add the following property:
 
 ```xml
 <property name="org.kie.server.location" value="http://localhost:8080/kie-server/services/rest/server" />
-<property name="org.kie.server.user" value="controllerUser" />
-<property name="org.kie.server.pwd" value="controllerUser1234;" />
-<property name="org.kie.server.id" value="default-kieserver" />
 ```
 
 - configure the KieLoginModule
