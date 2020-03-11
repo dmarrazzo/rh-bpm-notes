@@ -110,7 +110,10 @@ The user must have the `Administrators` role.
 
 ### Deploy Show case application in different EAP
 
-- user registry should be the same of the kieserver
+- user registry should be the same of the kieserver (e.g. if you have the user `pamAdmin` in the kieserver you need the same in the application server that hosts the case application)
+    
+- make sure that the user has the role `user` defined
+
 - add the following properties:
 
 ```xml
