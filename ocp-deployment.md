@@ -451,6 +451,8 @@ Add custom system properties
 
 ## Memory issues
 
+[How to change JVM memory options using Red Hat JBoss EAP image for Openshift](https://access.redhat.com/solutions/2682021)
+
 Environment variables:
 
 	CONTAINER_HEAP_PERCENT = 0.5
@@ -463,6 +465,10 @@ Metaspace (works out of S2I?):
 ## timeout
 
 	kubernetes.websocket.timeout
+
+## Grant permission to use operators
+
+oc adm policy add-cluster-role-to-user cluster-reader developer
 
 ## Docker image hacking
 
