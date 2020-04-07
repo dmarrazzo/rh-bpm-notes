@@ -40,7 +40,7 @@ https://github.com/jbossdemocentral/rhdm7-install-demo/blob/dm7ga/init.sh
 
         ./add-user.sh -a -u pamAdmin -p password --role admin,developer,analyst,user,manager,kie-server,rest-all,Administrators
 
-- add the roles
+- increase the heap memory `2GB` or more
 - listen all interface:
 
     - add the interface:
