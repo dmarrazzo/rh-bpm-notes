@@ -56,6 +56,8 @@ There are documents and samples.
 
 - [Detecting credit card fraud with Red Hat Decision Manager 7](https://developers.redhat.com/blog/2018/07/26/detecting-credit-card-fraud-with-red-hat-decision-manager-7/)
 
+- [Domain-specific Prometheus metrics with Red Hat Process Automation Manager and Decision Manager](https://developers.redhat.com/blog/2019/10/31/domain-specific-prometheus-metrics-with-red-hat-process-automation-manager-and-decision-manager)
+
 ### Video and Webinars
 
  - [Understand the kieserver REST APIs, monitoring the Java APIs traffic](https://youtu.be/v7Td4PsT1O8)

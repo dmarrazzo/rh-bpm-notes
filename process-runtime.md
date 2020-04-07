@@ -5,7 +5,7 @@ From RHPAM 7.0.2
 
 Each task and the overall process have a new property: `SLA Due Date`
 
-Example of date expression:
+Example of date expression (ISO Standard?):
 
 - 5m 
 

@@ -73,6 +73,10 @@ standalone.xml
 
 [Tune async execution in Kie Server](http://mswiderski.blogspot.it/2017/11/tune-async-execution-in-kie-server.html)
 
+- https://access.redhat.com/solutions/3003791
+- https://access.redhat.com/solutions/3109201 
+- https://access.redhat.com/solutions/2455451
+
 ### EAP 7.0 specific configurations
 
 ```

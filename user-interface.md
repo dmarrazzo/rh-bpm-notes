@@ -69,6 +69,9 @@ From version 7.x, to manage Document Collections (`org.jbpm.document.service.imp
     </marshalling-strategies>
 ```
 
+- [KIE Server brings document support](http://mswiderski.blogspot.com/2016/08/kie-server-jbpm-extension-brings.html)
+- [Example of CMIS integration through the Document Marshalling Strategy](https://github.com/mswiderski/jbpm-examples/tree/master/jbpm-open-cmis)
+
 ### Dependencies
 
 Add the dependencies to the project:
