@@ -276,3 +276,12 @@ Detailed information in: [Human Tasks](human_tasks.md)
 https://access.redhat.com/solutions/396853#eap6client
 
 https://github.com/selrahal/jbpm-rest
+
+
+Event emitters
+===============================================================
+
+The most effective way to store the runtime events is to leverage the event emitters.
+
+[NoSQL enters jBPM ... as an experiment ... so far](http://mswiderski.blogspot.com/2017/08/nosql-enters-jbpm-as-experiment-so-far.html)
+[Elasticsearch empowers jBPM](http://mswiderski.blogspot.com/2017/08/elasticsearch-empowers-jbpm.html)
