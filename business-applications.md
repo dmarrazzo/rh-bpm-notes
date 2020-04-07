@@ -299,3 +299,7 @@ Resources
 - [grafana example](https://github.com/hifly81/jbpm-spring-boot)
 
 https://github.com/BootstrapJBPM/jbpm-bootstrap-service/blob/master/pom.xml#L257-L260
+
+### Swagger security:
+
+https://github.com/kiegroup/droolsjbpm-integration/blob/8a6940ac5dd64886339a5492c538b017d1f6cb41/kie-spring-boot/kie-spring-boot-samples/kie-server-spring-boot-integ-tests-sample/src/main/java/org/kie/server/springboot/samples/IntegrationTestsWebSecurityConfig.java#L41
