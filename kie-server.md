@@ -284,6 +284,20 @@ A way to circumvent this is to use the following java system property `-Dorg.dro
 
 - works for XSTREAM serialization only (TO INVESTIGATE!)
 
+### Date JSON marshalling
+
+In order to manage the date serialization following the JSON Standard:
+
+- configure on server side and on client side this property: `<property name="org.kie.server.json.format.date" value="true"/>
+`
+- Inside complex data type use `java.utils.Date` with the following annotation:
+
+  ```java
+  @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd'T'hh:mm:ss.SSSZ")
+  @JsonSerialize(using=DateSerializer.class)
+  private Date dateTime;
+  ```
+
 
 ## Queries
 
