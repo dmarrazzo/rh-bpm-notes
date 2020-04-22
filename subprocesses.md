@@ -48,6 +48,16 @@ kcontext.getKieRuntime().startProcess(processId, params);
 
 [Full example](https://github.com/dmarrazzo/rhpam-dynamic-subprocesses)
 
+
+### Call a process when runtime strategy is not singleton
+
+```java
+String deploymentId = (String) kcontext.getKieRuntime().getEnvironment().get("deploymentId");
+
+ProcessService processService = (ProcessService) ServiceRegistry.get().service(ServiceRegistry.PROCESS_SERVICE);
+Long processInstanceId = processService.startProcess(deploymentId, processId, params);
+```
+
 ## Call a reusable subprocess from other project
 
 1. Create a Reusable Project, which will include Reusable sub process. Make sure that the `kbase` and `ksession` configured for this project will not be default.
