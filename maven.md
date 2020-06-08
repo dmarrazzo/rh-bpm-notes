@@ -9,8 +9,8 @@ In order to keep your POM clean and tidy, it's useful to introduce the bill of m
 
 ```xml
   <properties>
-    <ba.version>7.7.0.redhat-00002</ba.version>
-    <version.org.kie>7.33.0.Final-redhat-00002</version.org.kie>
+    <ba.version>7.7.1.redhat-00002</ba.version>
+    <version.org.kie>7.33.0.Final-redhat-00003</version.org.kie>
   </properties>
 ```
 
@@ -30,6 +30,7 @@ Here the mapping of the product version with the dependency versions:
 | 7.5.1           | 7.5.1.redhat-00001     | 7.26.0.Final-redhat-00006 |
 | 7.6             | 7.6.0.redhat-00004     | 7.30.0.Final-redhat-00003 |
 | 7.7             | 7.7.0.redhat-00002     | 7.33.0.Final-redhat-00002 |
+| 7.7.1           | 7.7.1.redhat-00002     | 7.33.0.Final-redhat-00003 |
 
 ### Red Hat Process Automation Manager v7.1 Bill of Material (BOM)
 
@@ -283,7 +284,12 @@ The following configuration set the **JDK level** and **exclude** unwanted files
 ## Create an empty project
 
 ```sh
-mvn archetype:generate -DgroupId=com.mycompany.app -DartifactId=my-app -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.4 -DinteractiveMode=false
+mvn archetype:generate \
+-DgroupId=com.redhat.sample \
+-DartifactId=SampleWIH \
+-DarchetypeArtifactId=maven-archetype-quickstart \
+-DarchetypeVersion=1.4 \
+-DinteractiveMode=false
 ```
 
 ## Dependency Scope
