@@ -6,11 +6,11 @@
 mvn archetype:generate \
 -DarchetypeGroupId=org.jbpm \
 -DarchetypeArtifactId=jbpm-workitems-archetype \
--DarchetypeVersion=7.30.0.Final-redhat-00003 \
+-DarchetypeVersion=7.33.0.Final-redhat-00002 \
 -Dversion=1.0.0-SNAPSHOT \
--DgroupId=com.redhat \
--DartifactId=wokitem-sql \
--DclassPrefix=SQLWorkItem
+-DgroupId=com.redhat.demo \
+-DartifactId=sample-wih \
+-DclassPrefix=SampleWorkItem
 ```
 
 ## Create a WIH legacy procedure
@@ -136,34 +136,64 @@ Internal implementation:
     </work-item-handlers>
 
 
-# Call REST service
+# Call a REST service
 
-Use the REST Workitem
+Enable your project to use the REST work item handler (aka Service Task):
 
-![REST palette](./imgs/rest-service_001.png)
+1. Open the project **Settings > Service Tasks**
+   
+   ![service tasks](imgs/project-service-tasks.png)
 
-## Configure the assignment
-Data Input:
+2. Click **Install** button for the `Rest` service task
+3. Insert username and password for the rest basic authentication. You can override those value for a specific call
+4. **Save** the configuration
 
-- Url - resource location to be invoked - mandatory
-- Method - HTTP method that will be executed - defaults to GET
-- ContentType - data type in case of sending data - mandatory for POST,PUT
-- Content - actual data to be sent - mandatory for POST,PUT
-- ConnectTimeout - connection time out - default to 60 seconds
-- ReadTimeout - read time out - default to 60 seconds</li>
-- Username - user name for authentication - overrides one given on handler initialization)
-- Password - password for authentication - overrides one given on handler initialization)
-- AuthUrl - url that is handling authentication (usually j_security_check url)
-- HandleResponseErrors - optional parameter that instructs handler to throw errors in case of non successful response codes (other than 2XX)
-- ResultClass - fully qualified class name of the class that response should be transformed to, if not given string format will be returned
+Optionally, check the configuration details in **Settings > Deployment > Work item handlers**
 
-Data Output:
+![work item handlers](imgs/workitem-handlers.png)
 
-- Result: the target DTO
+The value for Rest should be:
+```java
+new org.jbpm.process.workitem.rest.RESTWorkItemHandler("username", "password")
+```
 
-**DTO** stands for *Data Transfer Object*: a Java Object that will be used to map the data send from and by the rest service.
+## Use the REST Service Task
 
-![Data I/O](./imgs/rest-service_002.png)
+1. Open or create a new Business Process
+2. From the palette select the Service Tasks drawer (the gears icon)
+3. Drag and drop the the **REST task** on the process diagram
+
+   ![palette rest](imgs/palette-rest.png)
+
+### Configure the assignment
+
+1. Select the **Rest** task 
+
+   ![rest process](imgs/rest-process.png)
+
+2. From the **Properties** panel select **Assignments** to configure the Rest task behaviour:
+
+   ![assignments](imgs/rest-assignments.png)
+
+   **Data Input:**
+   
+   - Url - resource location to be invoked - mandatory
+   - Method - HTTP method that will be executed - defaults to GET
+   - ContentType - data type in case of sending data - mandatory for POST,   PUT
+   - Content - actual data to be sent - mandatory for POST,PUT
+   - ConnectTimeout - connection time out - default to 60 seconds
+   - ReadTimeout - read time out - default to 60 seconds</li>
+   - Username - user name for authentication - overrides one given on    handler initialization)
+   - Password - password for authentication - overrides one given on    handler initialization)
+   - AuthUrl - url that is handling authentication (usually    j_security_check url)
+   - HandleResponseErrors - optional parameter that instructs handler to    throw errors in case of non successful response codes (other than 2XX)
+   - ResultClass - fully qualified class name of the class that response    should be transformed to, if not given string format will be returned
+   
+   **Data Output:**
+   
+   - Result: the target **DTO** (a.k.a. *Data Transfer Object*: a Java Object that will be used to map the data send from and by the rest service)
+
+### Other Rest integration details
 
 If you want disregard some json properties, add the following annotation to the Java DTO:
 
@@ -180,7 +210,8 @@ Add the following dependency:
 	</dependency>
 
 
-## Dealing with the Content Type header property
+### Dealing with the Content Type header property
+
 Usually, REST service should declare how they serialize the data through the Header property `Content-Type` that in most case will assume the following values:
 
 - `application/json`
@@ -189,6 +220,8 @@ Usually, REST service should declare how they serialize the data through the Hea
 Some REST services return a more complex Content-Type to add more details.
 
 E.g. `Content-Type: application/json;charset=utf-8`
+
+#### Warning information for version 6.4 
 
 Unfortunately, the standard REST Workitem handler (WIH) is not able to handle this situation.
 Here you will found a modified version of the WIH that address the problem.
