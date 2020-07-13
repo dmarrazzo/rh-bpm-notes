@@ -369,6 +369,10 @@ the first task that is completed returns `ActorId` data output that represents t
 
 It cannot implemented to a couple of issues.
 
+## Case Role assignment
+
+- See more on case management chapter
+
 ## Notification Email
 
 ### Variable available in the template
@@ -467,8 +471,7 @@ Caused by: org.xmlpull.v1.XmlPullParserException: only whitespace content allowe
 
 This error can be caused by a wrong data output association. E.g. String -> Complex type 
 
-Form modeller
-=============================================================================
+## BPM v6 Form modeller
 
 
 Form Modeller supports jXpath expressions but only to access field values (? to be verified the version)

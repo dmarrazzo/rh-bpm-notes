@@ -175,13 +175,60 @@ CaseData( $p : data['person1'], $p#Person.name == "Jim" )
 ```
 
 
-## Roles
+## Case Roles
 
-Roles simplify the dynamic role assignment, they work like variables, used at task creation time to identify the right user / group.
+Case Roles simplify the dynamic role assignment, they work like variables, used at task creation time to identify the right user / group.
 
+- create a case role for that process
+
+  ![case roles](imgs/case-roles.png)
+
+- use the case role in the actors assignment:
+  
+  ![assign to actors](imgs/case-roles-actors.png)
+
+
+
+## Case Role Assignment
+
+Programmatic-ally:
+
+Inside script:
+
+```java
+kcontext.getCaseAssignment().assignUser("approvers", "donato");
+```
+
+In a Java component:
+
+```java
+import org.jbpm.services.task.impl.model.GroupImpl;
+import org.jbpm.services.task.impl.model.UserImpl;
+
+
+caseService.assignToCaseRole(HR_CASE_ID, "contact", new UserImpl("mary"));
+caseService.assignToCaseRole(HR_CASE_ID, "contact", new GroupImpl("HR"));
+```
+
+Assign the case owner to case role:
+
+```java
+CaseAssignment caseAssignment = kcontext.getCaseAssignment();
+
+Collection<OrganizationalEntity> entities = caseAssignment.getAssignments("owner");
+
+OrganizationalEntity owner = entities.iterator()
+                                     .next();
+
+CaseService caseService = (CaseService) ServiceRegistry.get()
+                                                       .service(ServiceRegistry.CASE_SERVICE);
+String caseId = ((CaseFileInstance)kcontext.getCaseData()).getCaseId();
+caseService.assignToCaseRole(caseId, "consult", owner);
+caseService.assignToCaseRole(caseId, "business", owner);
+```
 
 ## Case Management Security
-org.kie.api.runtime.process.CaseData
+
 By default case instance security is enabled. It does protect each case instance from being seen by users who do not belong to a case in anyway. In other words, if you are not part of case role assignment (either assigned as user or a group member) then you won't be able to get access to the case instance.
 
 
@@ -202,7 +249,7 @@ Above access is just one part of the security for case instances. In addition, t
 - MODIFY_COMMENT
 
 by default three of these operations:
-org.kie.api.runtime.process.CaseData
+
 - CANCEL_CASE
 - DESTROY_CASE
 - REOPEN_CASE
@@ -291,37 +338,6 @@ Here an alternative approach to retrieve the case id from the context:
 
 ```java
 String caseId = (String) kcontext.getCaseData().getData("caseId");
-```
-
-## Case Role Assignment
-
-Programmatically:
-
-
-```java
-import org.jbpm.services.task.impl.model.GroupImpl;
-import org.jbpm.services.task.impl.model.UserImpl;
-
-
-caseService.assignToCaseRole(HR_CASE_ID, "contact", new UserImpl("mary"));
-caseService.assignToCaseRole(HR_CASE_ID, "contact", new GroupImpl("HR"));
-```
-
-Assign the case owner to case role:
-
-```java
-CaseAssignment caseAssignment = kcontext.getCaseAssignment();
-
-Collection<OrganizationalEntity> entities = caseAssignment.getAssignments("owner");
-
-OrganizationalEntity owner = entities.iterator()
-                                     .next();
-
-CaseService caseService = (CaseService) ServiceRegistry.get()
-                                                       .service(ServiceRegistry.CASE_SERVICE);
-String caseId = ((CaseFileInstance)kcontext.getCaseData()).getCaseId();
-caseService.assignToCaseRole(caseId, "consult", owner);
-caseService.assignToCaseRole(caseId, "business", owner);
 ```
 
 ## References
