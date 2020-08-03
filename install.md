@@ -17,15 +17,6 @@ Launch:
 Sample script: 
 https://github.com/jbossdemocentral/rhdm7-install-demo/blob/dm7ga/init.sh
 
-
-## Installing RHPAM 7
-
-- EAP 7.1
-- add users
-
-    ./add-user.sh -a -u bpmsAdmin -p password --role admin,process-admin,developer,analyst,user,manager,rest-all,kie-server
-
-
 ## Installing Red Hat Process Automation Manager
 
 ### Installing on EAP 7
@@ -38,7 +29,7 @@ https://github.com/jbossdemocentral/rhdm7-install-demo/blob/dm7ga/init.sh
 - copy the content to the EAP7 home
 - add the users
 
-        ./add-user.sh -a -u pamAdmin -p password --role admin,developer,analyst,user,manager,kie-server,rest-all,Administrators
+        ./add-user.sh -a -u pamAdmin -p password --role user,Administrators,admin,rest-all,kie-server
 
 - increase the heap memory `2GB` or more
 - listen all interface:
@@ -670,8 +661,28 @@ Add the following system property:
 
 [https://access.redhat.com/solutions/3669631]()
 
-## Performance troubleshooting
+## Troubleshooting
 
+### kieserver requests
+
+Increase the log verbosity:
+
+In `<subsystem xmlns="urn:jboss:domain:logging:6.0">` section
+
+```xml
+    <logger category="org.kie.server">
+        <level name="TRACE"/>
+    </logger>
+```
+
+Might also be helpful to enable request dumping with the following two :
+
+```sh
+/subsystem=undertow/configuration=filter/expression-filter=requestDumperExpression:add(expression="dump-request")
+/subsystem=undertow/server=default-server/host=default-host/filter-ref=requestDumperExpression:add
+```
+
+### Performance
 Check EAP heap memory usage: `/core-service=platform-mbean/type=memory:read-attribute(name=heap-memory-usage)`
 
 Java tracing [Byteman](http://byteman.jboss.org/)
