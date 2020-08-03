@@ -6,7 +6,7 @@
 mvn archetype:generate \
 -DarchetypeGroupId=org.jbpm \
 -DarchetypeArtifactId=jbpm-workitems-archetype \
--DarchetypeVersion=7.33.0.Final-redhat-00002 \
+-DarchetypeVersion=7.33.0.Final-redhat-00003 \
 -Dversion=1.0.0-SNAPSHOT \
 -DgroupId=com.redhat.demo \
 -DartifactId=sample-wih \
@@ -180,7 +180,7 @@ new org.jbpm.process.workitem.rest.RESTWorkItemHandler("username", "password")
    - Url - resource location to be invoked - mandatory
    - Method - HTTP method that will be executed - defaults to GET
    - ContentType - data type in case of sending data - mandatory for POST,   PUT
-   - Content - actual data to be sent - mandatory for POST,PUT
+   - ContentData - actual data to be sent - mandatory for POST,PUT
    - ConnectTimeout - connection time out - default to 60 seconds
    - ReadTimeout - read time out - default to 60 seconds</li>
    - Username - user name for authentication - overrides one given on    handler initialization)
@@ -200,15 +200,17 @@ If you want disregard some json properties, add the following annotation to the 
     @org.codehaus.jackson.annotate.JsonIgnoreProperties(ignoreUnknown = true)
 
 This will say to the JSON mapper engine to ignore the JSON properties that are not present in the DTO, otherwise you'll get an exception.
+Indirectly import all json libraries:
 
-Add the following dependency:
+    <dependency>
+      <groupId>org.kie.server</groupId>
+      <artifactId>kie-server-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
 
-	<dependency>
-		<groupId>com.fasterxml.jackson.core</groupId>
-		<artifactId>jackson-databind</artifactId>
-		<scope>provided</scope>
-	</dependency>
+Define the property name:
 
+    @JsonProperty("caller-id")
 
 ### Dealing with the Content Type header property
 
