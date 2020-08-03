@@ -207,9 +207,12 @@ There are 3 extension types:
 KIE Server APIs
 ===========================================================
 
-RHPAM and DM version 7.1 now have good documentation:
+RHPAM and DM version 7.1 official documentation:
 
 [INTERACTING WITH RED HAT PROCESS AUTOMATION MANAGER USING KIE APIS](https://access.redhat.com/documentation/en-us/red_hat_process_automation_manager/7.1/html-single/interacting_with_red_hat_process_automation_manager_using_kie_apis/index)
+
+Swagger Spec hosted on CoP:
+[Process and Decision Server Rest APIs](https://redhat-cop.github.io/businessautomation-cop/api/)
 
 Other references:
 
@@ -260,7 +263,7 @@ By default the kieserver expects a JSON representation with an explicit referenc
 ```json
 {
   "transaction" : {
-    "com.demo.Transactio" : {
+    "com.demo.Transaction" : {
       "id" : "1234"
     }
   }
