@@ -30,6 +30,10 @@ List the images:
 
 	oc get imagestreams.image.openshift.io | grep rhpam73
 
+If old image are already present, update them:
+
+	oc apply -f rhpam73-image-streams.yaml
+
 ### Import image
 
 Manually import image:
@@ -70,13 +74,17 @@ To delete the project:
 
 	oc delete project pam73
 
-## Create secret
+## Create SSL secrets
 
 [Generate_a_SSL_Encryption_Key_and_Certificate](https://access.redhat.com/documentation/en-US/JBoss_Enterprise_Application_Platform/6.1/html-single/Security_Guide/index.html#Generate_a_SSL_Encryption_Key_and_Certificate)
 
-	keytool -genkeypair -alias jboss -keyalg RSA -keystore keystore.jks -storepass mykeystorepass --dname "CN=jsmith,OU=Engineering,O=mycompany.com,L=Raleigh,S=NC,C=US"
+	keytool -genkeypair -alias jboss -keyalg RSA -keystore keystore.jks -storepass mykeystorepass --dname "CN=dmarrazzo,OU=Sales,O=redhat.com,L=Rome,S=RM,C=Italy"
 	oc create secret generic kieserver-app-secret --from-file=keystore.jks
 	oc create secret generic businesscentral-app-secret --from-file=keystore.jks	
+
+## Create credential secret
+
+	oc create secret generic rhpam-credentials --from-literal=KIE_ADMIN_USER=pamadmin --from-literal=KIE_ADMIN_PWD=adminPassword
 
 ### Optionally import a self signed certificate
 
@@ -191,7 +199,7 @@ Example of output:
 
 You can access to the internal git in this way:
 
-	git clone ssh://adminUser@$(minishift ip):32618/<project path>
+	git clone ssh://pamadmin@$(minishift ip):32618/<project path>
 
 Alternatively, you can forward the pod port:
 
@@ -475,6 +483,12 @@ oc adm policy add-cluster-role-to-user cluster-reader developer
 docker run -ti quay.io/rhpam_rhdm/rhpam-businesscentral-rhel8-cm-showcase:7.5.0 /bin/sleep infinity
 
 config directory: `/opt/eap/bin/launch`
+
+
+## ConfigMap for properties
+
+	oc create configmap const-props --from-file=use-case-3/const.propertie
+	oc set volume dc/rhpam-authoring-kieserver --add --name=config-volume --type=configmap --configmap-name=const-props --mount-path=/etc/config
 
 ## Openshift Useful links
 
