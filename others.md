@@ -305,6 +305,7 @@ To remotely connect to a database using the TCP server, use the following driver
     JDBC driver class: org.h2.Driver
     Database URL: jdbc:h2:tcp://localhost/~/h2-net
 
+[h2-console in EAP](https://developers.redhat.com/quickstarts/eap/h2-console/)
 
 ### Mysql DB Driver
 
@@ -370,3 +371,9 @@ All of these all Docker Containers, so you can have them running locally or depl
 This stack is absurdly powerful and productive.
 
 
+Interesting Reading
+===================
+
+[Open Source is not a business model](https://anonymoushash.vmbrasseur.com/2018/08/24/open-source-is-not-a-business-model-and-your-business-will-fail-if-you-think-that-it-is/)
+
+[Fuse Tutorial](https://gitlab.com/rh-emea-ssa-fuse-tutorial/fis-rest-composite)
