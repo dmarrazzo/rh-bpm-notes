@@ -58,6 +58,8 @@ There are documents and samples.
 
 - [Domain-specific Prometheus metrics with Red Hat Process Automation Manager and Decision Manager](https://developers.redhat.com/blog/2019/10/31/domain-specific-prometheus-metrics-with-red-hat-process-automation-manager-and-decision-manager)
 
+- [Decisioning and Explainability Using Red Hat Decision Manager](https://dzone.com/articles/decisioning-and-explainability-using-red-hat-proce)
+
 ### Video and Webinars
 
  - [Understand the kieserver REST APIs, monitoring the Java APIs traffic](https://youtu.be/v7Td4PsT1O8)
