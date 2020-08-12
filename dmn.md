@@ -171,6 +171,16 @@ This is the way to define a Java function:
 
 ![dmn_boxed_function](imgs/dmn_boxed_function.png)
 
+## Special character "?" for Decision Table expression
+
+In a decision table cell, it's possible to write a complex FEEL expression and use the special character "?" (placeholder) to reference the column value.
+
+E.g.
+
+```
+list contains(?, "A")
+```
+
 ## Time handling
 
 FEEL extension to evaluate time:
