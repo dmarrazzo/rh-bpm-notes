@@ -17,6 +17,8 @@ Article that describe the new capabilities:
 
 ## Project 
 
+To change a normal project in case management one change the following features in `kie-deployment-descriptor.xml`:
+
 - set runtime strategy to Per Case
 
         <runtime-strategy>PER_CASE</runtime-strategy>
@@ -166,6 +168,7 @@ Handling complex data types:
 
 ```java
 CaseData( $data : data["person1"] ) $p : Person( name == 'Jim' ) from $data
+CaseData( $data : data["customerSupport"] ) CustomerSupport( customerEngaged ) from $data
 ```
 
 OOPath does not work since it's not reactive - AVOID this:
@@ -339,6 +342,25 @@ Here an alternative approach to retrieve the case id from the context:
 ```java
 String caseId = (String) kcontext.getCaseData().getData("caseId");
 ```
+
+## Start a case from a process
+
+This work item allows to be executed in independent mode which means once the case instance is started it will complete work item without waiting for case instance completion. 
+In this scenario work item is completed with data taken from the case instance - data from case file plus case id at is stored under *CaseId* name in the result map.
+If the work item is (as by default) in the dependent mode, this work item will not be completed until case instance completes - either being closed or canceled/destroyed.
+
+Parameters:
+
+ - *DeploymentId* - deployment id where that case definition belongs to (if not given deployment id of the work item will be used)
+ - *CaseDefinitionId* - identifier of the case definition a new case instance should be started for
+ - *Data_NAME* - case file data to be given when starting a case - NAME is the name of the case file input, can be given as many times as needed
+ - *UserRole_NAME* - case role assignment as user entity where NAME is the name of the role that given user should be assigned to
+ - *GroupRole_NAME* - case role assignment as group entity where NAME is the name of the role that given group should be assigned to
+ - *DataAccess_NAME* - case file data access restriction where NAME is the name of the data that given roles should have access to, supports list of roles (comma separated)
+ - *Independent* - indicates if the case instance is independent of the node that starts it - default is false
+ - *DestroyOnAbort* - indicates if the case instance should be destroyed in case the work item is aborted, faults to true
+
+
 
 ## References
 
