@@ -312,6 +312,17 @@ https://access.redhat.com/solutions/396853#eap6client
 
 https://github.com/selrahal/jbpm-rest
 
+Exception Handling Strategy
+===============================================================
+
+- **COMPLETE** - it completes the service task with the variables from the completed subprocess instance - these variables will be given to the service task as output of the service interaction and thus mapped to main process instance variables
+- **ABORT** - it aborts the service task and moves on the process without setting any variables
+- **RETRY** - it retries the service task logic (calls the work item handler again) with variables from both the original service task parameters and the variables from subprocess instance - variables from subprocess instance overrides any variables of the same name
+- **RETHROW** - it simply throws the error back to the caller - this strategy should not be used with wait state subprocesses as it will simply rollback the transaction and thus the completion of the subprocess instance
+
+[Exception Handling Strategy Usage Example](https://github.com/dmarrazzo/error-handling-strategy)
+
+See: [http://mswiderski.blogspot.com/2018/10/handle-service-exceptions-via-subprocess.html]()
 
 Event emitters
 ===============================================================
