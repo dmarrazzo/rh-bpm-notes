@@ -137,6 +137,18 @@ To test the capability in a development environment, there are 2 possible workar
 1. Configure the user registry to leverage a property file
 2. Change the process to set the `Actors` to `#{SwimlaneActorId}` for all the Human Task that follow the first one in the swim lane.
 
+## Delegating or Forwarding
+
+- **Forward** operation forwards the task to another organization entity. The WS-HumanTask Client MUST specify the receiving organizational entity. Potential owners MAY forward a task while the task is in the Ready state.
+
+- **Delegate** operation assigns the task to one user and set the task to state Reserved. If the recipient was not a potential owner then this person MUST be added to the set of potential owners.
+
+In short, from the practical point of view. Delegate is to change the task owner. Forward is to remove one user and add another user in PotentialOwner.
+
+Further information in [Human Task specification](http://docs.oasis-open.org/bpel4people/ws-humantask-1.1-spec-cs-01.pdf)
+
+See [https://access.redhat.com/solutions/784453]()
+
 ## User Registry 
 
 RHPAM security is based on the underling Application Server security (JAAS). 
