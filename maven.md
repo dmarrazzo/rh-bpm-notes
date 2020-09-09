@@ -9,8 +9,8 @@ In order to keep your POM clean and tidy, it's useful to introduce the bill of m
 
 ```xml
   <properties>
-    <ba.version>7.7.1.redhat-00002</ba.version>
-    <version.org.kie>7.33.0.Final-redhat-00003</version.org.kie>
+    <ba.version>7.8.1.redhat-00002</ba.version>
+    <version.org.kie>7.39.0.Final-redhat-00007</version.org.kie>
   </properties>
 ```
 
@@ -31,6 +31,8 @@ Here the mapping of the product version with the dependency versions:
 | 7.6             | 7.6.0.redhat-00004     | 7.30.0.Final-redhat-00003 |
 | 7.7             | 7.7.0.redhat-00002     | 7.33.0.Final-redhat-00002 |
 | 7.7.1           | 7.7.1.redhat-00002     | 7.33.0.Final-redhat-00003 |
+| 7.8             | 7.8.0.redhat-00002     | 7.39.0.Final-redhat-00005 |
+| 7.8.1           | 7.8.1.redhat-00002     | 7.39.0.Final-redhat-00007 |
 
 ### Red Hat Process Automation Manager v7.1 Bill of Material (BOM)
 
@@ -269,8 +271,8 @@ The following configuration set the **JDK level** and **exclude** unwanted files
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.1</version>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <source>11</source>
+          <target>11</target>
           <excludes>
             <exclude>**/.*.java</exclude>
           </excludes>
