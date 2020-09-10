@@ -151,11 +151,15 @@ The variable MUST be declared case file, flag it in the process variable list.
 
 **Condition** requires a Drool expression like in the following example:
 
+```java
     org.kie.api.runtime.process.CaseData(data.get("ok") == true)
+    // or just
+    CaseData( getData("ok") == true )
+```
 
 In order to get a more readable expression:
 
-1. At process level add this import: `org.kie.api.runtime.process.CaseData`
+1. At process level add this import: `org.kie.api.runtime.process.CaseData` (in the latest editions of RHPAM this definition is not required)
 2. Leverage the **OOPath**
 
     import org.kie.api.runtime.process.CaseData
@@ -175,6 +179,8 @@ OOPath does not work since it's not reactive - AVOID this:
 
 ```java
 CaseData( $p : data['person1'], $p#Person.name == "Jim" )
+CaseData( data['level'] >= 3 )
+CaseData( getData("level") >= 3 )
 ```
 
 
@@ -268,6 +274,11 @@ security for case operations is configurable via simple property file called `ca
 
 OPERATION=role1,role2,roleN
 
+### Case Security References
+
+[http://mswiderski.blogspot.com/2017/02/jbpm-7-case-management-security.html]()
+[http://mswiderski.blogspot.com/2017/10/case-management-improvements-data.html]()
+
 ## Case service
 
 Dependency:
@@ -310,6 +321,10 @@ rule "ask user for details"
         caseService.addDynamicTask($caseData.getCaseId(), caseService.newHumanTaskSpec("Please provide additional details", "Action", "insured", null, parameters));
 end
 ```
+### References
+
+- [http://mswiderski.blogspot.com/2017/07/make-use-of-rules-to-drive-your-cases.html]()
+
 
 ## Accessing to the case data from scripts
 
