@@ -164,6 +164,44 @@ module add --name=org.postgresql --resources=/home/donato/apps/jdbc/postgresql-4
             </drivers>
 ```
 
+#### MySql
+
+
+```xml
+            <xa-datasource jndi-name="java:jboss/MySqlXADS" pool-name="MySqlXADS">
+              <xa-datasource-property name="ServerName">
+                mysqlhost
+              </xa-datasource-property>
+              <xa-datasource-property name="DatabaseName">
+                rhpamdb
+              </xa-datasource-property>
+              <driver>mysql</driver>
+              <security>
+                <user-name>dbadmin</user-name>
+                <password>Passw0rd!</password>
+              </security>
+              <validation>
+                <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.mysql.MySQLValidConnectionChecker"/>
+                <validate-on-match>true</validate-on-match>
+                <background-validation>false</background-validation>
+                <exception-sorter class-name="org.jboss.jca.adapters.jdbc.extensions.mysql.MySQLExceptionSorter"/>
+              </validation>
+            </xa-datasource>
+           <drivers>
+               <driver name="mysql" module="com.mysql">
+                 <driver-class>com.mysql.jdbc.Driver</driver-class>
+                 <xa-datasource-class>com.mysql.cj.jdbc.MysqlXADataSource</xa-datasource-class>
+               </driver>
+            </drivers>
+```
+
+Grant XA priviledge:
+
+```sql
+GRANT XA_RECOVER_ADMIN ON *.* TO 'username'@'%';
+FLUSH PRIVILEGES;
+```
+
 #### Load the DDL
 
 Download Red Hat JBoss BPM Suite 6.4.0 Supplementary Tools.
@@ -453,7 +491,10 @@ Equivalent smart router API:
  * org.kie.demo: Enables external clone of a demo application from GitHub. This System Property takes precedence over org.kie.example. Default: true
  * org.kie.example: Enables example structure composed by Repository, Organization Unit and Project. Default: false
  * org.kie.server.mode: development / production
-
+ * org.uberfire.nio.git.http.host: If the HTTP daemon is enabled, it uses this property as the host identifier. This is an informative property that is used to display how to access the Git repository over HTTP. The HTTP still relies on the servlet container. Default value: localhost.
+ * org.uberfire.nio.git.http.hostname: If the HTTP daemon is enabled, it uses this property as the host name identifier. This is an informative property that is used to display how to access the Git repository over HTTP. The HTTP still relies on the servlet container. Default value: localhost.
+ * org.uberfire.nio.git.http.port: If the HTTP daemon is enabled, it uses this property as the port number. This is an informative property that is used to display how to access the Git repository over HTTP. The HTTP still relies on the servlet container. Default value: 8080.
+ * org.uberfire.nio.git.ssh.hostname: If the SSH daemon is enabled, it uses this property as local host name identifier. Default value: localhost.
 
 ## LDAP
 
