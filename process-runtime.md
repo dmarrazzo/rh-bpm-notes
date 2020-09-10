@@ -34,6 +34,36 @@ Limitations:
 
 [Fix for case management](https://issues.jboss.org/browse/JBPM-7230)
 
+Migration UI
+---------------------------------------------------------------------------
+
+From 7.5 Process Instance Migration is simplified by a web application:
+
+In the official doc the usage is well documented:
+
+http://access.redhat.com/documentation/en-us/red_hat_process_automation_manager/7.8/html-single/managing_and_monitoring_business_processes_in_business_central/index.html#process-instance-migration-con
+
+Here some additional tips:
+
+- In `application-users.properties` password are in clear text:
+
+  ```
+  user1=password1
+  ```
+
+- `application-roles.properties` example:
+
+  ```
+  user1=admin
+  ```
+
+- `swarm.port.offset` is the system property to shift the port allocation
+
+Example of starting command:
+
+```
+java -jar rhpam-7.8.1-process-migration-service-standalone.jar -Dswarm.port.offset=1 -s config.yml
+```
 
 Asynchronous Jobs
 ===========================================================================
@@ -41,11 +71,12 @@ Asynchronous Jobs
 Some findings:
 
 1. If you specify "Is Async" for a task, it is executed in another thread by the executor
-2. if the service get an runtime exception the executor repeat the execution for 3 times, then it puts the job in error state
+2. if the service get an runtime exception the executor repeat the execution for 3 times, then it puts the job in error state (it can be configured changing the system properties `org.kie.executor.retry.count`)
 3. in the Jobs page (Deploy > Jobs), you can find the job in the error tab.
 4. the user can requeue the job, so the executor tries again the job execution.
 5. from the Jobs page, you can stop and start the Executor, change the frequency and the threads (I think that it is implemented with a polling logic over the DB)
 6. If I stop the executor and launch a new process, for some strange reason the job is executed (regardless the executor stop status!) but if the service raise an exception, it is marked as "retrying" and is not processed again till the executor is started again
+
 
 Asynchronous Workitems
 ===========================================================================
