@@ -335,6 +335,18 @@ Security
 - [OAuth 2.0 and OpenID Connect (in plain English)](https://www.youtube.com/watch?v=996OiexHze0&t=1s)
 
 
+Access to the remote server using SSH as a proxy server
+------------------------------------
+
+Port forwarding comes to the rescue:
+
+```
+ssh -N -L 8090:remote-host:8080 user@remote-host
+```
+
+- 8090 is the local port
+- 8080 is the remote port
+
 Low code
 ------------------------------------
 
