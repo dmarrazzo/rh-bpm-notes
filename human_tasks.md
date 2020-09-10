@@ -196,7 +196,7 @@ The format of this file is as follows:
 
 	username=role1,role2,role3
 
-
+By default the user information file is expected in the kieserver WEB-INF/classes dir.
 Constructs default UserInfo implementation to provide required information to the escalation handler.
 following is the string for every organizational entity
 
@@ -437,6 +437,14 @@ Keep sending emails if some email addresses are incorrect:
 	        <property name="mail.smtp.sendpartial" value="true"/>
 	    </custom-server>
 	</mail-session> 
+
+### Notification Listeners
+It's possible to override or add extra listeners using the following system properties:
+
+- `org.kie.jpbm.notification_listeners.exclude`
+- `org.kie.jpbm.notification_listeners.include`
+
+** PR sent to fix the name typo **
 
 ### email.properties
 
