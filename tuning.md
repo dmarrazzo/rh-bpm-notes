@@ -69,6 +69,14 @@ standalone.xml
 </pooled-connection-factory>
 ```
 
+# DRL Tuning
+
+Red Hat Process Automation Manager include a powerful rule engine based on the well known Drools project.
+
+Tuning DRL to get the best performances is not trivial task. The following project is a very valuable tool:
+
+https://github.com/tkobayas/MetricLogUtils/wiki/How-to-use-MetricLogUtils
+
 ### References
 
 [Tune async execution in Kie Server](http://mswiderski.blogspot.it/2017/11/tune-async-execution-in-kie-server.html)
