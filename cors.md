@@ -22,6 +22,10 @@ https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
 	  <url-pattern>/*</url-pattern>
 	</filter-mapping>
 
+## EAP Configuration
+
+https://github.com/jesuino/dashbuilder-docker/blob/master/demos/custom_images/jbpm-server/conf/standalone.xml#L543-L567
+
 ## Interesting articles
 
 [https://access.redhat.com/solutions/2839031]()
