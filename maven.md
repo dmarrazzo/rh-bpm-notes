@@ -9,8 +9,8 @@ In order to keep your POM clean and tidy, it's useful to introduce the bill of m
 
 ```xml
   <properties>
-    <ba.version>7.8.1.redhat-00002</ba.version>
-    <version.org.kie>7.39.0.Final-redhat-00007</version.org.kie>
+    <ba.version>7.9.0.redhat-00002</ba.version>
+    <version.org.kie>7.44.0.Final-redhat-00003</version.org.kie>
   </properties>
 ```
 
@@ -33,6 +33,7 @@ Here the mapping of the product version with the dependency versions:
 | 7.7.1           | 7.7.1.redhat-00002     | 7.33.0.Final-redhat-00003 |
 | 7.8             | 7.8.0.redhat-00002     | 7.39.0.Final-redhat-00005 |
 | 7.8.1           | 7.8.1.redhat-00002     | 7.39.0.Final-redhat-00007 |
+| 7.9             | 7.9.0.redhat-00002     | 7.44.0.Final-redhat-00003 |
 
 ### Red Hat Process Automation Manager v7.1 Bill of Material (BOM)
 
@@ -243,6 +244,26 @@ The upload can be automated with following procedure (acknowledgements to Anton 
             </configuration>
         </server>
 
+- deploy
+
+	mvn deploy
+
+- To manage the username and passoword as command line paramiters, use variables in `settings.xml` file. 
+
+```xml
+<servers>
+    <server>
+        <id>guvnor-m2-repo</id>
+        <username>${user}</username>
+        <password>${password}</password>
+    </server>
+</servers>
+```
+
+Then, provide explicit values when invoking to Maven:
+
+	mvn -Duser=... -Dpassword=... deploy
+
 **References:**
 
 [Uploading Artifacts to Maven Repository](https://access.redhat.com/documentation/en-us/red_hat_jboss_bpm_suite/6.4/html/development_guide/chap_maven_dependencies#uploading_artifacts_to_maven_repository)
@@ -287,11 +308,10 @@ The following configuration set the **JDK level** and **exclude** unwanted files
 
 ```sh
 mvn archetype:generate \
--DgroupId=com.redhat.sample \
--DartifactId=SampleWIH \
--DarchetypeArtifactId=maven-archetype-quickstart \
--DarchetypeVersion=1.4 \
--DinteractiveMode=false
+	-DgroupId=com.redhat.sample \
+	-DartifactId=SampleWIH \
+	-DarchetypeArtifactId=maven-archetype-quickstart \
+	-DinteractiveMode=false
 ```
 
 ## Dependency Scope
