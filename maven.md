@@ -342,6 +342,16 @@ Declare an open-ended version range (will resolve to 2.0.0):
 
 [1]: http://www.mojohaus.org/versions-maven-plugin/examples/resolve-ranges.html
 
+## Dependency utilities
+
+It can be really useful to understand the dependencies chains looking at the dependency tree:
+
+	mvn dependency:tree 
+
+The following commmand analyzes the dependencies and highlights the unused and missing ones:
+
+	mvn dependency:analyze
+
 ## Configure Maven Repository
 
 ### Off line repositories
