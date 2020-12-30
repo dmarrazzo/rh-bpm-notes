@@ -10,7 +10,10 @@ In order to keep your POM clean and tidy, it's useful to introduce the bill of m
 ```xml
   <properties>
     <ba.version>7.9.0.redhat-00002</ba.version>
-    <version.org.kie>7.44.0.Final-redhat-00003</version.org.kie>
+	<version.org.kie>7.44.0.Final-redhat-00003</version.org.kie>
+    <maven.compiler.target>11</maven.compiler.target>
+    <maven.compiler.source>11</maven.compiler.source>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 ```
 
@@ -67,21 +70,6 @@ This is used to build the kjar package.
 			</plugin>
 		</plugins>
 	</build>
-
-##### Error Missing parameter for pluginExecutionFilter
-
-Eclipse has a problem with the version 7.1 of the plugin:
-
-[https://issues.jboss.org/browse/DROOLS-3236]()
-
-Work around: use a previous release
-
-	<plugin>
-		<groupId>org.kie</groupId>
-		<artifactId>kie-maven-plugin</artifactId>
-		<version>7.9.0.Final</version>
-		<extensions>true</extensions>
-	</plugin>
 
 
 ### Add all the product libraries without the version information
@@ -207,6 +195,19 @@ it is important for all Java plain execution:
       <version>6.0</version>
     </dependency>
 
+## Create a project outside Business Central
+
+```sh
+mvn archetype:generate \
+-DarchetypeGroupId=org.kie \
+-DarchetypeArtifactId=kie-kjar-archetype \
+-DarchetypeVersion=7.44.0.Final-redhat-00003 \
+-Dversion=1.0.0-SNAPSHOT \
+-DgroupId=com.redhat.demo \
+-DartifactId=project-name
+```
+[Archetype](https://github.com/kiegroup/droolsjbpm-knowledge/tree/master/kie-archetypes/kie-kjar-archetype)
+
 ## BPM Internal Maven repository
 
 Business Central hosts an internal maven repository.
@@ -283,33 +284,35 @@ Configure the local repository in settings.xml:
 ## Compilation setting (build)
 The following configuration set the **JDK level** and **exclude** unwanted files
 
-```
+```xml
   <build>
-    [...]
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.1</version>
         <configuration>
-          <source>11</source>
-          <target>11</target>
-          <excludes>
-            <exclude>**/.*.java</exclude>
-          </excludes>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
         </configuration>
       </plugin>
     </plugins>
-    [...]
   </build>
+```
+
+Extra configuration to exclude a file pattern from compilation:
+
+```xml
+          <excludes>
+            <exclude>**/.*.java</exclude>
+          </excludes>
 ```
 
 ## Create an empty project
 
 ```sh
 mvn archetype:generate \
-	-DgroupId=com.redhat.sample \
-	-DartifactId=SampleWIH \
+	-DgroupId=com.redhat.example \
+	-DartifactId=emp-onboarding-model \
 	-DarchetypeArtifactId=maven-archetype-quickstart \
 	-DinteractiveMode=false
 ```
@@ -547,102 +550,3 @@ Optionally, it's possible to override configuration adding following parameters:
 	</configuration>
 </plugin>		
 ```
-
-Former Information
-===============
-
-## Red Hat Process Automation Manager v7.0 Bill of Material (BOM)
-
-Bill of Material:
-
-	<dependencyManagement>
-		<dependencies>
-            <dependency>
-              <groupId>org.jboss.bom</groupId>
-              <artifactId>rhpam-platform-bom</artifactId>
-              <version>${version}</version>
-              <scope>import</scope>
-              <type>pom</type>
-            </dependency>
-		</dependencies>
-	</dependencyManagement>
-
-
-Version property:
-
-	<properties>
-		<version>7.0.2.GA-redhat-2</version>
-	</properties>
-
-
-| Product version | BOM Version        |
-|-----------------|--------------------|
-| 7.0.0           | 7.0.0.GA-redhat-3  |
-| 7.0.1           | 7.0.1.GA-redhat-1  |
-| 7.0.2           | 7.0.2.GA-redhat-2  |
-
-Reference:
-
-[What is the mapping between RHPAM product and maven library version?](https://access.redhat.com/solutions/3405361)
-
-## Red Hat Decision Manager v7.0 Bill of Material (BOM)
-
-Bill of Material
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.jboss.bom.rhdm</groupId>
-				<artifactId>rhdm-platform-bom</artifactId>
-				<version>${version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
-Version property:
-
-	<properties>
-		<version>7.0.1.GA-redhat-2</version>
-	</properties>
-
-
-| Product version | BOM Version        |
-|-----------------|--------------------|
-| 7.0.0           | 7.0.0.GA-redhat-2  |
-| 7.0.1           | 7.0.1.GA-redhat-2  |
-
-
-
-## Red Hat JBoss BPM Suite v6.4 Bill of material (BOM)
-
-[What is the mapping between BRMS / BPM Suite product and maven library version?](https://access.redhat.com/solutions/2985841)
-
-To simplify the dependency management you can add this:
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.jboss.bom.brms</groupId>
-				<artifactId>jboss-brms-bpmsuite-platform-bom</artifactId>
-				<version>6.4.7.GA-redhat-1</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
-Versions:
-
- - 6.4.6.GA-redhat-1
- - 6.4.5.GA-redhat-3
- - 6.4.4.GA-redhat-3
- - 6.4.3.GA-redhat-2
- - 6.4.2.GA-redhat-2
- - 6.4.1.GA-redhat-3
- - 6.4.0.GA-redhat-2
-
-
-You don't need to configure the dependency version number, because it's centrally handled by the BOM.
-
