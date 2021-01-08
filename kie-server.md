@@ -270,7 +270,24 @@ By default the kieserver expects a JSON representation with an explicit referenc
 }
 ```
 
-A way to circumvent this is to use the following java system property `-Dorg.drools.server.filter.classes=true`.
+### Simplified serializzation
+
+**WARNING** In openshift this is the default configuration.
+[JSON response from IPS in OCP](https://access.redhat.com/solutions/3047551)
+
+- System property `-Dorg.drools.server.filter.classes=true`.
+
+  **Make sure** kie-client side is configured as well
+
+- In the `kie-deployment-descriptor.xml` set `limit-serialization-classes` to `false`
+
+- Add the remoteable annotation to the DTO: 
+
+  ```java
+  import org.kie.api.remote.Remotable;
+
+  @Remotable
+  ```
 
 *See also:*
 
