@@ -210,18 +210,17 @@ This is the procedure to achieve such result:
 
 2. Configure the *Data Object* as *Persistable*.
 
-	![Create Data Object](imgs/persistable_01.png)
-
-	- **EXTRA CONFIGURATION** the data object MUST extend `org.drools.persistence.jpa.marshaller.VariableEntity`
+   ![Create Data Object](imgs/persistable_01.png)
+   
+   The side effect of this configuration is to add the following annotation to the class: `@javax.persistence.Entity`
+   
+   **EXTRA CONFIGURATION** the data object MUST extend `org.drools.persistence.jpa.marshaller.VariableEntity`
 
 
 3. Then you have to configure the *Persistence descriptor*:
 
 
-	- In the **Settings** section of the project, select the **Persistence** tab. 
-	
-	![](imgs/persistable_04.png)
-	
+	- In the **Settings** section of the project, select the **Persistence** tab. 	
 	- Take note of the **Persistence Unit** name
 	- Make sure that the Data Object is enlisted among the **Pesistable Data Object**
 	- Add this class: `org.drools.persistence.jpa.marshaller.MappedVariable`
@@ -242,17 +241,10 @@ This is the procedure to achieve such result:
 		</marshalling-strategies>
     ```
 
+    ![](imgs/persistable_04.png)
+
 
 **BE AWARE** the table that map the data object is in the same BPM datasource.
-
-*Final doubt:* In some example I found that the persisted data object are even declared remoteable classes in the `kie-deployment-descriptor.xml`. At the moment, I'm not aware of actual benefit of such configuration.
-
-```xml
-<remoteable-classes>
-  <remoteable-class>com.sample.Customer</remoteable-class>
-  <remoteable-class>org.drools.persistence.jpa.marshaller.VariableEntity</remoteable-class>
-</remoteable-classes>
-```
 
 **Configuration for form rendering:** Using a JPA Variable in a form lead to a problem when it's used in a form. The user get the following exception: `com.thoughtworks.xstream.security.ForbiddenClassException`. **Solution:** add the following system property:
 
