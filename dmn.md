@@ -206,6 +206,35 @@ Example: days between two dates
 
 	(date1 - date2).days
 
+## Testing 
+
+In order to initialize the context in a straightforward way, leverage the helper factories: `prototype` and `entry`.
+
+- Dependency
+
+  ```xml
+  <!-- DMN test-->
+  <dependency>
+    <groupId>org.kie</groupId>
+    <artifactId>kie-dmn-core</artifactId>
+    <type>test-jar</type>
+    <scope>compile</scope>
+  </dependency>
+  ```
+
+- Code example:
+
+  ```java
+  import static org.kie.dmn.core.util.DynamicTypeUtils.entry;
+  import static org.kie.dmn.core.util.DynamicTypeUtils.prototype;
+
+  Map<String, Object> transaction1 = prototype (
+                                      entry("balance", 2200),
+                                      entry("amount", -500),
+                                      entry("value date", LocalDateTime.now()),
+                                      entry("category", "shopping")
+                                     );
+  ```
 
 ## Listeners
 
