@@ -91,6 +91,33 @@ The latter technique has the drawback of being quite intrusive, because it requi
 
 **Warning:** the process runs in a transaction context with a default time out of 120 seconds, so if the debugging activities last more than that, you should incur in a runtime exception.
 
+## OpenShift debug
+
+To configure JVM remote debugging on a JBoss container, add the following configuration to the JAVA_OPTS_APPEND environment variable of the container:
+
+
+-agentlib:jdwp=transport=dt_socket,address=8787,server=y,suspend=n
+
+
+CRC snippet:
+
+```yaml
+spec:
+  environment: rhpam-authoring
+  objects:
+    servers:
+    - jvm:
+        javaOptsAppend: -agentlib:jdwp=transport=dt_socket,address=8787,server=y,suspend=n
+```
+
+Retrieve the list of running pods:
+
+	oc get pods
+
+Port-forward the a local port to the debugging port of the container, e.g.:
+
+	oc port-forward ${pod-name} 8787:8787
+
 Get the local classloader
 --------------------------------------------
 
