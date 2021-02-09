@@ -171,16 +171,16 @@ In this way the previous condition can be expressed as:
 Handling complex data types:
 
 ```java
-CaseData( $data : data["person1"] ) $p : Person( name == 'Jim' ) from $data
 CaseData( $data : data["customerSupport"] ) CustomerSupport( customerEngaged ) from $data
+
+CaseData( $clerk : data["teller"] ) 
+Clerk( experience == "senior" ) from $clerk
 ```
 
 OOPath does not work since it's not reactive - AVOID this:
 
 ```java
 CaseData( $p : data['person1'], $p#Person.name == "Jim" )
-CaseData( data['level'] >= 3 )
-CaseData( getData("level") >= 3 )
 ```
 
 
