@@ -288,6 +288,44 @@ Workaround?
 
 https://erikwramner.wordpress.com/2013/03/27/trust-self-signed-ssl-certificates-and-skip-host-name-verification-with-jax-ws/
 
+# AMQ Streams (Kafka) 
+
+## Send message - Workitem Handler
+https://issues.redhat.com/browse/JBPM-9291
+
+**Configuration**
+
+    new org.jbpm.process.workitem.kafka.KafkaWorkItemHandler("bootstrapServers", "clientId", "keySerializerClass", "valueSerializerClass")
+
+**Input parameters**
+
+- Topic (String)
+- Key (Object)
+- Value (Object)
+
+**Output parameters**
+
+- Result = "success" (always)
+
+## Consume events from Kafka by Signal or Messages Events
+
+As part of the integration story with AMQ streams one of the capabilities should be to have a kie-server extension that could listen to a Kafka topic and act upon the events received, using Start or Intermediate Catch Events (Signals/Messages).
+
+Kie server extension:
+
+https://issues.redhat.com/browse/JBPM-9436
+
+## Send Events to Kafka via intermediate events or end events
+
+https://issues.redhat.com/browse/BAPL-1763
+
+##  Sending Process Internal Events to Kafka
+
+The user would like to receive events with the information of a process instance execution, some example for this events could be completed task, completed process, started task, etc.
+The engine should have a configurable listener that could emit those events when the actions occur connecting to an external AMQ Streams topic
+
+https://issues.redhat.com/browse/BAPL-1646
+
 # Email
 
 Test emails:
