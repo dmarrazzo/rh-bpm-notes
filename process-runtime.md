@@ -452,6 +452,19 @@ Here the mapping column:
                                                      .get();
   ```
 
+### Process Instances with variables (Primitive types)
+
+```java
+private static final String QUERY_PROCESS_INSTANCES_WITH_VAR = "jbpmProcessInstancesWithVariables";
+
+QueryServicesClient queryClient = client.getServicesClient(QueryServicesClient.class);
+QueryFilterSpec spec = new QueryFilterSpecBuilder().between("processInstanceId", 0, 1)
+												   .in("variableId", Arrays.asList("initiator", "status"))
+                                                   .get();
+queryClient.query(QUERY_PROCESS_INSTANCES_WITH_VAR, QueryServicesClient.QUERY_MAP_PI_WITH_VARS, spec, 0, 10,
+        ProcessInstanceCustomVarsList.class);
+```
+
 ### Task with input variable
 
 taskId,
