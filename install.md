@@ -768,3 +768,9 @@ In order to measure the kieserver response time, it's possible to instrument the
 
 - [Byteman homepage](http://byteman.jboss.org/)
 - [Using Byteman to troubleshoot Java issues](https://access.redhat.com/solutions/31283)
+
+## Prometheus
+
+Enable it:
+
+  <property name="org.kie.prometheus.server.ext.disabled" value="false"/>

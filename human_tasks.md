@@ -491,10 +491,6 @@ Caused by: org.xmlpull.v1.XmlPullParserException: only whitespace content allowe
 
 This error can be caused by a wrong data output association. E.g. String -> Complex type 
 
-## BPM v6 Form modeller
+## Form Modelling 
 
-
-Form Modeller supports jXpath expressions but only to access field values (? to be verified the version)
-
-[https://commons.apache.org/proper/commons-jxpath/]()
-
+https://pravinstechblog.blogspot.com/2020/07/how-to-load-data-dynamically-in-listbox.html
