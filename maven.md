@@ -9,8 +9,8 @@ In order to keep your POM clean and tidy, it's useful to introduce the bill of m
 
 ```xml
   <properties>
-    <ba.version>7.9.0.redhat-00002</ba.version>
-	<version.org.kie>7.44.0.Final-redhat-00003</version.org.kie>
+    <ba.version>7.9.1.redhat-00003</ba.version>
+	<version.org.kie>7.44.0.Final-redhat-00006</version.org.kie>
     <maven.compiler.target>11</maven.compiler.target>
     <maven.compiler.source>11</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -37,6 +37,7 @@ Here the mapping of the product version with the dependency versions:
 | 7.8             | 7.8.0.redhat-00002     | 7.39.0.Final-redhat-00005 |
 | 7.8.1           | 7.8.1.redhat-00002     | 7.39.0.Final-redhat-00007 |
 | 7.9             | 7.9.0.redhat-00002     | 7.44.0.Final-redhat-00003 |
+| 7.9.1           | 7.9.1.redhat-00003     | 7.44.0.Final-redhat-00006 |
 
 ### Red Hat Process Automation Manager v7.1 Bill of Material (BOM)
 
@@ -76,24 +77,37 @@ This is used to build the kjar package.
 
 E.g. Some basic lib
 
-    	<dependency>
-    		<groupId>org.kie</groupId>
-    		<artifactId>kie-api</artifactId>
-    		<scope>provided</scope>
-    	</dependency>
-    	<dependency>
-    		<groupId>org.drools</groupId>
-    		<artifactId>drools-compiler</artifactId>
-    		<scope>provided</scope>
-    	</dependency>
+```xml
+	<dependency>
+		<groupId>org.kie</groupId>
+		<artifactId>kie-api</artifactId>
+		<scope>provided</scope>
+	</dependency>
+	<dependency>
+		<groupId>org.drools</groupId>
+		<artifactId>drools-compiler</artifactId>
+		<scope>provided</scope>
+	</dependency>
+	<dependency>
+		<groupId>org.drools</groupId>
+		<artifactId>drools-model-compiler</artifactId>
+		<scope>provided</scope>
+	</dependency>
+	<!-- Required if not using classpath KIE container -->
+	<dependency>
+		<groupId>org.kie</groupId>
+		<artifactId>kie-ci</artifactId>
+		<scope>provided</scope>
+	</dependency>
+```
 
 
 #### DMN
 
-		<dependency>
-			<groupId>org.kie</groupId>
-			<artifactId>kie-dmn-core</artifactId>
-		</dependency>
+	<dependency>
+		<groupId>org.kie</groupId>
+		<artifactId>kie-dmn-core</artifactId>
+	</dependency>
 
 #### Business Optimizer dependencies
 
@@ -355,6 +369,10 @@ The following commmand analyzes the dependencies and highlights the unused and m
 
 	mvn dependency:analyze
 
+To copy in the target directory all the dependencies:
+
+	mvn dependency:copy-dependencies
+
 ## Configure Maven Repository
 
 ### Off line repositories
@@ -465,6 +483,35 @@ Now you can deploy with maven command line:
     $ mvn deploy
 
 Here a complete example of maven [settings.xml](config/settings.xml)
+
+**Useful tip:**
+
+To avoid polluting the `settings.xml` with multiple endpoints and credentials, it's possible to keep all the variables in the command line:
+
+- Add to `settings.xml`:
+  
+  ```xml
+  <server>
+    <id>${repo.id}</id>
+    <username>${repo.login}</username>
+    <password>${repo.pwd}</password>
+    <privateKey>prdprivatekey</privateKey>
+    <configuration>
+      <wagonProvider>httpclient</wagonProvider>
+      <httpConfiguration>
+        <all>
+          <usePreemptive>true</usePreemptive>
+        </all>
+      </httpConfiguration>
+	</configuration>
+  </server>
+  ```
+
+- Deploy with the following command:
+
+  ```sh
+  mvn -Drepo.id=ocp-m2-repo -Drepo.login=user -Drepo.pwd=password -DaltDeploymentRepository=ocp-m2-repo::default::http://bcmon-rhpamcentrmon-rhpam.apps.shared-na4.na4.openshift.opentlc.com/maven2/ deploy
+  ```
 
 ### Execute the program
 
