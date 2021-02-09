@@ -1,4 +1,22 @@
-# Install RHPAM in OpenShift
+# Deploy RHPAM in OpenShift Container Platform using Operators 
+
+## Example of KieApp CRC
+
+```yaml
+apiVersion: app.kiegroup.org/v2
+kind: KieApp
+spec:
+  environment: rhpam-authoring
+  objects:
+    servers:
+      - jvm:
+          javaOptsAppend: '-agentlib:jdwp=transport=dt_socket,address=8787,server=y,suspend=n'
+```
+
+**Note** java options to enable the debug
+
+
+# Install RHPAM in OpenShift using Template (legacy)
 
 ## Login
 
@@ -24,22 +42,24 @@ This is actually the recommended way.  Using your RHN login may or may not work 
 
 Create the images:
 
-	oc create -f rhpam73-image-streams.yaml
+	oc create -f rhpam79-image-streams.yaml
 
 List the images:
 
-	oc get imagestreams.image.openshift.io | grep rhpam73
+	oc get imagestreams.image.openshift.io | grep rhpam79
 
 If old image are already present, update them:
 
-	oc apply -f rhpam73-image-streams.yaml
+	oc apply -f rhpam79-image-streams.yaml
 
 ### Import image
 
 Manually import image:
 
-	oc import-image rhpam73-businesscentral-openshift:1.0
-	oc import-image rhpam73-kieserver-openshift:1.0
+	oc import-image rhpam-kieserver-rhel8:7.9.0
+	oc import-image rhpam-businesscentral-rhel8:7.9.0
+	oc import-image rhpam-businesscentral-monitoring-rhel8:7.9.0
+	oc import-image rhpam-process-migration-rhel8:7.9.0
 
 ## Import templates
 
@@ -53,11 +73,11 @@ Optionally, you can import template the templates in order to enrich the catalog
 
 If you need to delete a previous version
 
-	oc delete imagestreams.image.openshift.io/rhpam72-smartrouter-openshift	
+	oc delete imagestreams.image.openshift.io/rhpam79-smartrouter-openshift	
 
 delete all imagestream
 
-	oc get imagestreams.image.openshift.io | grep rhpam72 | awk '{print "is/"$1}' |xargs oc delete 
+	oc get imagestreams.image.openshift.io | grep rhpam79 | awk '{print "is/"$1}' |xargs oc delete 
 
 ## Create a project
 
@@ -100,7 +120,7 @@ Replace the keystore:
 ### Authoring environment
 
 ```bash
-oc new-app -f rhpam73-authoring.yaml \
+oc new-app -f rhpam79-authoring.yaml \
  -p APPLICATION_NAME=pam-dev \
  -p BUSINESS_CENTRAL_HTTPS_SECRET=businesscentral-app-secret \
  -p KIE_SERVER_HTTPS_SECRET=kieserver-app-secret \
@@ -112,7 +132,7 @@ oc new-app -f rhpam73-authoring.yaml \
 If the image streams are not defined in the openshift namespace, it's possible to override it with this parameter `IMAGE_STREAM_NAMESPACE`.
 
 ```bash
-oc new-app -f rhpam73-authoring.yaml \
+oc new-app -f rhpam79-authoring.yaml \
  -p APPLICATION_NAME=pam-dev \
  -p IMAGE_STREAM_NAMESPACE=pam73 \
  -p BUSINESS_CENTRAL_HTTPS_SECRET=businesscentral-app-secret \
@@ -141,7 +161,7 @@ If you want to use Postgress instead of H2 database, you have to customize the t
 See [Modifying the template](https://access.redhat.com/documentation/en-us/red_hat_process_automation_manager/7.2/html-single/deploying_a_red_hat_process_automation_manager_authoring_environment_on_red_hat_openshift_container_platform/index#environment-authoring-single-modify-proc)
 
 ```
-oc new-app -f rhpam72-authoring-postgresql.yaml \
+oc new-app -f rhpam79-authoring-postgresql.yaml \
  -p BUSINESS_CENTRAL_HTTPS_SECRET=businesscentral-app-secret \
  -p KIE_SERVER_HTTPS_SECRET=kieserver-app-secret \
  -p KIE_ADMIN_PWD=r3dhat1! \
@@ -152,8 +172,8 @@ oc new-app -f rhpam72-authoring-postgresql.yaml \
 ### Other Environment variables
 
 ```bash
- -p OPENSHIFT_TEMPLATE_NAME=rhpam72-authoring \
- -p PROJECT_NAME=pam72 \
+ -p OPENSHIFT_TEMPLATE_NAME=rhpam79-authoring \
+ -p PROJECT_NAME=pam79 \
  -p BUSINESS_CENTRAL_USER=pamAdmin \
  -p BUSINESS_CENTRAL_PASSWORD=password \
  -p KIE_SERVER_DATABASE_USER=h2user \
@@ -169,14 +189,51 @@ oc new-app -f rhpam72-authoring-postgresql.yaml \
  -p IMAGE_STREAM_NAMESPACE=openshift
 ```
 
- 
+### Immutable kieserver
+
+- User name and password for a Red Hat Process Automation Manager administrative user account.user name and password for a Red Hat Process Automation Manager administrative user account.
+
+```sh
+oc new-app -f templates/rhpam79-prod-immutable-kieserver.yaml \
+-p APPLICATION_NAME=rhpam
+-p KIE_SERVER_CONTAINER_DEPLOYMENT=rhpam-kieserver-library=org.openshift.quickstarts:rhpam-kieserver-library:1.6.0-SNAPSHOT \
+-p SOURCE_REPOSITORY_URL=https://github.com/jboss-container-images/rhpam-7-openshift-image.git \
+-p SOURCE_REPOSITORY_REF=master \
+-p CONTEXT_DIR=quickstarts/library-process/library \
+-p KIE_SERVER_HTTPS_SECRET=kieserver-app-secret \
+-p CREDENTIALS_SECRET=rhpam-credentials \
+-p IMAGE_STREAM_NAMESPACE=rhpam
+```
+
+```sh
+oc new-app -f rhpam79-prod-immutable-kieserver.yaml \
+ -p KIE_SERVER_HTTPS_SECRET=kieserver-app-secret \
+ -p KIE_ADMIN_PWD=r3dhat1! \
+ -p KIE_SERVER_PWD=r3dhat1! \
+```
+
+
+### Source 2 Image deployment
+
+
+```sh
+# create ssh key pair
+ssh-keygen -C "openshift-source-builder/repo@gitlab" -f repo-at-gitlab -N ''
+oc create secret generic repo-at-gitlab-ssh --from-file=ssh-privatekey=repo-at-gitlab --type=kubernetes.io/ssh-auth
+oc secrets link builder repo-at-gitlab-ssh
+oc annotate secret/repo-at-gitlab-ssh 'build.openshift.io/source-secret-match-uri-1=ssh://git@gitlab.consulting.redhat.com:2222/poc-unicredit/w-ark-kjar.git'
+oc set build-secret --source bc/w-ark-kieserver repo-at-gitlab-ssh
+oc new-app -f templates/rhpam79-prod-immutable-kieserver.yaml -p APPLICATION_NAME=w-ark -p KIE_SERVER_CONTAINER_DEPLOYMENT=w-ark=com.pocs:w-ark:1.0.0-SNAPSHOT -p SOURCE_REPOSITORY_URL=ssh://git@gitlab.consulting.redhat.com:2222/poc-unicredit/w-ark-kjar.git -p SOURCE_REPOSITORY_REF=master -p CONTEXT_DIR=/ -p KIE_SERVER_HTTPS_SECRET=kieserver-app-secret -p CREDENTIALS_SECRET=rhpam-credentials -p IMAGE_STREAM_NAMESPACE=rhpam
+```
+
+
 ### Change readiness probe
 
 In minishift or environment with low resources, it's better to raise the readiness timeout.
 
 ## PostgreSQL Template
 
-[Template custom for PostgreSQL](config/rhpam72-authoring-postgresql-custom.yaml)
+[Template custom for PostgreSQL](config/rhpam79-authoring-postgresql-custom.yaml)
 
 ## Expose git ssh
 
@@ -222,7 +279,7 @@ References:
 
 2) oc create configmap settings.xml --from-file settings.xml
 
-3) vi rhpam72-trial-ephemeral.yaml (new sections are 'volume' and 'volumeMounts')
+3) vi rhpam79-trial-ephemeral.yaml (new sections are 'volume' and 'volumeMounts')
 
 ```
 - kind: DeploymentConfig
@@ -256,7 +313,7 @@ References:
           <!-- ... snip ...-->
 ```
 
-4) Deploy the app from the modified rhpam72-trial-ephemeral.yaml
+4) Deploy the app from the modified rhpam79-trial-ephemeral.yaml
 
 5) Navigate to the running kieserver pod and access the Terminal tab (or use `$ oc rsh <pod name>`)
 
@@ -354,14 +411,19 @@ List all
 
 	oc get bc cakephp-mysql-example -o yaml | less
 
-### delete the application
+### Clean up
+
+- delete the application
 
 	oc delete all -l app=rhpam72-authoring
 
-### delete all the project
+- delete all the project
 
 	oc delete all -l application=pam72
 
+- delete all the old pods
+
+	oc get pods|egrep "Error|Completed" | awk '{ print "pod/"$1 }' | xargs oc delete
 
 ### scale up and down
 
@@ -489,6 +551,124 @@ config directory: `/opt/eap/bin/launch`
 
 	oc create configmap const-props --from-file=use-case-3/const.propertie
 	oc set volume dc/rhpam-authoring-kieserver --add --name=config-volume --type=configmap --configmap-name=const-props --mount-path=/etc/config
+
+## Investigating pod issues
+
+https://docs.openshift.com/container-platform/4.5/support/troubleshooting/investigating-pod-issues.html
+
+## ConfigMap for Business Calendar
+
+	oc create configmap jbpm-business-calendar-props --from-file=jbpm.business.calendar.properties
+
+Then added it the Business Central Deployment Configuration:
+
+	oc set volume dc/rhpam-trial-rhpamcentr --add --name=jbpm-business-calendar-volume --type=configmap --configmap-name=jbpm-business-calendar-props --mount-path=/deployments/ROOT.war/WEB-INF/classes
+
+
+## replace a file 
+
+Use the subpath and the full path to the file
+
+```yaml
+	volumeMounts:
+      - name: log4j-properties-volume
+        mountPath: /zeppelin/conf/log4j.properties
+        subPath: log4j.properties
+
+	volumeMounts:
+      - name: log4j-properties-volume
+        mountPath: /zeppelin/conf
+```
+## intenal hostname
+
+internal namespace convention:
+
+	my-svc.my-namespace.svc.cluster.local
+
+
+## ControllerBasedStartupStrategy
+
+[Related issue](https://issues.redhat.com/browse/RHDM-1151)
+
+Procedure for setting KieServer to use ControllerBasedStartupStrategy and connect to an OpenShift enhancement DISABLED Business Central
+
+Step #1: Set ‘false’ to this env variable at Business Central DC
+
+```yaml
+- name: KIE_WORKBENCH_CONTROLLER_OPENSHIFT_ENABLED
+	value: "true"
+```
+
+Step #2: Set ‘ControllerBasedStartupStrategy’ to this env variable at Kie Server DC
+
+```yaml
+- name: KIE_SERVER_STARTUP_STRATEGY
+	value: "OpenShiftStartupStrategy"
+```
+
+Step #3: Add back the following env variables to Kie Server DC
+
+```yaml
+- name: KIE_SERVER_CONTROLLER_USER
+	value: "${KIE_SERVER_CONTROLLER_USER}"
+- name: KIE_SERVER_CONTROLLER_PWD
+	value: "${KIE_SERVER_CONTROLLER_PWD}"
+- name: KIE_SERVER_CONTROLLER_TOKEN
+	value: "${KIE_SERVER_CONTROLLER_TOKEN}"
+- name: KIE_SERVER_CONTROLLER_SERVICE
+	value: "${APPLICATION_NAME}-rhpamcentr"
+- name: KIE_SERVER_CONTROLLER_PROTOCOL
+	value: "ws"
+```
+
+Step #4 (Optional): To bypass TLS related configurations, Kie Server instance can register itself with Controller using regular Http port with following setting.
+
+```yaml
+- name: KIE_SERVER_ROUTE_NAME
+	value: "insecure-${APPLICATION_NAME}-kieserver"
+```
+### How to set up the webhook
+
+From the following command extract the URL:
+
+    oc describe bc/hello-kieserver
+
+E.g. `https://api.shared-na4.na4.openshift.opentlc.com:6443/apis/build.openshift.io/v1/namespaces/rhpam/buildconfigs/hello-kieserver/webhooks/<secret>/github`
+
+Replace `<secret>` with the outcome of the following command:
+
+    oc get bc/hello-kieserver -o yaml | grep -B 2 secret
+
+E.g.
+
+```
+  triggers:
+  - github:
+      secret: 1VajKlz8oR8LLa94
+    type: GitHub
+  - generic:
+      secret: gxqNhyT3
+```
+
+In Github:
+
+- open **project > settings**
+- select **Webhook** from left side menu
+- click **Add webhook** button
+- fill in the **URL** accordingly the previous outcomes
+- set **content type** to `application/json`
+
+
+### KieApp Operator Provisioned Environment
+
+To enable controller strategy on a KIE Server, set the `KIE_SERVER_STARTUP_STRATEGY` environment variable to `ControllerBasedStartupStrategy` and the `KIE_SERVER_CONTROLLER_OPENSHIFT_ENABLED` environment variable to `false`.
+
+Change the config map:
+
+    oc edit configmap/kieconfigs-7.9.0
+
+**NOTE**
+Do not enable the controller strategy in an environment with a high-availability Business Central. In such environments the controller strategy does not function correctly.
 
 ## Openshift Useful links
 
