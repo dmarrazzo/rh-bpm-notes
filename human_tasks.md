@@ -97,6 +97,8 @@ References:
 
 [http://mswiderski.blogspot.com/2017/01/distribute-tasks-wisely-pluggable-task.html]()
 
+[https://access.redhat.com/solutions/3714251](How to configure human task assignment logic, using PotentialOwnerBusyness, BusinessRule or RoundRobinin strategy in RHPAM 7?)
+
 ### References
 
 - jbpm-human-task/jbpm-human-task-workitems/src/main/java/org/jbpm/services/task/wih/util/PeopleAssignmentHelper.java
