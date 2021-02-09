@@ -41,7 +41,7 @@ From 7.5 Process Instance Migration is simplified by a web application:
 
 In the official doc the usage is well documented:
 
-http://access.redhat.com/documentation/en-us/red_hat_process_automation_manager/7.8/html-single/managing_and_monitoring_business_processes_in_business_central/index.html#process-instance-migration-con
+https://access.redhat.com/documentation/en-us/red_hat_process_automation_manager/7.9/html-single/developing_process_services_in_red_hat_process_automation_manager/index#process-instance-migration-con
 
 Here some additional tips:
 
@@ -61,9 +61,11 @@ Here some additional tips:
 
 Example of starting command:
 
-```
+```sh
 java -jar rhpam-7.8.1-process-migration-service-standalone.jar -Dswarm.port.offset=1 -s config.yml
 ```
+
+**Warning** This tool works only with deployment units (containers) in a stable release version. In other words containers with `_SNAPSHOT` will not be shown.
 
 Asynchronous Jobs
 ===========================================================================
