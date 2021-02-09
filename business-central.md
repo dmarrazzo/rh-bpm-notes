@@ -79,6 +79,21 @@ You need to add following configuration in the ~/m2/setting.xml
 
 Make sure this following Maven repo are also in the setting.xml
 
+## User Group Management
+
+
+### Pluggable implementation
+
+controller like this:
+
+https://github.com/kiegroup/kie-wb-distributions/blob/master/business-central-parent/business-central-webapp/src/main/resources/security-management.properties#L17
+
+There are various implementations out-of-the-box, our recommendation in general is to use keycloak where possible 
+
+Default implementation:
+https://github.com/kiegroup/appformer/tree/master/uberfire-extensions/uberfire-security/uberfire-security-management
+
+
 ## REST Services
 
 ### New in version 7
