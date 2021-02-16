@@ -62,6 +62,10 @@ There are documents and samples.
 
 ### Video and Webinars
 
+ - [Red Hat Process Automation Manager Demonstration](https://youtu.be/IQ0Ru-uoDo0)
+
+ - [Red Hat Process Automation Manager 7 Architecture Overview](https://youtu.be/gQHMh66mmh8)
+
  - [Understand the kieserver REST APIs, monitoring the Java APIs traffic](https://youtu.be/v7Td4PsT1O8)
 
  - [Webinar on simulation - BPMSim](https://www.youtube.com/watch?v=xNzM7A3MGJI&list=PLZPWJhPaP-K7u2cjmyhf2SknXX9HhyWrq)
