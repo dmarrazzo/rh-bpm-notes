@@ -245,6 +245,33 @@ This is the procedure to achieve such result:
 
     ![](imgs/persistable_04.png)
 
+### Modelling Complex Data Types
+
+
+#### Lists requires a specific annotation:
+
+```java
+@ElementCollection // <- this create a side table with suppliers (orderid, supplier)
+private java.util.List<java.lang.String> suppliersList;
+```
+
+#### Relationships
+
+Make sure that the relationship is bidirectional:
+
+```java
+// Order field
+@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, orphanRemoval = false)
+private Set<Product> products;
+
+// Product field
+@ManyToOne(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+private Order order;
+```
+
+
+### Troubleshooting
+
 
 **BE AWARE** the table that map the data object is in the same BPM datasource.
 
@@ -254,7 +281,6 @@ This is the procedure to achieve such result:
     <property name="org.kie.server.xstream.enabled.packages" value="org.drools.persistence.jpa.marshaller.*"/>
 ```
 
-#### Troubleshooting
 
 If you find this error in the BC means that you lack the libraries (Check first point of the procedure).
 
@@ -269,14 +295,6 @@ ERROR [org.kie.server.services.jbpm.JbpmKieServerExtension] (default task-21) Er
 [Line: 1, Column: 5]
 	at org.jbpm.kie.services.impl.KModuleDeploymentService.deploy(KModuleDeploymentService.java:214)
 ```
-
-E.g. you have a one to many relationship not defined.
-
-```java
-@ElementCollection // <- this create a side table with suppliers (orderid, supplier)
-private java.util.List<java.lang.String> suppliersList;
-```
-
 
 ## References
 
