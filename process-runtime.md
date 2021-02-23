@@ -202,13 +202,13 @@ This is the procedure to achieve such result:
 
 1. Add dependency to `drools-persistence-jpa` (unfortunately this cannot be done in business central since you have to add `provided` as scope)
 
-```xml
-		<dependency>
-			<groupId>org.drools</groupId>
-			<artifactId>drools-persistence-jpa</artifactId>
-			<scope>provided</scope>
-		</dependency>
-```
+   ```xml
+   <dependency>
+   	<groupId>org.drools</groupId>
+   	<artifactId>drools-persistence-jpa</artifactId>
+   	<scope>provided</scope>
+   </dependency>
+   ```
 
 2. Configure the *Data Object* as *Persistable*.
 
@@ -218,6 +218,14 @@ This is the procedure to achieve such result:
    
    **EXTRA CONFIGURATION** the data object MUST extend `org.drools.persistence.jpa.marshaller.VariableEntity`
 
+   The object requires a `Long` id:
+ 
+   ```java
+   @GeneratedValue(strategy = GenerationType.AUTO, generator = "ORDERINFO_ID_GENERATOR")
+   @Id
+   @SequenceGenerator(sequenceName = "ORDERINFO_ID_SEQ", name = "ORDERINFO_ID_GENERATOR")
+   private Long id;
+   ```
 
 3. Then you have to configure the *Persistence descriptor*:
 
@@ -260,15 +268,18 @@ private java.util.List<java.lang.String> suppliersList;
 Make sure that the relationship is bidirectional:
 
 ```java
+// E.g. Order class has a set of product
 // Order field
-@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, orphanRemoval = false)
+@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, orphanRemoval = false, mappedBy = "order")
 private Set<Product> products;
 
+// E.g. Product class has a reverse relationship to Order
 // Product field
 @ManyToOne(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
 private Order order;
 ```
 
+**Pay Attention**: `mappedBy` value must match the field name used in the reverse relationship. (In this case it's `order`, because in Product the reverse relationship is defined by the field `order`)
 
 ### Troubleshooting
 
