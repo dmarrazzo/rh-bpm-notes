@@ -74,7 +74,10 @@ Reference:
 * Service implementation: **Java** or **Webservices** (to avoid webservices, because there are more options with "Web Service" WIH)
 * Service interface: fully qualified Java class name
 * Service operation: name of the method (static method)
-* Add a **input** `Parameter` that match the name of method parameter.
+* Assignments:
+  * **input** must be`Parameter`
+  * **output** must be `Result`
+
 
 Example of method implementation:
 
