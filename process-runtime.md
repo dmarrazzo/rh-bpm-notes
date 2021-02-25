@@ -586,6 +586,14 @@ INNER JOIN AUDITTASKIMPL AS T ON T.PROCESSINSTANCEID = V.PROCESSINSTANCEID
 WHERE V2.ID IS NULL
 ```
 
+## Performing queries inside the Process Runtime
+
+Inside the process runtime it's possible to get access to the query service through the `ServiceRegistry`.
+
+```java
+QueryService queryService = (QueryService) ServiceRegistry.get().service(ServiceRegistry.QUERY_SERVICE);
+```
+
 ## References
 
 [Advanced Queries in jBPM](http://mswiderski.blogspot.it/2016/01/advanced-queries-in-jbpm-64.html)
