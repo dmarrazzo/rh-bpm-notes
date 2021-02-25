@@ -334,6 +334,7 @@ RuntimeDataService runtimeDataService = (RuntimeDataService) ServiceRegistry.get
 UserTaskAdminService userTaskAdminService = (UserTaskAdminService) ServiceRegistry.get()
         .service(ServiceRegistry.USER_TASK_ADMIN_SERVICE);
 
+QueryService queryService = (QueryService) ServiceRegistry.get().service(ServiceRegistry.QUERY_SERVICE);
 ```
 
 Local Container
