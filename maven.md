@@ -460,13 +460,37 @@ In your **pom.xml**
         </repository>
     </distributionManagement>
 
+Alternatively add the profile in **`~/.m2/settings.xml`**:
+
+```xml
+<profile>
+	<id>business-central</id>
+	<repositories>
+	<repository>
+		<id>guvnor-m2-repo</id>
+		<url>http://localhost:8080/business-central/maven2/</url>
+		<layout>default</layout>
+		<releases>
+		<enabled>true</enabled>
+		<updatePolicy>always</updatePolicy>
+		</releases>
+		<snapshots>
+		<enabled>true</enabled>
+		<updatePolicy>always</updatePolicy>
+		</snapshots>
+	</repository>
+	</repositories>
+</profile>
+```
+
 In your **`~/.m2/settings.xml`**, add this `<server>` element to the `<servers>` section:
 
-    <servers>
+```xml
+  <servers>
     <server>
         <id>guvnor-m2-repo</id>
-        <username>bpmsAdmin</username>
-        <password>abcd1234!</password>
+        <username>${repo.login}</username>
+        <password>${repo.pwd}</password>
         <configuration>
             <wagonProvider>httpclient</wagonProvider>
             <httpConfiguration>
@@ -476,42 +500,23 @@ In your **`~/.m2/settings.xml`**, add this `<server>` element to the `<servers>`
             </httpConfiguration>
         </configuration>
     </server>
-    </servers>
+  </servers>
+```
 
 Now you can deploy with maven command line:
 
-    $ mvn deploy
+```sh
+$ mvn deploy -Drepo.login=user -Drepo.pwd=password 
+```
+
+If you have not specified `<distributionManagement>` in the `pom.xml` file, then use this command:
+
+```sh
+$ mvn deploy -Drepo.id=guvnor-m2-repo -Drepo.login=user -Drepo.pwd=password -DaltDeploymentRepository=guvnor-m2-repo::default::http://<remote-host>/maven2/
+```
 
 Here a complete example of maven [settings.xml](config/settings.xml)
 
-**Useful tip:**
-
-To avoid polluting the `settings.xml` with multiple endpoints and credentials, it's possible to keep all the variables in the command line:
-
-- Add to `settings.xml`:
-  
-  ```xml
-  <server>
-    <id>${repo.id}</id>
-    <username>${repo.login}</username>
-    <password>${repo.pwd}</password>
-    <privateKey>prdprivatekey</privateKey>
-    <configuration>
-      <wagonProvider>httpclient</wagonProvider>
-      <httpConfiguration>
-        <all>
-          <usePreemptive>true</usePreemptive>
-        </all>
-      </httpConfiguration>
-	</configuration>
-  </server>
-  ```
-
-- Deploy with the following command:
-
-  ```sh
-  mvn -Drepo.id=ocp-m2-repo -Drepo.login=user -Drepo.pwd=password -DaltDeploymentRepository=ocp-m2-repo::default::http://bcmon-rhpamcentrmon-rhpam.apps.shared-na4.na4.openshift.opentlc.com/maven2/ deploy
-  ```
 
 ### Execute the program
 
