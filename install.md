@@ -61,6 +61,13 @@ known issue:
 
  - [datasource.management.disableDefaultDrivers parameter does not disable default drivers in RHPAM 7.0.1](https://issues.jboss.org/browse/RHPAM-1366)
 
+### Prepare kjar for the production server
+
+In case the kjar has a custom persistence:
+
+- remove `<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>`
+- change datasource to point to kieserver one:` <jta-data-source>${org.kie.server.persistence.ds}</jta-data-source>`
+
 ### Configure Persistence
 
 #### Install JDBC drivers
