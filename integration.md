@@ -2,37 +2,70 @@
 
 ## Create a WIH v7 procedure
 
-```sh
-mvn archetype:generate \
--DarchetypeGroupId=org.jbpm \
--DarchetypeArtifactId=jbpm-workitems-archetype \
--DarchetypeVersion=7.33.0.Final-redhat-00003 \
--Dversion=1.0.0-SNAPSHOT \
--DgroupId=com.redhat.demo \
--DartifactId=sample-wih \
--DclassPrefix=SampleWorkItem
-```
+http://access.redhat.com/documentation/en-us/red_hat_process_automation_manager/7.10/html-single/developing_process_services_in_red_hat_process_automation_manager/index.html#assembly-custom-tasks-and-work-item-handlers
 
-## Create a WIH legacy procedure
+## Work Item Handler - the old good way
 
-Using the Service registry to define a WIH:
+### Create a WIH project
 
-[https://docs.jboss.org/jbpm/release/6.5.0.Final/jbpm-docs/html_single/#d0e29362]()
+- create a plain Maven project
+- add dependencies
 
-Beside the service registry, you can define a new WIH with the following artefacts:
+  ```xml
+  <dependency>
+      <groupId>org.kie</groupId>
+      <artifactId>kie-api</artifactId>
+      <scope>provided</scope>
+  </dependency>
+  ```
 
-- create the wid file (just for the editor sake)
+- implement a class that extend `org.kie.api.runtime.process.WorkItemHandler`
+
+### Consume the WIH
+
+In the kjar:
+
+- define it in the wid file (just for the editor sake)
+
+  ```json
+  [
+      "name" : "YourWIH",
+      "displayName" : "YourWIH",
+      "category" : "your wih",
+      "description" : "",
+      "icon" : "defaultservicenodeicon.png",
+      "parameters" : [
+          "Param1" : new StringDataType(),
+          "Param2" : new StringDataType()
+      ],
+      "results" : [
+          "Result" : new StringDataType()
+      ]
+  ]
+  ```
+
 - add the dependency in pom.xml
-- define it in the kie-deployment-descriptor using the MVEL initialization script e.g. `new org.jbpm.process.workitem.webservice.WebServiceWorkItemHandler(ksession, classLoader)`
+- define it in the kie-deployment-descriptor :
 
-Init MVEL parameters:
+  ```xml
+  <work-item-handlers>
+      <work-item-handler>
+          <resolver>mvel</resolver>
+          <identifier>new com.sample.YourWIH(ksession)</identifier>
+          <parameters/>
+          <name>YourWIH</name>
+      </work-item-handler>
+  </work-item-handlers>
+  ```
 
-        ksession
-        taskService
-        runtimeManager
-        classLoader
-        entityManagerFactory (no?)
-        kieContainer
+- workitem handlers can be initialized with the following parameters:
+
+  - ksession
+  - taskService
+  - runtimeManager
+  - classLoader
+  - entityManagerFactory
+  - kieContainer
 
 **Source:** KModuleRegisterableItemsFactory
 
@@ -41,33 +74,6 @@ Init MVEL parameters:
 If you add the WIH in `WorkDefinition.wid` the icon should be included in the `global` folder of the project.
 
 Otherwise, if you create another wid file you can add the icon everywhere in the resources folder.
-
-
-### Wid file to get pre-populated fields:
-
-
-```
-"parameters" : [
-...
-  "Operation" : new StringDataType(),
-...
-],
-"parameterValues" : [
-   "Operation" : "opA,opB,opC"
-]
-```
-
-or if you have an existing enum class in workbench you could do:
-
-```
-"parameterValues" : [
-   "Operation" : new EnumDataType("org.jbpm.myenums.MyEnum")
-]
-```
-
-Reference:
-
-- [https://issues.jboss.org/browse/JBPM-5416]()
 
 # Service Task
 
