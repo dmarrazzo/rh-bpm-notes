@@ -27,7 +27,7 @@ In the kjar:
 
 - define it in the wid file (just for the editor sake)
 
-  ```json
+  ```ruby
   [
       "name" : "YourWIH",
       "displayName" : "YourWIH",
