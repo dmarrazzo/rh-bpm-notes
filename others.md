@@ -48,9 +48,13 @@ JBoss EAP 6.4
 
 ### Updating JBoss EAP
 
+Current version:
+
+     ./standalone.sh -v
+
 Downlaod the EAP patched and unzip the bundle to get the incremental fix.
-E.g. jboss-eap-6.4.8.CP.zip
-Lauch the CLI
+
+Launch the CLI:
 
     $ ./jboss-cli.sh 
 
