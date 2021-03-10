@@ -781,3 +781,11 @@ In order to measure the kieserver response time, it's possible to instrument the
 Enable it:
 
   <property name="org.kie.prometheus.server.ext.disabled" value="false"/>
+
+Custom metrics:
+
+https://github.com/rmuppane/prometheus-custom-ext/blob/master/src/main/java/org/kie/server/custom/ext/prometheus/TaskLevelCustomPrometheusMetricListener.java
+
+Grafana sample dashboards:
+
+https://github.com/jboss-dockerfiles/jbpm/tree/master/docker-compose-examples/grafana/provisioning/dashboards
