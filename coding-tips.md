@@ -337,6 +337,44 @@ UserTaskAdminService userTaskAdminService = (UserTaskAdminService) ServiceRegist
 QueryService queryService = (QueryService) ServiceRegistry.get().service(ServiceRegistry.QUERY_SERVICE);
 ```
 
+Trigger a node
+---------------------------------------------------------------------------------------------
+
+```java
+RuleFlowProcessInstance processInstance = (RuleFlowProcessInstance) event.getProcessInstance();
+
+processInstance.getNodeInstances()
+                .forEach(node -> {
+                    if (node instanceof StateBasedNodeInstance)
+                        ((StateBasedNodeInstance) node).triggerCompleted();;
+                });
+```
+
+Node instances statistics
+---------------------------------------------------------------------------------------------
+
+H2:
+
+```sql
+select processid, nid, nodetype, nodename, count(nid) as total_hits, avg(execution_time) as averageExecutionTime, min(execution_time) as minExecutionTime, max(execution_time) as maxExecutionTime 
+from ( 
+    select processid, max(log_date) as lastLog, processinstanceid as piid, nodeinstanceid as niid, nodeid as nid, nodetype, nodename, ( min(log_date) - max(log_date)) as execution_time 
+    from NodeInstanceLog group by processinstanceid, nodeinstanceid order by lastLog 
+) group by nid
+```
+
+Oracle:
+
+```sql
+select processid, nid, nodetype, nodename, count(nid) as total_hits, avg(execution_time) as averageExecutionTime, min(execution_time) as minExecutionTime, max(execution_time) as maxExecutionTime 
+from ( 
+select processid, max(log_date) as lastLog, processinstanceid as piid, nodeinstanceid as niid, nodeid as nid, nodetype, nodename, ( min(to_number(TO_CHAR(log_date,'YYYYMMDDHHmmss'))) - max(to_number(TO_CHAR(log_date,'YYYYMMDDHHmmss'))) ) as execution_time
+from c##rhpam.NodeInstanceLog 
+group by processid, processinstanceid, nodeinstanceid, nodeid, nodetype, nodename order by lastLog 
+) group by processid, nid, nodetype, nodename
+```
+
+
 Local Container
 ---------------------------------------------------------------------------------------------
 
