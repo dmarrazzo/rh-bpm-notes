@@ -40,6 +40,8 @@ Here the mapping of the product version with the dependency versions:
 | 7.9.1           | 7.9.1.redhat-00003     | 7.44.0.Final-redhat-00006 |
 | 7.10            | 7.10.0.redhat-00004    | 7.48.0.Final-redhat-00004 |
 
+**Official page:** [What is the mapping between Red Hat Process Automation Manager and the Maven library version?](https://access.redhat.com/solutions/3405361)
+
 ### Red Hat Process Automation Manager v7.1 Bill of Material (BOM)
 
 The BOM is a way to manage the version in a single place, add to the POM file:
