@@ -9,8 +9,8 @@ In order to keep your POM clean and tidy, it's useful to introduce the bill of m
 
 ```xml
   <properties>
-    <ba.version>7.10.0.redhat-00004</ba.version>
-	<version.org.kie>7.48.0.Final-redhat-00004</version.org.kie>
+    <ba.version>7.10.1.redhat-00001</ba.version>
+	<version.org.kie>7.48.0.Final-redhat-00006</version.org.kie>
     <maven.compiler.target>11</maven.compiler.target>
     <maven.compiler.source>11</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -39,6 +39,8 @@ Here the mapping of the product version with the dependency versions:
 | 7.9             | 7.9.0.redhat-00002     | 7.44.0.Final-redhat-00003 |
 | 7.9.1           | 7.9.1.redhat-00003     | 7.44.0.Final-redhat-00006 |
 | 7.10            | 7.10.0.redhat-00004    | 7.48.0.Final-redhat-00004 |
+| 7.10.1          | 7.10.1.redhat-00001    | 7.48.0.Final-redhat-00006 |
+
 
 **Official page:** [What is the mapping between Red Hat Process Automation Manager and the Maven library version?](https://access.redhat.com/solutions/3405361)
 
