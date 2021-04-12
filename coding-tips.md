@@ -384,3 +384,26 @@ Retrieve the kieContainer from the classpath
     private static KieServices ks = KieServices.Factory.get();
     private static KieContainer kieContainer = ks.getKieClasspathContainer(BKM.class.getClassLoader());
 ```
+
+Singletons
+---------------------------------------------------------------------------------------------
+
+singleton with a counter:
+
+```java
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class SingletonSample {
+    private static SingletonSample SINGLETON = new SingletonSample();
+    
+    private AtomicInteger counter = new AtomicInteger();
+
+    public static SingletonSample get() {
+        return SINGLETON;
+    }
+
+    public int count() {
+        return counter.incrementAndGet();
+    }
+}
+```
