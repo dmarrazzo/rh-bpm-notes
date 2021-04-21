@@ -5,7 +5,7 @@ Create project
 ------------------------------------------------
 
 ```sh
-mvn io.quarkus:quarkus-maven-plugin:1.12.2.Final:create \
+mvn io.quarkus:quarkus-maven-plugin:1.13.2.Final:create \
     -DprojectGroupId=com.redhat.example \
     -DprojectArtifactId=service \
     -DprojectVersion=1.0.0-SNAPSHOT \
@@ -80,6 +80,20 @@ OpenAPI
 
       quarkus.swagger-ui.always-include=true
 
+### Forms from Open APIs
+
+Add the following dependency and open the URL http://<host>:<port>/openapi-ui-forms/
+
+```xml
+    <dependency>
+      <groupId>io.smallrye</groupId>
+      <artifactId>smallrye-open-api-ui-forms</artifactId>
+      <version>2.1.3</version>
+      <scope>runtime</scope>
+    </dependency>
+```
+
+https://github.com/smallrye/smallrye-open-api/tree/main/ui/open-api-ui-forms
 
 OpenShift
 ------------------------------------------------
