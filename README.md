@@ -28,6 +28,8 @@ There are documents and samples.
 
 ### Blogs
 
+- [Donato Marrazzo blogs at Red Hat Developers](https://developers.redhat.com/blog/author/dmarrazzo/)
+
 - [The Ultimate Guide to Business Central and Git](http://porcelli.me/rhba/business-central/git/2018/11/05/business-central-git.html)
 
 - [Reducing data inconsistencies with Red Hat Process Automation Manager](https://developers.redhat.com/blog/2018/08/22/reducing-data-inconsistencies-with-red-hat-process-automation-manager/)
@@ -62,7 +64,13 @@ There are documents and samples.
 
 - [Applying Mathematical Optimization in Practice](https://link.springer.com/article/10.1007/s43069-020-00046-9)
 
+- [Knowledge meets Machine Learning for Smarter Decisions - Part 1](https://developers.redhat.com/blog/2021/01/14/knowledge-meets-machine-learning-for-smarter-decisions-part-1/)
+
+- [Knowledge meets Machine Learning for Smarter Decisions - Part 2](https://developers.redhat.com/blog/2021/01/22/knowledge-meets-machine-learning-for-smarter-decisions-part-2/)
+
 - [Optimizing COVID-19 vaccination appointment scheduling](https://blog.kie.org/2021/03/optimizing-covid-19-vaccination-appointment-scheduling.html) 
+
+- [AI != ML](https://medium.com/swlh/ai-is-not-equal-to-ml-2312e0a815e2)
 
 ### Video and Webinars
 
