@@ -60,6 +60,10 @@ There are documents and samples.
 
 - [Decisioning and Explainability Using Red Hat Decision Manager](https://dzone.com/articles/decisioning-and-explainability-using-red-hat-proce)
 
+- [Applying Mathematical Optimization in Practice](https://link.springer.com/article/10.1007/s43069-020-00046-9)
+
+- [Optimizing COVID-19 vaccination appointment scheduling](https://blog.kie.org/2021/03/optimizing-covid-19-vaccination-appointment-scheduling.html) 
+
 ### Video and Webinars
 
  - [Red Hat Process Automation Manager Demonstration](https://youtu.be/IQ0Ru-uoDo0)
@@ -84,6 +88,7 @@ There are documents and samples.
 
  - **Free ebook** [Effective Business Process Management with JBoss BPM](https://developers.redhat.com/books/effective-business-process-management-jboss-bpm/)
  - [Mastering jBPM 6](https://www.packtpub.com/application-development/mastering-jbpm6)
+ - [Basics Process Improvement](https://www.amazon.it/Basics-Process-Improvement-Tristan-Boutros/dp/1498719880/ref=cm_cr_arp_d_product_top?ie=UTF8)
  
 ### Official courses
 
