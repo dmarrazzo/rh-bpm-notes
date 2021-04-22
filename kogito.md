@@ -6,6 +6,11 @@ Learning resources
 
 - https://github.com/KIE-Learning
 
+Embedded
+---------------------------------------------------------
+
+https://github.com/kiegroup/kogito-runtimes/tree/master/integration-tests/integration-tests-quarkus-norest
+
 Kogito tooling
 ---------------------------------------------------------
 
