@@ -1,55 +1,75 @@
 Install and configure
 ======================================
 
-## Graphical Installation BPM Suite
-
-**Prerequisite**: JDK, JBoss EAP 6.4.8
-
-Launch:
-
-    $ java -jar jboss-brms-6.3.0.GA-installer.jar
-
-## Installing RHDM 7
-
-- standalone-full.xml
-- kieserver prop
-
-Sample script: 
-https://github.com/jbossdemocentral/rhdm7-install-demo/blob/dm7ga/init.sh
-
 ## Installing Red Hat Process Automation Manager
 
-### Installing on EAP 7
+### Prerequisite
 
-- Download the deployable for EAP7
-- extract it and adjust permissions
+Check [RHPAM software prerequisites](https://access.redhat.com/articles/3405381)
 
-  chmod 775 jboss-eap-7.0
+RHPAM 7.10 requires: 
 
-- copy the content to the EAP7 home
-- add the users
+- JDK 11 (or 8)
+- Maven >= 3.6.3
+- EAP 7.3.4+
 
-        ./add-user.sh -a -u pamAdmin -p password --role user,Administrators,admin,rest-all,kie-server
+### Install EAP
 
-- increase the heap memory `2GB` or more
-- listen all interface:
 
-    - add the interface:
 
-            <interfaces>  
+From [Red Hat Product Downloads](https://access.redhat.com/downloads) site look for **Red Hat JBoss Enterprise Application Platform**:
 
-               <!-- Equivalent of -b 0.0.0.0 -->  
+- Select *Download Latest*
+- Select *7.3* version
+- In the row *Red Hat JBoss Enterprise Application Platform 7.3.0* select *Download* 
+- Select *Patch* tab and download the latest e.g. `jboss-eap-7.3.4-patch.zip`
 
-                  <interface name="any">  
-                       <any-address/>  
-                  </interface>  
-            </interfaces>  
+Uncompress EAP:
 
-    - change the standard-sockets binding
-    
-            <socket-binding-group name="standard-sockets" default-interface="any" ...>
+```
+unzip jboss-eap-7.3.0.zip
+```
 
-    - configure maven
+Upgrade EAP:
+
+- In `<EAP_HOME>\bin`, launch the CLI `./jboss-cli.sh` or `jboss-cli.bat`
+- In the CLI, issue the following command: `patch apply <download dir>/jboss-eap-7.3.4-patch.zip`
+
+### Install Business Central on EAP 7
+
+- Download `Red Hat Process Automation Manager 7.10.1 Business Central Deployable for EAP 7`.
+- Extract it in the parent folder of `jboss-eap-7.3`, some file of EAP will be replaced by the Business Central version.
+- If by mistake it was extracted in a different folder move the content in the EAP folder.
+- Add the user:
+
+  ```
+  <EAP_HOME>/add-user.sh -a -u pamAdmin -p password --role user,Administrators,admin,rest-all,kie-server
+  ```
+
+- Make sure the heap memory is at least `2GB` or better `4GB`
+
+  - open `standalone.conf` or `standalone.conf.bat`
+  - search the jdk flag`-Xmx` and change it in `-Xmx2G`
+
+**Optionally** config the server to listen on all network interface:
+
+- Open `<EAP_HOME>/standalone/configuration/standalone.xml`
+- Update the `interfaces` section ad follow:
+
+  ```xml
+  <interfaces>  
+    <!-- Equivalent of -b 0.0.0.0 -->  
+    <interface name="any">  
+      <any-address/>  
+    </interface>  
+  </interfaces>  
+  ```
+
+- Change the `standard-sockets` binding:
+
+  ```xml
+  <socket-binding-group name="standard-sockets" default-interface="any" ...>
+  ```
 
 ### Disable datasource lookup in Business Central
 
