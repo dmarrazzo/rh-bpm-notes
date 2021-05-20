@@ -320,12 +320,22 @@ Related information:
 Workaround for user recognition problem:
 [https://github.com/RHsyseng/container-rhel-examples/blob/master/starter-arbitrary-uid/Dockerfile]()
 
-ConfigMap
-------------------------------------------------------------
+### ConfigMap
 
 ```bash
 oc create configmap business-application-service --from-file=repo/
 ??? oc volume dc/busapp --add --name=busapp-cfg -m /deployment/repo -t configmap --configmap-name=business-application-service
+```
+
+Transactions
+------------------------------------------------------------
+
+**Warning** How to handle XA transactions?
+
+Workaround to move the tranlog in `/tmp`
+
+```
+spring.jta.log-dir=/tmp
 ```
 
 Resources

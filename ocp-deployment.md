@@ -235,6 +235,12 @@ In minishift or environment with low resources, it's better to raise the readine
 
 [Template custom for PostgreSQL](config/rhpam79-authoring-postgresql-custom.yaml)
 
+## Expose a service
+
+In order to get an accessible URL:
+
+  oc expose service/openshift-kie-springboot --port=8090
+
 ## Expose git ssh
 
 Expose all services:
@@ -375,6 +381,25 @@ Retrive the configuration xml:
 
 	oc rsync <pod-name>:/opt/eap/standalone/configuration/standalone-openshift.xml .
 
+# Running OCP images locally
+
+**Under test**
+
+```sh
+docker run \
+  -it \
+  --name rhpam-kieserver \
+  --mount type=bind,source="$(pwd)"/.m2/repository,target=/home/jboss/.m2/repository \
+  -p 8080:8080 \
+  --env MAVEN_LOCAL_REPO=/home/jboss/.m2/repository \
+  --env KIE_SERVER_CONTAINER_DEPLOYMENT="myproj_1.0.0-SNAPSHOT(myproj)=com.example:myproj:1.0.0-SNAPSHOT" \
+  --env KIE_SERVER_USER=appUser \
+  --env KIE_SERVER_PWD=changeme \
+  --env GC_MAX_METASPACE_SIZE=1024 \
+  --env KIE_SERVER_MEMORY_LIMIT=4Gi \
+  registry.redhat.io/rhpam-7/rhpam-kieserver-rhel8:7.9.1
+```
+
 # OpenShift cheat sheet
 
 ### new project
@@ -449,6 +474,26 @@ List all
 Add environment variable:
 
 	JAVA_OPTS_APPEND = "-Dfile.encoding=UTF-8 -Dfile.io.encoding=UTF-8 -Dclient.encoding=UTF-8 -DjavaEncoding=UTF-8 -Dorg.apache.catalina.connector.URI_ENCODING=UTF-8"
+
+When the deployment is handled by the operator, it's possible to leverage the `jvm` section:
+
+```
+apiVersion: app.kiegroup.org/v2
+kind: KieApp
+metadata:
+  generation: 2
+  name: rhpam-trial
+  namespace: demo-pam-operator
+  selfLink: /apis/app.kiegroup.org/v2/namespaces/demo-pam-operator/kieapps/rhpam-trial
+  uid: 9497c82e-edac-419a-b2f7-a6a92970ebce
+spec:
+  environment: rhpam-trial
+  objects:
+    servers:
+      - jvm:
+          javaOptsAppend: >-
+            -Dorg.kie.server.xstream.enabled.packages=org.drools.persistence.jpa.marshaller.*
+```
 
 ### Raise log level
 
@@ -661,6 +706,7 @@ In Github:
 
 ### KieApp Operator Provisioned Environment
 
+#### Controller Strategy
 To enable controller strategy on a KIE Server, set the `KIE_SERVER_STARTUP_STRATEGY` environment variable to `ControllerBasedStartupStrategy` and the `KIE_SERVER_CONTROLLER_OPENSHIFT_ENABLED` environment variable to `false`.
 
 Change the config map:
@@ -669,6 +715,25 @@ Change the config map:
 
 **NOTE**
 Do not enable the controller strategy in an environment with a high-availability Business Central. In such environments the controller strategy does not function correctly.
+
+#### Deploy a standalone Business Central
+
+```yaml
+apiVersion: app.kiegroup.org/v2
+kind: KieApp
+spec:
+  environment: rhpam-production-immutable
+  objects:
+    console:
+      replicas: 1
+      env:
+        - name: KIE_SERVER_CONTROLLER_OPENSHIFT_ENABLED
+          value: 'false'
+    servers:
+      - database:
+          type: h2
+        replicas: 0
+```
 
 ## Openshift Useful links
 

@@ -371,6 +371,10 @@ A possible library to implement HTML templates:
 
 https://freemarker.apache.org/
 
+## Boundary events
+
+[Task details in boundary events](https://issues.redhat.com/browse/BAPL-1568)
+
 ## 4 eye principle
 
 And why not to rely on potential owners and excluded owners that come with WS-HT spec that we do have support for?
