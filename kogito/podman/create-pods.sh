@@ -64,9 +64,9 @@ podman pod create --name kogito-data-index \
 # data-index
        #-v ./target/protobuf:/home/kogito/data/protobufs/ \
        #-e KOGITO_DATA_INDEX_PROPS=-Dkogito.protobuf.folder=/home/kogito/data/protobufs/ \
-podman run -d --pod kogito-data-index --name data-index --restart=always \
+podman run -d --pod kogito-data-index --name data-index --restart=always --network=host \
        -e QUARKUS_INFINISPAN_CLIENT_SERVER_LIST=localhost:11222 \
-       -e KAFKA_BOOTSTRAP_SERVERS=localhost:29092 \
+       -e KAFKA_BOOTSTRAP_SERVERS=localhost:9092 \
        quay.io/kiegroup/kogito-data-index-infinispan:${KOGITO_VERSION}
 
 # management-console pod
@@ -75,7 +75,7 @@ podman pod create --name kogito-management-console \
 
 # management-console
        #-v ./svg/:/home/kogito/data/svg/ \
-podman run -d --pod kogito-management-console --name management-console --restart=always \
+podman run -d --pod kogito-management-console --name management-console --restart=always --network=host \
        -e KOGITO_DATAINDEX_HTTP_URL=http://localhost:8180 \
        -e KOGITO_MANAGEMENT_CONSOLE_PROPS=-Dkogito.svg.folder.path=/home/kogito/data/svg \
        quay.io/kiegroup/kogito-management-console:${KOGITO_VERSION} 
