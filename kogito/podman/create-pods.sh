@@ -55,23 +55,25 @@ podman run -d --pod kogito-infra --name grafana --restart=always \
 
 # kogito supporting services
 
-export KOGITO_VERSION=1.6.0
+set KOGITO_VERSION 1.6.0
 
 # data-index pod
 podman pod create --name kogito-data-index \
-       -p 8180:8080
+       -p 8080:8180
+
+set HOSTIP (ip route get 1.2.3.4 | awk '{print $7}' | xargs)
 
 # data-index
        #-v ./target/protobuf:/home/kogito/data/protobufs/ \
        #-e KOGITO_DATA_INDEX_PROPS=-Dkogito.protobuf.folder=/home/kogito/data/protobufs/ \
-podman run -d --pod kogito-data-index --name data-index --restart=always --network=host \
-       -e QUARKUS_INFINISPAN_CLIENT_SERVER_LIST=localhost:11222 \
-       -e KAFKA_BOOTSTRAP_SERVERS=localhost:9092 \
-       quay.io/kiegroup/kogito-data-index-infinispan:${KOGITO_VERSION}
+podman run -d --pod kogito-data-index --name data-index --restart=always \
+       -e QUARKUS_INFINISPAN_CLIENT_SERVER_LIST=$HOSTIP:11222 \
+       -e KAFKA_BOOTSTRAP_SERVERS=$HOSTIP:9092 \
+       quay.io/kiegroup/kogito-data-index-infinispan:$KOGITO_VERSION
 
 # management-console pod
 podman pod create --name kogito-management-console \
-       -p 8280:8080
+       -p 8080:8280
 
 # management-console
        #-v ./svg/:/home/kogito/data/svg/ \
