@@ -39,26 +39,28 @@ Ref: https://github.com/kiegroup/kogito-examples/tree/stable/trusty-demonstratio
 
 Create a pod with all services:
 
-    podman pod create --name kogito -p 11222:11222 -p 9000:9000 -p 9092:9092 -p 9404:9404 -p 9405:9405
-    podman run -d --pod kogito --name infinispan -it -e USER="admin" -e PASS="password" --net=host quay.io/infinispan/server:12.1
+```sh
+podman pod create --name kogito -p 11222:11222 -p 9000:9000 -p 9092:9092 -p 9404:9404 -p 9405:9405
+podman run -d --pod kogito --name infinispan -it -e USER="admin" -e PASS="password" --net=host quay.io/infinispan/server:12.1
 
-    podman run -d --pod kogito --restart=always \
-    -e LOG_DIR=/tmp/logs \
-    -e KAFKA_OPTS=-javaagent:/opt/kafka/libs/jmx_prometheus_javaagent-0.14.0.redhat-00002.jar=9404:/opt/kafka/custom-config/zookeeper-prometheus-config.yaml \
-    amqstreams:1.6.0 \
-    sh -c "bin/zookeeper-server-start.sh config/zookeeper.properties"
+podman run -d --pod kogito --restart=always \
+-e LOG_DIR=/tmp/logs \
+-e KAFKA_OPTS=-javaagent:/opt/kafka/libs/jmx_prometheus_javaagent-0.14.0.redhat-00002.jar=9404:/opt/kafka/custom-config/zookeeper-prometheus-config.yaml \
+amqstreams:1.6.0 \
+sh -c "bin/zookeeper-server-start.sh config/zookeeper.properties"
 
-    podman run -d --pod kogito --restart=always \
-    -e LOG_DIR=/tmp/logs \
-    -e KAFKA_OPTS=-javaagent:/opt/kafka/libs/jmx_prometheus_javaagent-0.14.0.redhat-00002.jar=9405:/opt/kafka/custom-config/kafka-prometheus-config.yaml \
-    amqstreams:1.6.0 \
-    sh -c "bin/kafka-server-start.sh config/server.properties --override listeners=PLAINTEXT://localhost:9092 --override advertised.listeners=PLAINTEXT://localhost:9092 --override zookeeper.connect=localhost:2181"
+podman run -d --pod kogito --restart=always \
+-e LOG_DIR=/tmp/logs \
+-e KAFKA_OPTS=-javaagent:/opt/kafka/libs/jmx_prometheus_javaagent-0.14.0.redhat-00002.jar=9405:/opt/kafka/custom-config/kafka-prometheus-config.yaml \
+amqstreams:1.6.0 \
+sh -c "bin/kafka-server-start.sh config/server.properties --override listeners=PLAINTEXT://localhost:9092 --override advertised.listeners=PLAINTEXT://localhost:9092 --override zookeeper.connect=localhost:2181"
 
-    podman run -d --pod kogito --restart=always \
-        -e KAFKA_BROKERCONNECT=localhost:9092 \
-        -e JVM_OPTS="-Xms32M -Xmx128M" \
-        -e SERVER_SERVLET_CONTEXTPATH="/" \
-        obsidiandynamics/kafdrop:3.27.0
+podman run -d --pod kogito --restart=always \
+    -e KAFKA_BROKERCONNECT=localhost:9092 \
+    -e JVM_OPTS="-Xms32M -Xmx128M" \
+    -e SERVER_SERVLET_CONTEXTPATH="/" \
+    obsidiandynamics/kafdrop:3.27.0
+```
 
 OpenShift Deployment
 ---------------------------------------------------------

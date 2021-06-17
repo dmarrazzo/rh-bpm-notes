@@ -402,7 +402,7 @@ It cannot implemented to a couple of issues.
 - taskId
 - `doc` is an HashMap with the Task Input Parameters
 
-
+Process variables are accessed with `#{variable}` and task variables are accessed with `${variable}`.
 
 Source class:
 
@@ -421,11 +421,9 @@ System properties:
 
 Mail session configuration:
 
-	<subsystem xmlns="urn:jboss:domain:mail:1.2">
+	<subsystem xmlns="urn:jboss:domain:mail:3.0'">
 		<mail-session name="default" jndi-name="java:jboss/mail/jbpmMailSession" >
-			<smtp-server outbound-socket-binding-ref="mail-smtp" tls="true">
-				<login name="email@gmail.com" password="___"/>
-			</smtp-server>
+        <smtp-server password="password" username="user" tls="true" outbound-socket-binding-ref="mail-smtp"/>
 		</mail-session>
 	</subsystem>
 
@@ -460,8 +458,8 @@ If `mail/jbpmMailSession` is not found, jBPM searches `/email.properties` in cla
 	mail.smtp.port=25
 	mail.from=xxx@xxx.com
 	mail.replyto=xxx@xxx.com
-
-
+    mail.username=user
+    mail.password=changeMe
 
 
 ## Business Calendar

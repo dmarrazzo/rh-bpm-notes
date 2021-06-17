@@ -5,9 +5,9 @@ Create project
 ------------------------------------------------
 
 ```sh
-mvn io.quarkus:quarkus-maven-plugin:1.13.2.Final:create \
+mvn io.quarkus:quarkus-maven-plugin:1.13.7.Final:create \
     -DprojectGroupId=com.redhat.example \
-    -DprojectArtifactId=service \
+    -DprojectArtifactId=rest-service \
     -DprojectVersion=1.0.0-SNAPSHOT \
     -DclassName="com.redhat.example.MyResource"
 ```
