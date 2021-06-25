@@ -13,11 +13,11 @@ Generate the project structure
 
 
 ```bash
-mvn archetype:generate -B -DarchetypeGroupId=org.kie -DarchetypeArtifactId=kie-model-archetype -DarchetypeVersion=7.48.0.Final-redhat-00006 -DgroupId=com.company -DartifactId=test-model -Dversion=1.0-SNAPSHOT -Dpackage=com.company.model
+mvn archetype:generate -B -DarchetypeGroupId=org.kie -DarchetypeArtifactId=kie-model-archetype -DarchetypeVersion=7.52.0.Final-redhat-00007 -DgroupId=com.company -DartifactId=test-model -Dversion=1.0-SNAPSHOT -Dpackage=com.company.model
 
-mvn archetype:generate -B -DarchetypeGroupId=org.kie -DarchetypeArtifactId=kie-kjar-archetype -DarchetypeVersion=7.48.0.Final-redhat-00006 -DgroupId=com.company -DartifactId=test-kjar -Dversion=1.0-SNAPSHOT -Dpackage=com.company
+mvn archetype:generate -B -DarchetypeGroupId=org.kie -DarchetypeArtifactId=kie-kjar-archetype -DarchetypeVersion=7.52.0.Final-redhat-00007 -DgroupId=com.company -DartifactId=test-kjar -Dversion=1.0-SNAPSHOT -Dpackage=com.company
 
-mvn archetype:generate -B -DarchetypeGroupId=org.kie -DarchetypeArtifactId=kie-service-spring-boot-archetype -DarchetypeVersion=7.48.0.Final-redhat-00006 -DgroupId=com.company -DartifactId=test-service -Dversion=1.0-SNAPSHOT -Dpackage=com.company.service -DappType=bpm
+mvn archetype:generate -B -DarchetypeGroupId=org.kie -DarchetypeArtifactId=kie-service-spring-boot-archetype -DarchetypeVersion=7.52.0.Final-redhat-00007 -DgroupId=com.company -DartifactId=test-service -Dversion=1.0-SNAPSHOT -Dpackage=com.company.service -DappType=bpm
 ```
 
 Versions configuration
