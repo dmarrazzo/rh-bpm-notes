@@ -7,6 +7,9 @@
 ```yaml
 apiVersion: app.kiegroup.org/v2
 kind: KieApp
+metadata:
+  name: rhpam-authoring
+  namespace: rhpam-prj
 spec:
   environment: rhpam-authoring
   objects:
@@ -20,6 +23,9 @@ spec:
 ```yaml
 apiVersion: app.kiegroup.org/v2
 kind: KieApp
+metadata:
+  name: rhpam-bc-monitoring
+  namespace: rhpam-prj
 spec:
   environment: rhpam-production-immutable
   objects:
