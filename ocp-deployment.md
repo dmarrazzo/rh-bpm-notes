@@ -1,6 +1,8 @@
 # Deploy RHPAM in OpenShift Container Platform using Operators 
 
-## Example of KieApp CRC
+## RHPAM Authoring
+
+**Power Tweak** java options to enable the debug
 
 ```yaml
 apiVersion: app.kiegroup.org/v2
@@ -13,8 +15,107 @@ spec:
           javaOptsAppend: '-agentlib:jdwp=transport=dt_socket,address=8787,server=y,suspend=n'
 ```
 
-**Note** java options to enable the debug
+## Deploy a standalone Business Central
 
+```yaml
+apiVersion: app.kiegroup.org/v2
+kind: KieApp
+spec:
+  environment: rhpam-production-immutable
+  objects:
+    console:
+      replicas: 1
+      env:
+        - name: KIE_SERVER_CONTROLLER_OPENSHIFT_ENABLED
+          value: 'false'
+    servers:
+      - database:
+          type: h2
+        replicas: 0
+```
+
+
+## Change the controller Strategy
+To enable controller strategy on a KIE Server, set the `KIE_SERVER_STARTUP_STRATEGY` environment variable to `ControllerBasedStartupStrategy` and the `KIE_SERVER_CONTROLLER_OPENSHIFT_ENABLED` environment variable to `false`.
+
+Change the config map:
+
+    oc edit configmap/kieconfigs-7.9.0
+
+**NOTE**
+Do not enable the controller strategy in an environment with a high-availability Business Central. In such environments the controller strategy does not function correctly.
+
+
+# Running OCP images locally - for testing purposes
+
+**Under test**
+
+### Podman
+
+- pull images
+
+```
+podman login -u $REGISTRY_REDHAT_IO_USERNAME -p $REGISTRY_REDHAT_IO_PASSWORD registry.redhat.io
+podman pull registry.redhat.io/rhpam-7/rhpam-businesscentral-rhel8:latest
+podman pull registry.redhat.io/rhpam-7/rhpam-kieserver-rhel8:latest
+```
+
+- run the kieserver
+
+```sh
+podman run \
+  -it \
+  --name rhpam-kieserver \
+  --mount type=bind,source=$HOME/.m2/repository,target=/home/jboss/.m2/repository \
+  -p 8080:8080 \
+  --env MAVEN_LOCAL_REPO=/home/jboss/.m2/repository \
+  --env KIE_SERVER_CONTAINER_DEPLOYMENT="process_1.0.0-SNAPSHOT(process)=com.poc-lantik:process:1.0.0-SNAPSHOT" \
+  --env KIE_SERVER_USER=appUser \
+  --env KIE_SERVER_PWD=changeme \
+  --env GC_MAX_METASPACE_SIZE=1024 \
+  --env KIE_SERVER_MEMORY_LIMIT=4Gi \
+  registry.redhat.io/rhpam-7/rhpam-kieserver-rhel8:latest
+```
+
+
+### docker
+
+```sh
+docker run \
+  -it \
+  --name rhpam-kieserver \
+  --mount type=bind,source="$(pwd)"/.m2/repository,target=/home/jboss/.m2/repository \
+  -p 8080:8080 \
+  --env MAVEN_LOCAL_REPO=/home/jboss/.m2/repository \
+  --env KIE_SERVER_CONTAINER_DEPLOYMENT="myproj_1.0.0-SNAPSHOT(myproj)=com.example:myproj:1.0.0-SNAPSHOT" \
+  --env KIE_SERVER_USER=appUser \
+  --env KIE_SERVER_PWD=changeme \
+  --env GC_MAX_METASPACE_SIZE=1024 \
+  --env KIE_SERVER_MEMORY_LIMIT=4Gi \
+  registry.redhat.io/rhpam-7/rhpam-kieserver-rhel8:7.9.1
+```
+# Create custom image
+
+if you need to change some of the image file:
+
+```Dockerfile
+FROM rhpam-7/rhpam-kieserver-rhel8
+
+USER root
+
+COPY application-users.properties /opt/eap/standalone/configuration/application-users.properties
+COPY application-roles.properties /opt/eap/standalone/configuration/application-roles.properties
+
+RUN chown jboss:root ${JBOSS_HOME}/standalone/configuration/application-users.properties
+RUN chown jboss:root ${JBOSS_HOME}/standalone/configuration/application-roles.properties
+
+
+USER 185
+```
+
+```sh
+docker build -t rhpam-7/rhpam-kieserver-rhel8-custom-props:7.11.0 .
+```
 
 # Install RHPAM in OpenShift using Template (legacy)
 
@@ -381,25 +482,6 @@ Retrive the configuration xml:
 
 	oc rsync <pod-name>:/opt/eap/standalone/configuration/standalone-openshift.xml .
 
-# Running OCP images locally
-
-**Under test**
-
-```sh
-docker run \
-  -it \
-  --name rhpam-kieserver \
-  --mount type=bind,source="$(pwd)"/.m2/repository,target=/home/jboss/.m2/repository \
-  -p 8080:8080 \
-  --env MAVEN_LOCAL_REPO=/home/jboss/.m2/repository \
-  --env KIE_SERVER_CONTAINER_DEPLOYMENT="myproj_1.0.0-SNAPSHOT(myproj)=com.example:myproj:1.0.0-SNAPSHOT" \
-  --env KIE_SERVER_USER=appUser \
-  --env KIE_SERVER_PWD=changeme \
-  --env GC_MAX_METASPACE_SIZE=1024 \
-  --env KIE_SERVER_MEMORY_LIMIT=4Gi \
-  registry.redhat.io/rhpam-7/rhpam-kieserver-rhel8:7.9.1
-```
-
 # OpenShift cheat sheet
 
 ### new project
@@ -702,38 +784,6 @@ In Github:
 - click **Add webhook** button
 - fill in the **URL** accordingly the previous outcomes
 - set **content type** to `application/json`
-
-
-### KieApp Operator Provisioned Environment
-
-#### Controller Strategy
-To enable controller strategy on a KIE Server, set the `KIE_SERVER_STARTUP_STRATEGY` environment variable to `ControllerBasedStartupStrategy` and the `KIE_SERVER_CONTROLLER_OPENSHIFT_ENABLED` environment variable to `false`.
-
-Change the config map:
-
-    oc edit configmap/kieconfigs-7.9.0
-
-**NOTE**
-Do not enable the controller strategy in an environment with a high-availability Business Central. In such environments the controller strategy does not function correctly.
-
-#### Deploy a standalone Business Central
-
-```yaml
-apiVersion: app.kiegroup.org/v2
-kind: KieApp
-spec:
-  environment: rhpam-production-immutable
-  objects:
-    console:
-      replicas: 1
-      env:
-        - name: KIE_SERVER_CONTROLLER_OPENSHIFT_ENABLED
-          value: 'false'
-    servers:
-      - database:
-          type: h2
-        replicas: 0
-```
 
 ## Openshift Useful links
 
