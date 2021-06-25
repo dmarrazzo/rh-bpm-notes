@@ -321,6 +321,12 @@ To remotely connect to a database using the TCP server, use the following driver
     JAVA_OPTS="$JAVA_OPTS -Dmysql.host.port=3306"
     JAVA_OPTS="$JAVA_OPTS -Dmysql.bpms.schema=bpms"
 
+
+Infinispan
+------------------------------------
+
+[Real-time data and statistics on the open hybrid cloud with Quarkus and Infinispan](https://developers.redhat.com/devnation/tech-talks/data-quarkus-infinispan)
+
 CI/CD
 ==================================
 
