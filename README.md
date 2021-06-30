@@ -92,6 +92,10 @@ There are documents and samples.
 
  - [Monitoring Prometheus Graphana Optaplanner- 7.4](https://youtu.be/q0mSR36Xnmkk)
 
+### Demo
+
+- [Order Management Demo](https://github.com/jbossdemocentral/rhpam7-order-management-demo-repo)
+
 ### Books
 
  - **Free ebook** [Effective Business Process Management with JBoss BPM](https://developers.redhat.com/books/effective-business-process-management-jboss-bpm/)
