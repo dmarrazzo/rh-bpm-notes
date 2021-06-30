@@ -12,6 +12,8 @@ metadata:
   namespace: rhpam-prj
 spec:
   environment: rhpam-authoring
+  commonConfig:
+    adminPassword: changeme
   objects:
     servers:
       - jvm:
@@ -27,13 +29,17 @@ metadata:
   name: rhpam-bc-monitoring
   namespace: rhpam-prj
 spec:
-  environment: rhpam-production-immutable
+  environment: rhpam-trial
+  commonConfig:
+    adminPassword: changeme
   objects:
     console:
       replicas: 1
       env:
         - name: KIE_SERVER_CONTROLLER_OPENSHIFT_ENABLED
           value: 'false'
+        - name: KIE_SERVER_STARTUP_STRATEGY
+          value: ControllerBasedStartupStrategy
     servers:
       - database:
           type: h2
@@ -342,7 +348,7 @@ In minishift or environment with low resources, it's better to raise the readine
 
 [Template custom for PostgreSQL](config/rhpam79-authoring-postgresql-custom.yaml)
 
-## Expose a service
+## Expose a service - create a new route
 
 In order to get an accessible URL:
 
