@@ -7,15 +7,13 @@ Install and configure
 
 Check [RHPAM software prerequisites](https://access.redhat.com/articles/3405381)
 
-RHPAM 7.10 requires: 
+RHPAM 7.11 requires: 
 
 - JDK 11 (or 8)
 - Maven >= 3.6.3
-- EAP 7.3.4+
+- EAP 7.3.6+
 
 ### Install EAP
-
-
 
 From [Red Hat Product Downloads](https://access.redhat.com/downloads) site look for **Red Hat JBoss Enterprise Application Platform**:
 
@@ -37,7 +35,7 @@ Upgrade EAP:
 
 ### Install Business Central on EAP 7
 
-- Download `Red Hat Process Automation Manager 7.10.1 Business Central Deployable for EAP 7`.
+- Download **Red Hat Process Automation Manager 7.11 Business Central Deployable for EAP 7**.
 - Extract it in the parent folder of `jboss-eap-7.3`, some file of EAP will be replaced by the Business Central version.
 - If by mistake it was extracted in a different folder move the content in the EAP folder.
 - Add the user:
@@ -51,7 +49,39 @@ Upgrade EAP:
   - open `standalone.conf` or `standalone.conf.bat`
   - search the jdk flag`-Xmx` and change it in `-Xmx2G`
 
-**Optionally** config the server to listen on all network interface:
+### Install Kie Server on EAP 7
+
+- Download **Red Hat Process Automation Manager 7.11.0 Process Server for All Supported EE8 Containers**
+- Extract it in the `<EAP_HOME>/standalone/deployments/`
+- Create an empty file named: `kie-server.war.dodeploy` 
+  - Linux way: `touch kie-server.war.dodeploy`
+- Use the full EAP configuration
+
+  ```sh
+  cd <EAP_HOME>/standalone/configuration
+  cp standalone-full.xml standalone.xml
+  ```
+
+- Enable the kieserver properties in the `standalone.xml`
+
+  ```xml
+      <property name="org.kie.server.location" value="http://localhost:8080/kie-server/services/rest/server"/>
+      <property name="org.kie.server.controller" value="http://localhost:8080/business-central/rest/controller"/>
+      <property name="org.kie.server.controller.user" value="controllerUser"/>
+      <property name="org.kie.server.controller.pwd" value="controllerUser1234;"/>
+      <property name="org.kie.server.user" value="controllerUser"/>
+      <property name="org.kie.server.pwd" value="controllerUser1234;"/>
+      <property name="org.kie.server.id" value="default-kieserver"/>
+  ```
+
+- Enable `controllerUser`
+  - `cd <EAP_HOME>/standalone/configuration/`
+  - Remove the comment in `application-users.properties`
+  - Remove the comment from the related line `application-roles.properties` 
+
+### Optional tunings
+
+#### Config the server to listen on all network interface
 
 - Open `<EAP_HOME>/standalone/configuration/standalone.xml`
 - Update the `interfaces` section ad follow:
@@ -70,6 +100,8 @@ Upgrade EAP:
   ```xml
   <socket-binding-group name="standard-sockets" default-interface="any" ...>
   ```
+
+## Other installation topic 
 
 ### Disable datasource lookup in Business Central
 
