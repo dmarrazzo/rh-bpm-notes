@@ -81,7 +81,7 @@ podman run \
   --mount type=bind,source=$HOME/.m2/repository,target=/home/jboss/.m2/repository \
   -p 8080:8080 \
   --env MAVEN_LOCAL_REPO=/home/jboss/.m2/repository \
-  --env KIE_SERVER_CONTAINER_DEPLOYMENT="process_1.0.0-SNAPSHOT(process)=com.poc-lantik:process:1.0.0-SNAPSHOT" \
+  --env KIE_SERVER_CONTAINER_DEPLOYMENT="process_1.0.0-SNAPSHOT(process)=com.group:process:1.0.0-SNAPSHOT" \
   --env KIE_SERVER_USER=appUser \
   --env KIE_SERVER_PWD=changeme \
   --env GC_MAX_METASPACE_SIZE=1024 \
@@ -493,6 +493,21 @@ if you change password you have delete previous h2 or rename
 Retrive the configuration xml:
 
 	oc rsync <pod-name>:/opt/eap/standalone/configuration/standalone-openshift.xml .
+
+## Access to kieserver h2 db
+
+1. Retrieve username and password from the env variables `RHPAM_USERNAME` and `RHPAM_PASSWORD`:
+
+   ```sh
+   oc set env pod/<kieserver pod> --list
+   ```
+
+2. Copy locally the DB:
+
+   ```sh
+   oc rsync <kieserver pod>:/opt/kie/data/h2 .
+   ```
+3. Access with a local tool like _squirrel sql_
 
 # OpenShift cheat sheet
 
