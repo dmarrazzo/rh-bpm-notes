@@ -41,6 +41,7 @@ Here the mapping of the product version with the dependency versions:
 | 7.10            | 7.10.0.redhat-00004    | 7.48.0.Final-redhat-00004 |
 | 7.10.1          | 7.10.1.redhat-00001    | 7.48.0.Final-redhat-00006 |
 | 7.11            | 7.11.0.redhat-00005    | 7.52.0.Final-redhat-00007 |
+| 7.11.1          | 7.11.1.redhat-00001    | 7.52.0.Final-redhat-00008 |
 
 
 **Official page:** [What is the mapping between Red Hat Process Automation Manager and the Maven library version?](https://access.redhat.com/solutions/3405361)
