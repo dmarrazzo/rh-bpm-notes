@@ -125,7 +125,7 @@ Kogito shared services:
 
   ```sh
   mkdir -p ./target/protobuf
-  find .. -name "persistence" -print0 | xargs -0 -I \1 find \1 -name "*.proto" -exec cp {} target/  protobuf/ \;
+  find .. -name "persistence" -print0 | xargs -0 -I \1 find \1 -name "*.proto" -exec cp {} target/protobuf/ \;
   
   podman pod create --name kogito-data-index -p 8180:8080
   
@@ -159,7 +159,11 @@ Kogito shared services:
 OpenShift Deployment
 ---------------------------------------------------------
 
-Infinispan Operator 2.0.6
+Tested integrations: 
+
+https://github.com/kiegroup/kogito-operator#kogito-operator-tested-integrations
+
+Infinispan Operator 2.1.x
 
 ```yaml
 apiVersion: infinispan.org/v1
@@ -170,6 +174,11 @@ metadata:
 spec:
   replicas: 1
 ```
+
+Protobuf configmap:
+
+  oc create configmap data-index-protobuf-def --from-file=travels.proto --from-file=visaApplications.proto 
+  oc label configmap data-index-protobuf-def kogito-protobuf=true
 
 Kogito operator:
 
