@@ -57,9 +57,9 @@ chcon -Rt svirt_sandbox_file_t sql
 podman run --name kogito-postgres \
        --pod kogito-pg \
        -d \
-       -v ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql \
+       -v ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql:z \
        -e POSTGRES_PASSWORD=pass \
-       postgres:9.6
+       postgres:13
 
 podman run --name kogito-pgadmin \
        --pod kogito-pg \
@@ -123,6 +123,9 @@ Kogito shared services:
 
 - **Data Index** It requires data type definitions in protobuf 
 
+  Infinispan
+
+
   ```sh
   mkdir -p ./target/protobuf
   find .. -name "persistence" -print0 | xargs -0 -I \1 find \1 -name "*.proto" -exec cp {} target/protobuf/ \;
@@ -139,6 +142,25 @@ Kogito shared services:
          quay.io/kiegroup/kogito-data-index-infinispan:latest
   ```
 
+  PostgreSQL
+
+  Initialize the DB Schema: https://github.com/kiegroup/kogito-apps/blob/main/data-index/data-index-storage/data-index-storage-postgresql/src/main/resources/create.sql
+
+  ```sh
+  podman pod create --name kogito-data-index-pg -p 8180:8080
+  
+  podman run --name kogito-data-index-pg-server \
+         --pod kogito-data-index-pg \
+         -d \
+         -e KAFKA_BOOTSTRAP_SERVERS=thehost:9092 \
+         -e QUARKUS_DATASOURCE_DB-KIND=postgresql \
+         -e QUARKUS_DATASOURCE_JDBC_URL=jdbc:postgresql://thehost:5432/kogito \
+         -e QUARKUS_DATASOURCE_USERNAME=kogito-user \
+         -e QUARKUS_DATASOURCE_PASSWORD=kogito-pass \
+         quay.io/kiegroup/kogito-data-index-postgresql:latest
+  ```
+
+
 - **Management Console** It requires SVG images of the BPMN diagrams
 
   ```sh
@@ -146,6 +168,8 @@ Kogito shared services:
   find .. -iname "*.svg" -exec cp {} svg/ \;
   
   podman pod create --name kogito-management-console -p 8280:8080
+  
+  podman rm -f kogito-management-console-server
   
   podman run --name kogito-management-console-server \
          --pod kogito-management-console \
@@ -155,6 +179,19 @@ Kogito shared services:
          -v ./svg/:/home/kogito/data/svg/ \
          quay.io/kiegroup/kogito-management-console:latest
   ```
+
+- **Task console**
+
+  ```sh  
+  podman pod create --name kogito-task-console -p 8380:8080
+  
+  podman run --name kogito-task-console-server \
+         --pod kogito-task-console \
+         -d \
+         -e KOGITO_TASK_CONSOLE_PROPS=-Dkogito.test.user-system.enabled=true \
+         quay.io/kiegroup/kogito-task-console:latest
+  ```
+    
 
 OpenShift Deployment
 ---------------------------------------------------------
