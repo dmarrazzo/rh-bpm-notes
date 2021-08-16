@@ -32,18 +32,26 @@ ELECTRON_RUN_AS_NODE=1 "$ELECTRON" "$CLI" "--enable-proposed-api" "kiegroup.vsco
 
 ![reopen](imgs/reopen.gif)
 
-Kogito supporting services 
+Kogito Supporting Services 
 ---------------------------------------------------------
 
-Network trick: use a default hostname (*thehost*) to one of your host ip, e.g. `/etc/host`:
+**Podman** is much easier for Linux users than Docker, moreover it does not require root access.  
+For such reason, I collected those script that help Kogito users to set up a local environment.
+They could be useful also for docker users who prefer to have finer control.
 
-```
-192.168.130.1 thehost
-```
+The following instruction leverages assets from [kogito-example](https://github.com/kiegroup/kogito-examples) repository.
 
-**To check** - *kogito-kafka* is a temporary workaround
 
-### Postgress
+> **Important Network Note**: Whenever a container has to access to other containers (in different pods), it needs the *ip address* of the hosting machine. A pratical trick is to use a *stable ip* who does not change over the time (not DHCP provided). It's likely that you already have such *ip address* in your system, in case you can use **podman network command** to create it. Once you have found your stable IP, you can refer to it using a local name (*thehost*) and binding it in `/etc/hosts` e.g.:
+>
+> ```
+> 192.168.130.1 thehost
+> ```
+> 
+> The remaining doc assumes you have defined `thehost` in your naming service.
+
+
+### PostgresSQL
 
 Using **process-postgresql-persistence-quarkus**
 
@@ -51,8 +59,6 @@ Using **process-postgresql-persistence-quarkus**
 cd $KOGITO_EXAMPLES/kogito-examples/process-postgresql-persistence-quarkus/docker-compose
 
 podman pod create --name kogito-pg -p 5432:5432 -p 8055:80
-
-chcon -Rt svirt_sandbox_file_t sql
 
 podman run --name kogito-postgres \
        --pod kogito-pg \
@@ -69,129 +75,129 @@ podman run --name kogito-pgadmin \
        dpage/pgadmin4:5.0
 ```
 
-### Travel Agency
+> In case of problems with **SELinux** you may try the following solution:
+>
+>     chcon -Rt svirt_sandbox_file_t sql
 
-Ref: https://github.com/kiegroup/kogito-examples/tree/stable/trusty-demonstration/kubernetes
+### Infinispan persistence
 
-Kogito shared services:
+As an alternative to PostgresSQL persistence:
 
-- **Infinispan persistence**
+```sh
+podman pod create --name kogito-infinispan -p 11222:11222
 
-  ```sh
-  podman pod create --name kogito-infinispan -p 11222:11222
-  
-  podman run --name kogito-ifs \
-         --pod kogito-infinispan \
-         -d \
-         --tmpfs /tmp \
-         -v ./infinispan/infinispan.xml:/opt/infinispan/server/conf/infinispan-demo.xml:z \
-         infinispan/server:12.1.4.Final \
-         /opt/infinispan/bin/server.sh -c infinispan-demo.xml
-  ```
+podman run --name kogito-ifs \
+       --pod kogito-infinispan \
+       -d \
+       --tmpfs /tmp \
+       -v ./infinispan/infinispan.xml:/opt/infinispan/server/conf/infinispan-demo.xml:z \
+       infinispan/server:12.1.4.Final \
+       /opt/infinispan/bin/server.sh -c infinispan-demo.xml
+```
 
-- **Kafka messaging**
+### Kafka messaging
 
-  ```sh
-  podman pod create --name kogito-kafka -p 9092:9092
-  
-  podman run --name kogito-zookeeper \
-         --pod kogito-kafka \
-         -d \
-         -e LOG_DIR=/tmp/logs \
-         --tmpfs /tmp \
-         strimzi/kafka:0.20.1-kafka-2.6.0 \
-         bin/zookeeper-server-start.sh config/zookeeper.properties
-  
-  podman run --name kogito-kafka-server \
-         --pod kogito-kafka \
-         -d \
-         -e KAFKA_BROKER_ID=0 \
-         -e KAFKA_ZOOKEEPER_CONNECT=localhost:2181 \
-         -e KAFKA_LISTENERS=INTERNAL://localhost:29092,EXTERNAL://0.0.0.0:9092 \
-         -e KAFKA_ADVERTISED_LISTENERS=INTERNAL://localhost:29092,EXTERNAL://thehost:9092 \
-         -e KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT \
-         -e KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL \
-         -e KAFKA_AUTO_CREATE_TOPICS_ENABLE="true" \
-         -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 \
-         -e LOG_DIR="/tmp/logs" \
-         --tmpfs /tmp \
-         --requires kogito-zookeeper \
-         --entrypoint bash \
-         strimzi/kafka:0.20.1-kafka-2.6.0 \
-         -c "bin/kafka-server-start.sh config/server.properties --override inter.broker.listener.name=\${KAFKA_INTER_BROKER_LISTENER_NAME} --override listener.security.protocol.map=\${KAFKA_LISTENER_SECURITY_PROTOCOL_MAP} --override listeners=\${KAFKA_LISTENERS} --override advertised.listeners=\${KAFKA_ADVERTISED_LISTENERS} --override zookeeper.connect=\${KAFKA_ZOOKEEPER_CONNECT}"
-    ```
+```sh
+podman pod create --name kogito-kafka -p 9092:9092
 
-- **Data Index** It requires data type definitions in protobuf 
+podman run --name kogito-zookeeper \
+       --pod kogito-kafka \
+       -d \
+       -e LOG_DIR=/tmp/logs \
+       --tmpfs /tmp \
+       strimzi/kafka:0.20.1-kafka-2.6.0 \
+       bin/zookeeper-server-start.sh config/zookeeper.properties
 
-  Infinispan
+podman run --name kogito-kafka-server \
+       --pod kogito-kafka \
+       -d \
+       -e KAFKA_BROKER_ID=0 \
+       -e KAFKA_ZOOKEEPER_CONNECT=localhost:2181 \
+       -e KAFKA_LISTENERS=INTERNAL://localhost:29092,EXTERNAL://0.0.0.0:9092 \
+       -e KAFKA_ADVERTISED_LISTENERS=INTERNAL://localhost:29092,EXTERNAL://thehost:9092 \
+       -e KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT \
+       -e KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL \
+       -e KAFKA_AUTO_CREATE_TOPICS_ENABLE="true" \
+       -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 \
+       -e LOG_DIR="/tmp/logs" \
+       --tmpfs /tmp \
+       --requires kogito-zookeeper \
+       --entrypoint bash \
+       strimzi/kafka:0.20.1-kafka-2.6.0 \
+       -c "bin/kafka-server-start.sh config/server.properties --override inter.broker.listener.name=\${KAFKA_INTER_BROKER_LISTENER_NAME} --override listener.security.protocol.map=\${KAFKA_LISTENER_SECURITY_PROTOCOL_MAP} --override listeners=\${KAFKA_LISTENERS} --override advertised.listeners=\${KAFKA_ADVERTISED_LISTENERS} --override zookeeper.connect=\${KAFKA_ZOOKEEPER_CONNECT}"
+```
 
+### Data Index (PostgreSQL based)
 
-  ```sh
-  mkdir -p ./target/protobuf
-  find .. -name "persistence" -print0 | xargs -0 -I \1 find \1 -name "*.proto" -exec cp {} target/protobuf/ \;
-  
-  podman pod create --name kogito-data-index -p 8180:8080
-  
-  podman run --name kogito-data-index-server \
-         --pod kogito-data-index \
-         -d \
-         -e QUARKUS_INFINISPAN_CLIENT_SERVER_LIST=thehost:11222 \
-         -e KAFKA_BOOTSTRAP_SERVERS=thehost:9092 \
-         -e KOGITO_DATA_INDEX_PROPS=-Dkogito.protobuf.folder=/home/kogito/data/protobufs/ \
-         -v ./target/protobuf:/home/kogito/data/protobufs:Z \
-         quay.io/kiegroup/kogito-data-index-infinispan:latest
-  ```
+```sh
+podman pod create --name kogito-data-index-pg -p 8180:8080
 
-  PostgreSQL
+podman run --name kogito-data-index-pg-server \
+       --pod kogito-data-index-pg \
+       -d \
+       -e KAFKA_BOOTSTRAP_SERVERS=thehost:9092 \
+       -e QUARKUS_DATASOURCE_DB-KIND=postgresql \
+       -e QUARKUS_DATASOURCE_JDBC_URL=jdbc:postgresql://thehost:5432/kogito \
+       -e QUARKUS_DATASOURCE_USERNAME=kogito-user \
+       -e QUARKUS_DATASOURCE_PASSWORD=kogito-pass \
+       -e QUARKUS_HIBERNATE_ORM_DATABASE_GENERATION=update \
+       quay.io/kiegroup/kogito-data-index-postgresql:latest
+```
 
-  Initialize the DB Schema: https://github.com/kiegroup/kogito-apps/blob/main/data-index/data-index-storage/data-index-storage-postgresql/src/main/resources/create.sql
+It's possible to manually initialize the DB Schema, removing the `QUARKUS_HIBERNATE_ORM_DATABASE_GENERATION` and using the following SQL script: https://github.com/kiegroup/kogito-apps/blob/main/data-index/data-index-storage/data-index-storage-postgresql/src/main/resources/create.sql
 
-  ```sh
-  podman pod create --name kogito-data-index-pg -p 8180:8080
-  
-  podman run --name kogito-data-index-pg-server \
-         --pod kogito-data-index-pg \
-         -d \
-         -e KAFKA_BOOTSTRAP_SERVERS=thehost:9092 \
-         -e QUARKUS_DATASOURCE_DB-KIND=postgresql \
-         -e QUARKUS_DATASOURCE_JDBC_URL=jdbc:postgresql://thehost:5432/kogito \
-         -e QUARKUS_DATASOURCE_USERNAME=kogito-user \
-         -e QUARKUS_DATASOURCE_PASSWORD=kogito-pass \
-         quay.io/kiegroup/kogito-data-index-postgresql:latest
-  ```
+### Data Index (Infinispan based)
 
+In case you are using the Infinispan as persistence layer, it requires data type definitions in protobuf 
 
-- **Management Console** It requires SVG images of the BPMN diagrams
+```sh
+mkdir -p ./target/protobuf
+find .. -name "persistence" -print0 | xargs -0 -I \1 find \1 -name "*.proto" -exec cp {} target/protobuf/ \;
 
-  ```sh
-  mkdir svg
-  find .. -iname "*.svg" -exec cp {} svg/ \;
-  
-  podman pod create --name kogito-management-console -p 8280:8080
-  
-  podman rm -f kogito-management-console-server
-  
-  podman run --name kogito-management-console-server \
-         --pod kogito-management-console \
-         -d \
-         -e KOGITO_DATAINDEX_HTTP_URL=http://thehost:8180 \
-         -e KOGITO_MANAGEMENT_CONSOLE_PROPS=-Dkogito.svg.folder.path=/home/kogito/data/svg \
-         -v ./svg/:/home/kogito/data/svg/ \
-         quay.io/kiegroup/kogito-management-console:latest
-  ```
+podman pod create --name kogito-data-index -p 8180:8080
 
-- **Task console**
+podman run --name kogito-data-index-server \
+       --pod kogito-data-index \
+       -d \
+       -e QUARKUS_INFINISPAN_CLIENT_SERVER_LIST=thehost:11222 \
+       -e KAFKA_BOOTSTRAP_SERVERS=thehost:9092 \
+       -e KOGITO_DATA_INDEX_PROPS=-Dkogito.protobuf.folder=/home/kogito/data/protobufs/ \
+       -v ./target/protobuf:/home/kogito/data/protobufs:Z \
+       quay.io/kiegroup/kogito-data-index-infinispan:latest
+```
 
-  ```sh  
-  podman pod create --name kogito-task-console -p 8380:8080
-  
-  podman run --name kogito-task-console-server \
-         --pod kogito-task-console \
-         -d \
-         -e KOGITO_TASK_CONSOLE_PROPS=-Dkogito.test.user-system.enabled=true \
-         quay.io/kiegroup/kogito-task-console:latest
-  ```
-    
+### Management Console 
+
+It requires SVG images of the BPMN diagrams
+
+```sh
+mkdir svg
+find .. -iname "*.svg" -exec cp {} svg/ \;
+
+podman pod create --name kogito-management-console -p 8280:8080
+
+podman rm -f kogito-management-console-server
+
+podman run --name kogito-management-console-server \
+       --pod kogito-management-console \
+       -d \
+       -e KOGITO_DATAINDEX_HTTP_URL=http://thehost:8180 \
+       -e KOGITO_MANAGEMENT_CONSOLE_PROPS=-Dkogito.svg.folder.path=/home/kogito/data/svg \
+       -v ./svg/:/home/kogito/data/svg/ \
+       quay.io/kiegroup/kogito-management-console:latest
+```
+
+### Task console
+
+```sh  
+podman pod create --name kogito-task-console -p 8380:8080
+
+podman run --name kogito-task-console-server \
+       --pod kogito-task-console \
+       -d \
+       -e KOGITO_TASK_CONSOLE_PROPS=-Dkogito.test.user-system.enabled=true \
+       quay.io/kiegroup/kogito-task-console:latest
+```    
 
 OpenShift Deployment
 ---------------------------------------------------------
