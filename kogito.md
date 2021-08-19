@@ -39,18 +39,15 @@ The following instruction leverages assets from [kogito-example](https://github.
 
 ### PostgresSQL
 
-Using **process-postgresql-persistence-quarkus**
-
 ```sh
-cd $KOGITO_EXAMPLES/kogito-examples/process-postgresql-persistence-quarkus/docker-compose
-
 podman pod create --name kogito-pg -p 5432:5432 -p 8055:80
 
-podman run --name kogito-postgres \
+podman run --name kogito-pg-server \
        --pod kogito-pg \
        -d \
-       -v ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql:z \
-       -e POSTGRES_PASSWORD=pass \
+       -e POSTGRES_USER=kogito-user \
+       -e POSTGRES_PASSWORD=kogito-pass \
+       -e POSTGRES_DB=kogito \
        postgres:13
 
 podman run --name kogito-pgadmin \
@@ -60,10 +57,6 @@ podman run --name kogito-pgadmin \
        -e PGADMIN_DEFAULT_PASSWORD=pass \
        dpage/pgadmin4:5.0
 ```
-
-> In case of problems with **SELinux** you may try the following solution:
->
->     chcon -Rt svirt_sandbox_file_t sql
 
 ### Infinispan persistence
 
@@ -80,6 +73,10 @@ podman run --name kogito-ifs \
        infinispan/server:12.1.4.Final \
        /opt/infinispan/bin/server.sh -c infinispan-demo.xml
 ```
+
+> In case of problems with **SELinux** you may try the following solution:
+>
+>     chcon -Rt svirt_sandbox_file_t sql
 
 ### Kafka messaging
 
@@ -184,6 +181,24 @@ podman run --name kogito-task-console-server \
        -e KOGITO_TASK_CONSOLE_PROPS=-Dkogito.test.user-system.enabled=true \
        quay.io/kiegroup/kogito-task-console:latest
 ```    
+
+### Jobs Service (PostgreSQL)
+
+> **Note** Due to a current limitation (v1.9.1) Jobs Service expects to find an empty DB.  
+
+```sh
+podman pod create --name kogito-jobs-service -p 8085:8080
+
+podman run --name kogito-jobs-service-server \
+       --pod kogito-jobs-service \
+       -d \
+       -e QUARKUS_DATASOURCE_JDBC_URL=jdbc:postgresql://thehost:5432/kogito \
+       -e QUARKUS_DATASOURCE_REACTIVE_URL=postgresql://thehost:5432/kogito \
+       -e QUARKUS_DATASOURCE_USERNAME=kogito-user  \
+       -e QUARKUS_DATASOURCE_PASSWORD=kogito-pass \
+       quay.io/kiegroup/kogito-jobs-service-postgresql:latest
+```
+
 
 OpenShift Deployment
 ---------------------------------------------------------
