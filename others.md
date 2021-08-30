@@ -132,6 +132,17 @@ with the same IP:
 
         Dependencies: <module-name>
 
+### Using environment variable in data source configuration in JBoss EAP 6/7
+
+Environment variable `server`
+
+```xml
+<datasource jndi-name="java:jboss/datasources/NewDS" pool-name="NewDS" enabled="true" use-java-context="true" use-ccm="true">
+    <connection-url>jdbc:db2://**${env.server}**:3306/aaa</connection-url>
+```
+
+[https://access.redhat.com/solutions/744843]()
+
 
 ### Logging
 
@@ -399,3 +410,5 @@ Interesting Reading
 [Open Source is not a business model](https://anonymoushash.vmbrasseur.com/2018/08/24/open-source-is-not-a-business-model-and-your-business-will-fail-if-you-think-that-it-is/)
 
 [Fuse Tutorial](https://gitlab.com/rh-emea-ssa-fuse-tutorial/fis-rest-composite)
+
+[Thinking in Events: From Databases to Distributed Collaboration Software](https://youtu.be/72W_VvFRqc0)
