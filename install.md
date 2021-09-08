@@ -41,7 +41,7 @@ Upgrade EAP:
 - Add the user:
 
   ```
-  <EAP_HOME>/add-user.sh -a -u pamAdmin -p password --role user,Administrators,admin,rest-all,kie-server
+  <EAP_HOME>/bin/add-user.sh -a -u pamAdmin -p password --role user,Administrators,admin,rest-all,kie-server
   ```
 
 - Make sure the heap memory is at least `2GB` or better `4GB`
@@ -118,7 +118,7 @@ known issue:
 In case the kjar has a custom persistence:
 
 - remove `<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>`
-- change datasource to point to kieserver one:` <jta-data-source>${org.kie.server.persistence.ds}</jta-data-source>`
+- change datasource to point to kieserver one:`<jta-data-source>${org.kie.server.persistence.ds}</jta-data-source>`
 
 ### Configure Persistence
 
