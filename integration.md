@@ -115,7 +115,7 @@ Example of method implementation:
 Internal implementation: 
 [https://github.com/kiegroup/jbpm/blob/master/jbpm-bpmn2/src/main/java/org/jbpm/bpmn2/handler/ServiceTaskHandler.java]()
 
-## Work Item Handlers out of the box
+# Work Item Handlers out of the box
 
     <work-item-handlers>
         <work-item-handler>
