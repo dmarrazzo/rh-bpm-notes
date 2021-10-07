@@ -308,14 +308,28 @@ By default the kieserver expects a JSON representation with an explicit referenc
 
 In order to manage the date serialization following the JSON Standard:
 
-- configure on server side and on client side this property: `<property name="org.kie.server.json.format.date" value="true"/>
-`
+- configure on server side and on client side these properties: 
+
+  ```xml
+  <property name="org.kie.server.json.format.date" value="true"/>
+  <property name="org.kie.server.json.date_format" value="yyyy-MM-dd'T'hh:mm:ss.SSSZ"/>
+  ```
+
 - Inside complex data type use `java.utils.Date` with the following annotation:
 
   ```java
   @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd'T'hh:mm:ss.SSSZ")
   @JsonSerialize(using=DateSerializer.class)
   private Date dateTime;
+  ```
+
+  For `LocalDateTime`:
+
+  ```java
+    @JsonSerialize(using=LocalDateTimeSerializer.class)
+    @JsonDeserialize(using=LocalDateTimeDeserializer.class)
+    @JsonFormat(shape = Shape.STRING)
+    private LocalDateTime startDate;
   ```
 
 
