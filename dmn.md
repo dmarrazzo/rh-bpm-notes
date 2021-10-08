@@ -72,6 +72,18 @@ In the previous example there are:
 
 3. `Suppliers bids` is a variable defined as `tBids`
 
+### Feel annotation
+
+To help the DMN engine to map the Java fields in the FEEL properties:
+
+```java
+@FEELProperty("initial rating")
+public double getInitialRating() {
+    return initialRating;
+}
+```
+
+
 
 ### Path Expressions
 
