@@ -192,7 +192,7 @@ JPA variable persistence
 
 RHPAM can store the process variable in a relational table leveraging JPA.
 
-**Warning for old version of RHPAM** Business Central till version 7.1.1 lacks of some libraries that support the JPA variable persistence. In order to work around this you have to copy from kie-server libs the followings:
+**Warning for old version of RHPAM** Business Central up to version 7.1.1 lacks of some libraries that support the JPA variable persistence. In order to work around this you have to copy from kie-server libs the followings:
 
  - drools-persistence-api-7.11.0.Final-redhat-00004.jar
  - drools-persistence-jpa-7.11.0.Final-redhat-00004.jar
