@@ -98,7 +98,7 @@ https://github.com/smallrye/smallrye-open-api/tree/main/ui/open-api-ui-forms
 OpenShift
 ------------------------------------------------
 
-extension  -Dextensions="openshift"
+Add extension  -Dextensions="openshift"
 
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -113,38 +113,47 @@ Resources use OpenShift’s DeploymentConfig:
 
 - Configured to automatically trigger redeployment when detecting ImageStream change
 
-[https://quarkus.io/guides/deploying-to-kubernetes#openshift]()
+  [https://quarkus.io/guides/deploying-to-kubernetes#openshift]()
 
+Manual deploy:
 
 1. Uberjar
-
-   	mvn clean package -Dquarkus.package.type=uber-jar
+  
+   ```
+   mvn clean package -Dquarkus.package.type=uber-jar
+   ```
 
 2. Create the build
 
-	oc new-build registry.access.redhat.com/openjdk/openjdk-11-rhel7:1.1 --binary --name=people -l app=people
+	   oc new-build registry.access.redhat.com/openjdk/openjdk-11-rhel7:1.1 --binary --name=people -l app=people
 
 3. Start the build
 
-	oc start-build people --from-file target/*-runner.jar --follow
+	   oc start-build people --from-file target/*-runner.jar --follow
 
 4. Deploy
 
-	oc new-app people && oc expose svc/people
+   ```
+   oc new-app people && oc expose svc/people
+   ```
 
    Check the rollout
 
-	oc rollout status -w deployment/people
+	   oc rollout status -w deployment/people
 
 ### Test the application
 
 - Get the route
 
-	PEOPLE_ROUTE_URL=$(oc get route people -o=template --template='{{.spec.host}}')
+	  PEOPLE_ROUTE_URL=$(oc get route people -o=template --template='{{.spec.host}}')
+
+  or:
+
+    PEOPLE_ROUTE_URL=$(oc get route discount -o jsonpath='{.spec.host}')
 
 - Run
 
-	curl http://${PEOPLE_ROUTE_URL}/hello
+	  curl http://${PEOPLE_ROUTE_URL}/hello
 
 ### Health check config
 

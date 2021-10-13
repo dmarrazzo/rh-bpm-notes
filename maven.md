@@ -9,8 +9,8 @@ In order to keep your POM clean and tidy, it's useful to introduce the bill of m
 
 ```xml
   <properties>
-    <ba.version>7.11.0.redhat-00005</ba.version>
-	<version.org.kie>7.52.0.Final-redhat-00007</version.org.kie>
+    <ba.version>7.11.1.redhat-00001</ba.version>
+	<version.org.kie>7.52.0.Final-redhat-00008</version.org.kie>
     <maven.compiler.target>11</maven.compiler.target>
     <maven.compiler.source>11</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
