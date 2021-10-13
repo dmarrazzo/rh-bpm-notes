@@ -92,6 +92,8 @@ There are documents and samples.
 
  - [Monitoring Prometheus Graphana Optaplanner- 7.4](https://youtu.be/q0mSR36Xnmkk)
 
+ - [Constraint solving A.I. algorithms in OptaPlanner (Geoffrey De Smet)](https://www.youtube.com/watch?v=dW_b_n737TU&t=24s)
+
 ### Demo
 
 - [Order Management Demo](https://github.com/jbossdemocentral/rhpam7-order-management-demo-repo)
