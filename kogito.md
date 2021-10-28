@@ -39,6 +39,55 @@ mvn archetype:generate \
     -DarchetypeVersion=1.10.0.Final
 ```
 
+Create from Quarkus:
+
+```sh
+mvn io.quarkus:quarkus-maven-plugin:create \
+    -DprojectGroupId=org.acme -DprojectArtifactId=sample-kogito \
+    -DprojectVersion=1.0.0-SNAPSHOT -Dextensions=kogito-quarkus
+```
+
+In order to discover the **kogito version** used in the quarkus project:
+
+```
+mvn dependency:tree -Dincludes=org.kie.kogito:kogito-quarkus
+```
+
+Using PostgreSQL persistence 
+---------------------------------------------------------
+
+```xml
+<dependency>
+  <groupId>org.kie.kogito</groupId>
+  <artifactId>kogito-addons-quarkus-persistence-postgresql</artifactId>
+</dependency>
+<dependency>
+  <groupId>io.quarkus</groupId>
+  <artifactId>quarkus-reactive-pg-client</artifactId>
+</dependency>
+```
+
+```
+kogito.persistence.type=postgresql
+kogito.persistence.auto.ddl=true
+kogito.persistence.query.timeout.millis=10000
+
+quarkus.datasource.db-kind=postgresql
+quarkus.datasource.username=kogito-user
+quarkus.datasource.password=kogito-pass
+quarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/kogito
+```
+
+Development UI
+---------------------------------------------------------
+
+<dependency>
+    <groupId>org.kie.kogito</groupId>
+    <artifactId>runtime-tools-quarkus-extension</artifactId>
+    <version>1.11.0.Final</version>
+</dependency>
+
+
 Kogito Supporting Services 
 ---------------------------------------------------------
 
@@ -293,3 +342,39 @@ Caused by: java.net.ConnectException: finishConnect(..) failed: Connection refus
 	at io.netty.channel.unix.Errors.throwConnectException(Errors.java:124)
 ```
 
+Podman for testcontainers
+---------------------------------------------------------
+
+Requirements:
+
+```
+podman-3.4.0-1.fc34.x86_64
+podman-docker-3.4.0-1.fc34.noarch
+```
+
+You can disable this prompt by setting the `short-name-mode="disabled"` configuration property of Podman in `/etc/containers/registries.conf`
+
+```sh
+set DOCKER_HOST unix:///run/user/(id -u)/podman/podman.sock
+sudo systemctl start podman.socket
+systemctl --user enable podman.socket --now
+podman-remote info
+set TESTCONTAINERS_RYUK_DISABLED true
+```
+
+Create `~/.testcontainers.properties` and the following properties:
+
+```
+docker.host = unix\:///run/user/1000/podman/podman.sock
+ryuk.container.privileged = true
+```
+
+Enable `app` in selinux?
+
+See:
+
+- https://github.com/quarkusio/quarkusio.github.io/blob/aeeeaf3a4e68012ea8cbefb1e3bf9e1a6a6b376f/_posts/2021-11-02-quarkus-devservices-testcontainers-podman.adoc
+
+- https://www.redhat.com/sysadmin/podman-docker-compose
+
+- https://www.testcontainers.org/features/configuration/
