@@ -160,3 +160,55 @@ Manual deploy:
 	oc set probe deployment/people --readiness --initial-delay-seconds=30 --get-url=http://:8080/health/ready
 
 	oc set probe deployment/people --liveness --initial-delay-seconds=30 --get-url=http://:8080/health/live
+
+Testcontainers with podman
+---------------------------------------------------------
+
+**Warning** this procedure was tested in Fedora 34 using _Fish shell_.
+
+Requirements:
+
+```
+podman-3.4.0-1.fc34.x86_64
+podman-docker-3.4.0-1.fc34.noarch
+```
+
+Disable the registry prompt by setting the `short-name-mode="disabled"` configuration property of Podman in `/etc/containers/registries.conf`
+
+Start Podman service to listen on socket and grant access to users:
+
+```sh
+sudo systemctl start podman.socket
+systemctl --user enable podman.socket --now
+```
+
+The following commands to check that all is up and running:
+
+```
+podman-remote info
+curl -H "Content-Type: application/json" --unix-socket /run/user/(id -u)/podman/podman.sock http://localhost/_ping
+```
+
+Set the following environment variables (Fish shell way):
+
+```sh
+set DOCKER_HOST unix:///run/user/(id -u)/podman/podman.sock
+set TESTCONTAINERS_RYUK_DISABLED true
+```
+
+Create `~/.testcontainers.properties` and the following properties:
+
+```
+docker.host = unix\:///run/user/1000/podman/podman.sock
+ryuk.container.privileged = true
+```
+
+Enable `app` in selinux?
+
+See:
+
+- https://github.com/quarkusio/quarkusio.github.io/blob/aeeeaf3a4e68012ea8cbefb1e3bf9e1a6a6b376f/_posts/2021-11-02-quarkus-devservices-testcontainers-podman.adoc
+
+- https://www.redhat.com/sysadmin/podman-docker-compose
+
+- https://www.testcontainers.org/features/configuration/

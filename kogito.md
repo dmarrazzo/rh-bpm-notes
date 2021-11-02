@@ -42,7 +42,7 @@ mvn archetype:generate \
 Create from Quarkus:
 
 ```sh
-mvn io.quarkus:quarkus-maven-plugin:create \
+mvn io.quarkus:quarkus-maven-plugin:2.3.0.Final:create \
     -DprojectGroupId=org.acme -DprojectArtifactId=sample-kogito \
     -DprojectVersion=1.0.0-SNAPSHOT -Dextensions=kogito-quarkus
 ```
@@ -76,6 +76,15 @@ quarkus.datasource.db-kind=postgresql
 quarkus.datasource.username=kogito-user
 quarkus.datasource.password=kogito-pass
 quarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/kogito
+```
+
+Delete all instances:
+
+```sql
+DELETE FROM PROCESSINSTANCEENTITY_NODEINSTANCEENTITY;
+DELETE FROM PROCESSINSTANCEENTITY;
+DELETE FROM USERTASKINSTANCEENTITY;
+DELETE FROM NODEINSTANCEENTITY;
 ```
 
 Development UI
@@ -273,11 +282,58 @@ podman run --name kogito-jobs-service-server \
 OpenShift Deployment
 ---------------------------------------------------------
 
+### Prerequisites
+
 Tested integrations: 
 
-https://github.com/kiegroup/kogito-operator#kogito-operator-tested-integrations
 
-Infinispan Operator 2.1.x
+| Technology	       | Tested version                                               |
+|--------------------|--------------------------------------------------------------|
+| Infinispan	       | Infinispan operator 2.1.5 (deployed by OLM 2.1.x channel)    |
+| Kafka	       | Strimzi 0.25.0 (deployed by OLM stable channel)              |
+| Keycloak	       | Keycloak operator 15.0.2 (deployed by OLM alpha channel)     |
+| Prometheus	       | Prometheus operator 0.47.0 (deployed by OLM beta channel)    |
+| Grafana	       | Grafana operator 3.10.3 (deployed by OLM alpha channel)      |
+| Knative Eventing	| Knative Eventing 0.26.0                                      |
+| MongoDB	       | MongoDB Community Kubernetes Operator 0.2.2                  |
+| PostgreSQL	       | PostgreSQL 12.7 (deployed directly using image)              |
+
+See: 
+- https://github.com/kiegroup/kogito-operator#kogito-operator-tested-integrations
+- https://catalog.redhat.com/
+
+
+### Install kogito operator
+
+set the project
+```
+kogito use-project kogito-112
+```
+
+Image streams:
+
+wget https://github.com/kiegroup/kogito-images/raw/1.12.0/kogito-imagestream.yaml
+
+oc create -f kogito-imagestream.yaml -n openshift
+
+### Persistence
+
+- set up registy credential in OCP: 
+
+```sh
+oc create secret docker-registry red-hat-container-registry --docker-server=https://registry.redhat.io   --docker-username="$REGISTRY_REDHAT_IO_USERNAME"   --docker-password="$REGISTRY_REDHAT_IO_PASSWORD"  --docker-email="$REGISTRY_REDHAT_IO_USERNAME"
+oc secrets link builder red-hat-container-registry --for=pull
+```
+
+- postgresql persistent template
+
+wget https://raw.githubusercontent.com/sclorg/postgresql-container/master/examples/postgresql-persistent-template.json
+
+oc process -f postgresql-persistent-template.json -p POSTGRESQL_VERSION=12 -p POSTGRESQL_USER=kogito-user -p POSTGRESQL_PASSWORD=kogito-pass -p POSTGRESQL_DATABASE=kogito | oc create -f -
+
+### Old approach Infinispan
+
+- Infinispan Operator 2.1.x
 
 ```yaml
 apiVersion: infinispan.org/v1
@@ -311,10 +367,54 @@ spec:
     name: example-infinispan
 ```
 
+### Messaging
+
+Install operator strimzi 0.25
+
+- Create Kafka cluster `kogito-kafka`
+
+Install the Kogito Infra for messaging
+
+    kogito install infra kogito-kafka-infra --kind Kafka --apiVersion kafka.strimzi.io/v1beta2 --resource-name kogito-kafka
+
+### Dataindex
+
+change project namespace
+
+```yaml
+apiVersion: app.kiegroup.org/v1beta1
+kind: KogitoSupportingService
+metadata:
+  name: data-index
+spec:
+  serviceType: DataIndex
+  infra:
+    - kogito-kafka-infra
+  image: kogito-data-index-postgresql
+  env:
+    - name: QUARKUS_DATASOURCE_DB-KIND
+      value: postgresql
+    - name: QUARKUS_DATASOURCE_USERNAME
+      value: kogito-user
+    - name: QUARKUS_DATASOURCE_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: postgresql
+          key: database-password
+    - name: QUARKUS_DATASOURCE_JDBC_URL
+      value: jdbc:postgresql://postgresql.kogito-112.svc.cluster.local:5432/kogito
+    - name: QUARKUS_HIBERNATE_ORM_DATABASE_GENERATION
+      value: update
+```
+
+### Runtime
+
+#### Deploy via command line
+
 Deploy runtime from local dir:
 check:
 ```sh
-kogito deploy-service proc-infinispan . --infra kogito-infinispan-infra
+kogito deploy-service order-kogito-runtime . --infra kogito-kafka-infra
 ```
 
 Kogito Runtime outcome:
@@ -330,6 +430,49 @@ spec:
     - kogito-infinispan-infra
 ```
 
+#### Deploy via oc
+
+mvn clean package -Popenshift -Dquarkus.package.type=uber-jar -DskipTests
+
+oc new-build registry.access.redhat.com/openjdk/openjdk-11-rhel7:latest --binary --name=order-kogito-runtime -l app=order-kogito-runtime
+oc start-build order-kogito-runtime --from-file target/*-runner.jar --follow
+
+```yaml
+apiVersion: app.kiegroup.org/v1beta1
+kind: KogitoRuntime
+metadata:
+  name: order-kogito-runtime
+spec:
+  replicas: 1
+  image: order-kogito-runtime
+  probes:
+    livenessProbe:
+      httpGet:
+        path: /probes/live # Liveness endpoint
+        port: 8080
+    readinessProbe:
+      httpGet:
+        path: /probes/ready # Readiness endpoint
+        port: 8080
+    startupProbe:
+      tcpSocket:
+        port: 8080
+  # Reference to the KogitoInfra resource with the Knative Broker binding
+  infra:
+  - kogito-kafka-infra
+  env:
+  - name: QUARKUS_DATASOURCE_USERNAME
+    value: kogito-user
+  - name: QUARKUS_DATASOURCE_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: postgresql
+        key: database-password
+  - name: QUARKUS_DATASOURCE_REACTIVE_URL
+    value: postgresql://localhost:5432/kogito
+  - name: QUARKUS_HIBERNATE_ORM_DATABASE_GENERATION
+    value: update
+```
 
 ### Errors:
 
@@ -342,39 +485,3 @@ Caused by: java.net.ConnectException: finishConnect(..) failed: Connection refus
 	at io.netty.channel.unix.Errors.throwConnectException(Errors.java:124)
 ```
 
-Podman for testcontainers
----------------------------------------------------------
-
-Requirements:
-
-```
-podman-3.4.0-1.fc34.x86_64
-podman-docker-3.4.0-1.fc34.noarch
-```
-
-You can disable this prompt by setting the `short-name-mode="disabled"` configuration property of Podman in `/etc/containers/registries.conf`
-
-```sh
-set DOCKER_HOST unix:///run/user/(id -u)/podman/podman.sock
-sudo systemctl start podman.socket
-systemctl --user enable podman.socket --now
-podman-remote info
-set TESTCONTAINERS_RYUK_DISABLED true
-```
-
-Create `~/.testcontainers.properties` and the following properties:
-
-```
-docker.host = unix\:///run/user/1000/podman/podman.sock
-ryuk.container.privileged = true
-```
-
-Enable `app` in selinux?
-
-See:
-
-- https://github.com/quarkusio/quarkusio.github.io/blob/aeeeaf3a4e68012ea8cbefb1e3bf9e1a6a6b376f/_posts/2021-11-02-quarkus-devservices-testcontainers-podman.adoc
-
-- https://www.redhat.com/sysadmin/podman-docker-compose
-
-- https://www.testcontainers.org/features/configuration/
