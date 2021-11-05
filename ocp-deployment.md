@@ -463,6 +463,37 @@ According to [maven documentation](https://maven.apache.org/guides/mini/guide-pr
 </settings>
 ```
 
+## How to set up the webhook
+
+From the following command extract the URL:
+
+    oc describe bc/hello-kieserver
+
+E.g. `https://api.shared-na4.na4.openshift.opentlc.com:6443/apis/build.openshift.io/v1/namespaces/rhpam/buildconfigs/hello-kieserver/webhooks/<secret>/github`
+
+Replace `<secret>` with the outcome of the following command:
+
+    oc get bc/hello-kieserver -o yaml | grep -B 2 secret
+
+E.g.
+
+```
+  triggers:
+  - github:
+      secret: 1VajKlz8oR8LLa94
+    type: GitHub
+  - generic:
+      secret: gxqNhyT3
+```
+
+In Github:
+
+- open **project > settings**
+- select **Webhook** from left side menu
+- click **Add webhook** button
+- fill in the **URL** accordingly the previous outcomes
+- set **content type** to `application/json`
+
 # Source 2 image (S2I)
 
 It's possible to override the default configuration of the image using the `configuration` directory in the source code:
@@ -476,6 +507,125 @@ It's possible to override the default configuration of the image using the `conf
 It's possible to add a user on the fly using the BC settings (add the role `user`, `developer`, `process-admin`).
 Be aware the change will not survive after the pod restart.
 For production environments is to integrate the RH SSO.
+
+# Fine tunining
+
+## System properties
+
+Add custom system properties
+
+	JAVA_OPTS_APPEND=-Dkubernetes.websocket.timeout=10000
+
+	JAVA_OPTS_APPEND=-XX:MetaspaceSize=512M
+
+## Memory issues
+
+[How to change JVM memory options using Red Hat JBoss EAP image for Openshift](https://access.redhat.com/solutions/2682021)
+
+Environment variables:
+
+	CONTAINER_HEAP_PERCENT = 0.5
+	INITIAL_HEAP_PERCENT = 0.5
+	
+Metaspace (works out of S2I?): 
+
+	GC_MAX_METASPACE_SIZE = 512
+
+## timeout
+
+	kubernetes.websocket.timeout
+
+## Grant permission to use operators
+
+oc adm policy add-cluster-role-to-user cluster-reader developer
+
+## Docker image hacking
+
+docker run -ti quay.io/rhpam_rhdm/rhpam-businesscentral-rhel8-cm-showcase:7.5.0 /bin/sleep infinity
+
+config directory: `/opt/eap/bin/launch`
+
+
+## ConfigMap for properties
+
+	oc create configmap const-props --from-file=use-case-3/const.propertie
+	oc set volume dc/rhpam-authoring-kieserver --add --name=config-volume --type=configmap --configmap-name=const-props --mount-path=/etc/config
+
+## Investigating pod issues
+
+https://docs.openshift.com/container-platform/4.5/support/troubleshooting/investigating-pod-issues.html
+
+## ConfigMap for Business Calendar
+
+	oc create configmap jbpm-business-calendar-props --from-file=jbpm.business.calendar.properties
+
+Then added it the Business Central Deployment Configuration:
+
+	oc set volume dc/rhpam-trial-rhpamcentr --add --name=jbpm-business-calendar-volume --type=configmap --configmap-name=jbpm-business-calendar-props --mount-path=/deployments/ROOT.war/WEB-INF/classes
+
+
+## replace a file 
+
+Use the subpath and the full path to the file
+
+```yaml
+	volumeMounts:
+      - name: log4j-properties-volume
+        mountPath: /zeppelin/conf/log4j.properties
+        subPath: log4j.properties
+
+	volumeMounts:
+      - name: log4j-properties-volume
+        mountPath: /zeppelin/conf
+```
+## intenal hostname
+
+internal namespace convention:
+
+	my-svc.my-namespace.svc.cluster.local
+
+
+## ControllerBasedStartupStrategy
+
+[Related issue](https://issues.redhat.com/browse/RHDM-1151)
+
+Procedure for setting KieServer to use ControllerBasedStartupStrategy and connect to an OpenShift enhancement DISABLED Business Central
+
+Step #1: Set ‘false’ to this env variable at Business Central DC
+
+```yaml
+- name: KIE_WORKBENCH_CONTROLLER_OPENSHIFT_ENABLED
+	value: "true"
+```
+
+Step #2: Set ‘ControllerBasedStartupStrategy’ to this env variable at Kie Server DC
+
+```yaml
+- name: KIE_SERVER_STARTUP_STRATEGY
+	value: "OpenShiftStartupStrategy"
+```
+
+Step #3: Add back the following env variables to Kie Server DC
+
+```yaml
+- name: KIE_SERVER_CONTROLLER_USER
+	value: "${KIE_SERVER_CONTROLLER_USER}"
+- name: KIE_SERVER_CONTROLLER_PWD
+	value: "${KIE_SERVER_CONTROLLER_PWD}"
+- name: KIE_SERVER_CONTROLLER_TOKEN
+	value: "${KIE_SERVER_CONTROLLER_TOKEN}"
+- name: KIE_SERVER_CONTROLLER_SERVICE
+	value: "${APPLICATION_NAME}-rhpamcentr"
+- name: KIE_SERVER_CONTROLLER_PROTOCOL
+	value: "ws"
+```
+
+Step #4 (Optional): To bypass TLS related configurations, Kie Server instance can register itself with Controller using regular Http port with following setting.
+
+```yaml
+- name: KIE_SERVER_ROUTE_NAME
+	value: "insecure-${APPLICATION_NAME}-kieserver"
+```
 
 # Troubleshooting
 
@@ -508,6 +658,26 @@ Retrive the configuration xml:
    oc rsync <kieserver pod>:/opt/kie/data/h2 .
    ```
 3. Access with a local tool like _squirrel sql_
+
+## Cluster Certificate refresh
+
+1. Connect to the bastion
+
+2. Check the csr conditions:
+
+     $ oc get csr
+
+   Look for "Pending" in the output.
+
+3. Try the below to approve, followed with a review of the command:
+
+     $ oc get csr -o name | xargs oc adm certificate approve
+     $ oc get csr
+
+   Stuck operators. The below will get you status. You should see the operators with "True", "False", "False". If you don't then try the following command and review again:
+
+     $ oc get co
+     $ oc delete secret csr-signer csr-signer-signer -n openshift-kube-controller-manager-operator
 
 # OpenShift cheat sheet
 
@@ -663,155 +833,6 @@ or
 
 	# oc delete pod example-pod-1 -n name --grace-period=0 --force
 
-# Fine tunining
-
-## System properties
-
-Add custom system properties
-
-	JAVA_OPTS_APPEND=-Dkubernetes.websocket.timeout=10000
-
-	JAVA_OPTS_APPEND=-XX:MetaspaceSize=512M
-
-## Memory issues
-
-[How to change JVM memory options using Red Hat JBoss EAP image for Openshift](https://access.redhat.com/solutions/2682021)
-
-Environment variables:
-
-	CONTAINER_HEAP_PERCENT = 0.5
-	INITIAL_HEAP_PERCENT = 0.5
-	
-Metaspace (works out of S2I?): 
-
-	GC_MAX_METASPACE_SIZE = 512
-
-## timeout
-
-	kubernetes.websocket.timeout
-
-## Grant permission to use operators
-
-oc adm policy add-cluster-role-to-user cluster-reader developer
-
-## Docker image hacking
-
-docker run -ti quay.io/rhpam_rhdm/rhpam-businesscentral-rhel8-cm-showcase:7.5.0 /bin/sleep infinity
-
-config directory: `/opt/eap/bin/launch`
-
-
-## ConfigMap for properties
-
-	oc create configmap const-props --from-file=use-case-3/const.propertie
-	oc set volume dc/rhpam-authoring-kieserver --add --name=config-volume --type=configmap --configmap-name=const-props --mount-path=/etc/config
-
-## Investigating pod issues
-
-https://docs.openshift.com/container-platform/4.5/support/troubleshooting/investigating-pod-issues.html
-
-## ConfigMap for Business Calendar
-
-	oc create configmap jbpm-business-calendar-props --from-file=jbpm.business.calendar.properties
-
-Then added it the Business Central Deployment Configuration:
-
-	oc set volume dc/rhpam-trial-rhpamcentr --add --name=jbpm-business-calendar-volume --type=configmap --configmap-name=jbpm-business-calendar-props --mount-path=/deployments/ROOT.war/WEB-INF/classes
-
-
-## replace a file 
-
-Use the subpath and the full path to the file
-
-```yaml
-	volumeMounts:
-      - name: log4j-properties-volume
-        mountPath: /zeppelin/conf/log4j.properties
-        subPath: log4j.properties
-
-	volumeMounts:
-      - name: log4j-properties-volume
-        mountPath: /zeppelin/conf
-```
-## intenal hostname
-
-internal namespace convention:
-
-	my-svc.my-namespace.svc.cluster.local
-
-
-## ControllerBasedStartupStrategy
-
-[Related issue](https://issues.redhat.com/browse/RHDM-1151)
-
-Procedure for setting KieServer to use ControllerBasedStartupStrategy and connect to an OpenShift enhancement DISABLED Business Central
-
-Step #1: Set ‘false’ to this env variable at Business Central DC
-
-```yaml
-- name: KIE_WORKBENCH_CONTROLLER_OPENSHIFT_ENABLED
-	value: "true"
-```
-
-Step #2: Set ‘ControllerBasedStartupStrategy’ to this env variable at Kie Server DC
-
-```yaml
-- name: KIE_SERVER_STARTUP_STRATEGY
-	value: "OpenShiftStartupStrategy"
-```
-
-Step #3: Add back the following env variables to Kie Server DC
-
-```yaml
-- name: KIE_SERVER_CONTROLLER_USER
-	value: "${KIE_SERVER_CONTROLLER_USER}"
-- name: KIE_SERVER_CONTROLLER_PWD
-	value: "${KIE_SERVER_CONTROLLER_PWD}"
-- name: KIE_SERVER_CONTROLLER_TOKEN
-	value: "${KIE_SERVER_CONTROLLER_TOKEN}"
-- name: KIE_SERVER_CONTROLLER_SERVICE
-	value: "${APPLICATION_NAME}-rhpamcentr"
-- name: KIE_SERVER_CONTROLLER_PROTOCOL
-	value: "ws"
-```
-
-Step #4 (Optional): To bypass TLS related configurations, Kie Server instance can register itself with Controller using regular Http port with following setting.
-
-```yaml
-- name: KIE_SERVER_ROUTE_NAME
-	value: "insecure-${APPLICATION_NAME}-kieserver"
-```
-### How to set up the webhook
-
-From the following command extract the URL:
-
-    oc describe bc/hello-kieserver
-
-E.g. `https://api.shared-na4.na4.openshift.opentlc.com:6443/apis/build.openshift.io/v1/namespaces/rhpam/buildconfigs/hello-kieserver/webhooks/<secret>/github`
-
-Replace `<secret>` with the outcome of the following command:
-
-    oc get bc/hello-kieserver -o yaml | grep -B 2 secret
-
-E.g.
-
-```
-  triggers:
-  - github:
-      secret: 1VajKlz8oR8LLa94
-    type: GitHub
-  - generic:
-      secret: gxqNhyT3
-```
-
-In Github:
-
-- open **project > settings**
-- select **Webhook** from left side menu
-- click **Add webhook** button
-- fill in the **URL** accordingly the previous outcomes
-- set **content type** to `application/json`
-
 ## Openshift Useful links
 
 - [https://docs.openshift.com/container-platform/3.9/dev_guide/copy_files_to_container.html]()
@@ -819,3 +840,4 @@ In Github:
 - [https://www.mankier.com/package/origin-clients]()
 
 - [Learn OpenShift interactively](https://learn.openshift.com/)
+
