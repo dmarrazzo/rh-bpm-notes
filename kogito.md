@@ -107,14 +107,19 @@ They could be useful also for docker users who prefer to have finer control.
 The following instruction leverages assets from [kogito-example](https://github.com/kiegroup/kogito-examples) repository.
 
 
-> **Important Network Note**: Whenever a container has to access to other containers (in different pods), it needs the *ip address* of the hosting machine. A pratical trick is to use a *stable ip* who does not change over the time (not DHCP provided). It's likely that you already have such *ip address* in your system, in case you can use **podman network command** to create it. Once you have found your stable IP, you can refer to it using a local name (*thehost*) and binding it in `/etc/hosts` e.g.:
+> **Important Network Note**: Whenever a container has to access to other containers (in different pods), it needs the *ip address* of the hosting machine. A pratical trick is to use a *static ip* who does not change over the time (not DHCP provided). It's likely that you already have such *ip address* in your system, in case you can use **podman network command** to create it. 
+>
+> Issue the following command to list all the ip bound to your hostname: `hostname -I`
+>
+> Once you have found a *static IP*, you can refer to it using a local name (*thehost*) and binding it in `/etc/hosts` e.g.:
 >
 > ```
 > 192.168.130.1 thehost
 > ```
 > 
 > The remaining doc assumes you have defined `thehost` in your naming service.
-
+> 
+> If you are looking for a "quick and dirty" solution, you can simply replace in the following script `thehost` with your actual hostname. **Pay attention** you cannot use `localhost`
 
 ### PostgresSQL
 
@@ -167,7 +172,7 @@ podman run --name kogito-zookeeper \
        -d \
        -e LOG_DIR=/tmp/logs \
        --tmpfs /tmp \
-       strimzi/kafka:0.20.1-kafka-2.6.0 \
+       quay.io/strimzi/kafka:0.25.0-kafka-2.8.0 \
        bin/zookeeper-server-start.sh config/zookeeper.properties
 
 podman run --name kogito-kafka-server \
@@ -185,7 +190,7 @@ podman run --name kogito-kafka-server \
        --tmpfs /tmp \
        --requires kogito-zookeeper \
        --entrypoint bash \
-       strimzi/kafka:0.20.1-kafka-2.6.0 \
+       quay.io/strimzi/kafka:0.25.0-kafka-2.8.0 \
        -c "bin/kafka-server-start.sh config/server.properties --override inter.broker.listener.name=\${KAFKA_INTER_BROKER_LISTENER_NAME} --override listener.security.protocol.map=\${KAFKA_LISTENER_SECURITY_PROTOCOL_MAP} --override listeners=\${KAFKA_LISTENERS} --override advertised.listeners=\${KAFKA_ADVERTISED_LISTENERS} --override zookeeper.connect=\${KAFKA_ZOOKEEPER_CONNECT}"
 ```
 
@@ -203,7 +208,7 @@ podman run --name kogito-data-index-pg-server \
        -e QUARKUS_DATASOURCE_USERNAME=kogito-user \
        -e QUARKUS_DATASOURCE_PASSWORD=kogito-pass \
        -e QUARKUS_HIBERNATE_ORM_DATABASE_GENERATION=update \
-       quay.io/kiegroup/kogito-data-index-postgresql:latest
+       quay.io/kiegroup/kogito-data-index-postgresql:1.12
 ```
 
 It's possible to manually initialize the DB Schema, removing the `QUARKUS_HIBERNATE_ORM_DATABASE_GENERATION` and using the following SQL script: https://github.com/kiegroup/kogito-apps/blob/main/data-index/data-index-storage/data-index-storage-postgresql/src/main/resources/create.sql
@@ -444,7 +449,8 @@ metadata:
   name: order-kogito-runtime
 spec:
   replicas: 1
-  image: order-kogito-runtime
+  image: image-registry.openshift-image-registry.svc:5000/kogito-112/order-kogito-runtime
+  
   probes:
     livenessProbe:
       httpGet:
