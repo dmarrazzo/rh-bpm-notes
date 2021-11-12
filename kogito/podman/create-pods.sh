@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set HOSTIP (ip route get 1.2.3.4 | awk '{print $7}' | xargs)
+
 podman pod create --name kogito-infra \
        -p 11222:11222 \
        -p 2181:2181 \
@@ -25,14 +27,14 @@ podman run -d --pod kogito-infra --name kafka --restart=always \
            -e KAFKA_BROKER_ID=0 \
            -e KAFKA_ZOOKEEPER_CONNECT=localhost:2181 \
            -e KAFKA_LISTENERS=INTERNAL://localhost:29092,EXTERNAL://localhost:9092 \
-           -e KAFKA_ADVERTISED_LISTENERS=INTERNAL://localhost:29092,EXTERNAL://localhost:9092 \
+           -e KAFKA_ADVERTISED_LISTENERS=INTERNAL://localhost:29092,EXTERNAL://$HOSTIP:9092 \
            -e KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT \
            -e KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL \
            -e KAFKA_AUTO_CREATE_TOPICS_ENABLE="true" \
            -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 \
            -e LOG_DIR=/tmp/logs \
            docker.io/strimzi/kafka:0.20.1-kafka-2.6.0 \
-           sh -c "bin/kafka-server-start.sh config/server.properties --override listeners=PLAINTEXT://localhost:9092 --override advertised.listeners=PLAINTEXT://localhost:9092 --override zookeeper.connect=localhost:2181"
+           sh -c "bin/kafka-server-start.sh config/server.properties --override inter.broker.listener.name=\${KAFKA_INTER_BROKER_LISTENER_NAME} --override listener.security.protocol.map=\${KAFKA_LISTENER_SECURITY_PROTOCOL_MAP} --override listeners=\${KAFKA_LISTENERS} --override advertised.listeners=\${KAFKA_ADVERTISED_LISTENERS} --override zookeeper.connect=\${KAFKA_ZOOKEEPER_CONNECT}"
 
 # kafka drop
 # podman run -d --pod kogito-infra --restart=always \
@@ -50,7 +52,7 @@ podman run -d --pod kogito-infra --name prometheus --restart=always \
 # grafana
 podman run -d --pod kogito-infra --name grafana --restart=always \
        -v ./grafana/provisioning/:/etc/grafana/provisioning/:Z \
-       -e PROMETHEUS_URL=http://prometheus:9090 \
+       -e PROMETHEUS_URL=http://localhost:9090 \
        docker.io/grafana/grafana:6.6.1
 
 # kogito supporting services
@@ -61,14 +63,18 @@ set KOGITO_VERSION 1.6.0
 podman pod create --name kogito-data-index \
        -p 8080:8180
 
-set HOSTIP (ip route get 1.2.3.4 | awk '{print $7}' | xargs)
-
 # data-index
        #-v ./target/protobuf:/home/kogito/data/protobufs/ \
        #-e KOGITO_DATA_INDEX_PROPS=-Dkogito.protobuf.folder=/home/kogito/data/protobufs/ \
 podman run -d --pod kogito-data-index --name data-index --restart=always \
        -e QUARKUS_INFINISPAN_CLIENT_SERVER_LIST=$HOSTIP:11222 \
        -e KAFKA_BOOTSTRAP_SERVERS=$HOSTIP:9092 \
+       quay.io/kiegroup/kogito-data-index-infinispan:$KOGITO_VERSION
+
+# the following works
+podman run -d --pod kogito-infra --name data-index --restart=always \
+       -e QUARKUS_INFINISPAN_CLIENT_SERVER_LIST=localhost:11222 \
+       -e KAFKA_BOOTSTRAP_SERVERS=localhost:29092 \
        quay.io/kiegroup/kogito-data-index-infinispan:$KOGITO_VERSION
 
 # management-console pod
