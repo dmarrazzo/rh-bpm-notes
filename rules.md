@@ -1,3 +1,25 @@
+Rules
+==================
+
+If you are using Decision Manager in an embedded mode, you can transform a guided decision table into the DRL rules, for example:
+
+```java
+import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
+import org.drools.workbench.models.guided.dtable.backend.GuidedDTXMLPersistence;
+import org.drools.workbench.models.guided.dtable.backend.GuidedDTDRLPersistence;
+// imports unrelated to marshalling omitted
+// class and methods omitted
+
+GuidedDecisionTable52 unmarshal =
+  GuidedDTXMLPersistence.getInstance()
+    .unmarshal(new String(
+      Files.readAllBytes(Paths.get("src/main/resources/guidedTable.gdst"))
+	 ));
+
+String drl = GuidedDTDRLPersistence.getInstance().marshal(unmarshal);
+System.out.println(drl);
+```
+
 Business Rule Task
 ==================
 
