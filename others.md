@@ -412,3 +412,5 @@ Interesting Reading
 [Fuse Tutorial](https://gitlab.com/rh-emea-ssa-fuse-tutorial/fis-rest-composite)
 
 [Thinking in Events: From Databases to Distributed Collaboration Software](https://youtu.be/72W_VvFRqc0)
+
+[Distributed transaction patterns for microservices compared](https://developers.redhat.com/articles/2021/09/21/distributed-transaction-patterns-microservices-compared)
