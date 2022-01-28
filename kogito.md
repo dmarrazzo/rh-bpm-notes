@@ -36,7 +36,7 @@ mvn archetype:generate \
     -DgroupId=org.acme -Dversion=1.0-SNAPSHOT \
     -DarchetypeGroupId=org.kie.kogito \
     -DarchetypeArtifactId=kogito-quarkus-archetype \
-    -DarchetypeVersion=1.10.0.Final
+    -DarchetypeVersion=1.16.0.Final
 ```
 
 Create from Quarkus:

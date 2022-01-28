@@ -9,8 +9,8 @@ In order to keep your POM clean and tidy, it's useful to introduce the bill of m
 
 ```xml
   <properties>
-    <ba.version>7.11.1.redhat-00001</ba.version>
-	<version.org.kie>7.52.0.Final-redhat-00008</version.org.kie>
+    <ba.version>7.12.0.redhat-00008</ba.version>
+	<version.org.kie>7.59.0.Final-redhat-00006</version.org.kie>
     <maven.compiler.target>11</maven.compiler.target>
     <maven.compiler.source>11</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -42,7 +42,7 @@ Here the mapping of the product version with the dependency versions:
 | 7.10.1          | 7.10.1.redhat-00001    | 7.48.0.Final-redhat-00006 |
 | 7.11            | 7.11.0.redhat-00005    | 7.52.0.Final-redhat-00007 |
 | 7.11.1          | 7.11.1.redhat-00001    | 7.52.0.Final-redhat-00008 |
-
+| 7.12            | 7.12.0.redhat-00008    | 7.59.0.Final-redhat-00006 |
 
 **Official page:** [What is the mapping between Red Hat Process Automation Manager and the Maven library version?](https://access.redhat.com/solutions/3405361)
 
@@ -412,6 +412,11 @@ The following command pull all the dependencies in local repository:
 To check a specific repo
 
     mvn dependency:get -Dartifact=g:a:v -o -DrepoUrl=http://192.168.1.200:8080/business-central/maven2/
+
+To download an artifact locally (e.g. retrieve the jar). In the following example how to retrieve with a specific classifier
+
+	mvn dependency:get -Dartifact=org.kie.kogito:jobs-service-inmemory:1.15.0.Final:jar:runner -Dtransitive=false -Ddest=jobs-service-inmemory-1.15.0.Final-runner.jar
+
 
 
 ### Skip Tests
