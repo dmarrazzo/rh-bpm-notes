@@ -747,6 +747,11 @@ List all
 
 	oc set probe dc/pam72-kieserver --readiness --initial-delay-seconds=90 --all deploymentconfig.apps.openshift.io/pam72-kieserver probes updated
 
+### use go-template to extract information
+
+extract all names:
+
+  oc get pods --selector=job-name=k6-test -o go-template='{{range .items}}{{.metadata.name}}{{"\\n"}}{{end}}' 
 
 ### Add extra system properties
 
@@ -832,6 +837,11 @@ rm -rf /opt/eap/standalone/data/kie/.niogit
 or 
 
 	# oc delete pod example-pod-1 -n name --grace-period=0 --force
+
+### Remove CPU limits
+
+  oc get limitrange
+  oc delete limitrange/<name>
 
 ## Openshift Useful links
 
