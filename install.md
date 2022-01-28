@@ -7,20 +7,22 @@ Install and configure
 
 Check [RHPAM software prerequisites](https://access.redhat.com/articles/3405381)
 
-RHPAM 7.11 requires: 
+RHPAM 7.12 requires: 
 
 - JDK 11 (or 8)
+- EAP 7.4.2+
+
+For coding:
 - Maven >= 3.6.3
-- EAP 7.3.6+
 
 ### Install EAP
 
 From [Red Hat Product Downloads](https://access.redhat.com/downloads) site look for **Red Hat JBoss Enterprise Application Platform**:
 
 - Select *Download Latest*
-- Select *7.3* version
-- In the row *Red Hat JBoss Enterprise Application Platform 7.3.0* select *Download* 
-- Select *Patch* tab and download the latest e.g. `jboss-eap-7.3.4-patch.zip`
+- Select *7.4* version
+- In the row *Red Hat JBoss Enterprise Application Platform 7.4.0* select *Download* 
+- Select *Patch* tab and download the latest e.g. `jboss-eap-7.4.2-patch.zip`
 
 Uncompress EAP:
 
@@ -31,7 +33,7 @@ unzip jboss-eap-7.3.0.zip
 Upgrade EAP:
 
 - In `<EAP_HOME>\bin`, launch the CLI `./jboss-cli.sh` or `jboss-cli.bat`
-- In the CLI, issue the following command: `patch apply <download dir>/jboss-eap-7.3.4-patch.zip`
+- In the CLI, issue the following command: `patch apply <download dir>/jboss-eap-7.4.2-patch.zip`
 
 ### Install Business Central on EAP 7
 
@@ -40,8 +42,9 @@ Upgrade EAP:
 - If by mistake it was extracted in a different folder move the content in the EAP folder.
 - Add the user:
 
-  ```
-  <EAP_HOME>/bin/add-user.sh -a -u pamAdmin -p password --role user,Administrators,admin,rest-all,kie-server
+  ```sh
+  cd <EAP_HOME>
+  ./bin/jboss-cli.sh --commands="embed-server --std-out=echo,/subsystem=elytron/filesystem-realm=ApplicationRealm:add-identity(identity=<USERNAME>),/subsystem=elytron/filesystem-realm=ApplicationRealm:set-password(identity=<USERNAME>, clear={password=<PASSWORD>}),/subsystem=elytron/filesystem-realm=ApplicationRealm:add-identity-attribute(identity=<USERNAME>, name=role, value=[admin,rest-all,kie-server])"
   ```
 
 - Make sure the heap memory is at least `2GB` or better `4GB`
@@ -75,9 +78,12 @@ Upgrade EAP:
   ```
 
 - Enable `controllerUser`
-  - `cd <EAP_HOME>/standalone/configuration/`
-  - Remove the comment in `application-users.properties`
-  - Remove the comment from the related line `application-roles.properties` 
+
+  ```sh
+  cd <EAP_HOME>
+  ./bin/jboss-cli.sh --commands="embed-server --std-out=echo,/subsystem=elytron/filesystem-realm=ApplicationRealm:add-identity(identity=controllerUser),/subsystem=elytron/filesystem-realm=ApplicationRealm:set-password(identity=controllerUser, clear={password=controllerUser1234;}),/subsystem=elytron/filesystem-realm=ApplicationRealm:add-identity-attribute(identity=controllerUser, name=role, value=[admin,rest-all,kie-server])"
+  ```
+
 
 ### Optional tunings
 
