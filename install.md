@@ -823,6 +823,40 @@ In order to measure the kieserver response time, it's possible to instrument the
   ENDRULE
   ```
 
+### Inject Byteman in an OCP pod
+
+From Local Host:
+
+```sh
+$ oc get pods
+NAME                     READY   STATUS      RESTARTS   AGE
+wildfly-basic-1-mrlt5    1/1     Running     0          25m
+
+$ oc cp ./byteman-download-4.0.12 wildfly-basic-1-mrlt5:/opt/wildfly
+
+$ oc rsh pod  wildfly-basic-1-mrlt5
+```
+
+Inside the Pod
+
+```sh
+$ PID=$(jps -lv | grep -i jboss | cut -d ' ' -f 1)
+
+$ export BYTEMAN_HOME=/opt/wildfly/byteman-download-4.0.12
+
+$ chmod 755 $BYTEMAN_HOME/bin/bminstall.sh
+$ chmod 755 $BYTEMAN_HOME/bin/bmsubmit.sh
+
+$ ./bminstall.sh -h localhost -p 1234 -b -Dorg.jboss.byteman.transform.all $PID
+$ ./bmsubmit.sh -h localhost -p 1234 -l $BYTEMAN_HOME/sample/scripts/ClassLoadMonitor.btm 
+```
+
+When done, to remove the Rule:
+
+```sh
+./bmsubmit.sh -u  -h localhost -p 1234
+```
+
 ### Byteman References
 
 - [Byteman homepage](http://byteman.jboss.org/)
