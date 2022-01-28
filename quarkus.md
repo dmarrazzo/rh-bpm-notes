@@ -105,6 +105,10 @@ Add extension  -Dextensions="openshift"
       <artifactId>quarkus-openshift</artifactId>
     </dependency>
 
+Add property:
+
+  quarkus.openshift.route.expose=true
+
 build:
 
 	mvn clean package -Dquarkus.container-image.build=true
@@ -140,6 +144,8 @@ Manual deploy:
    Check the rollout
 
 	   oc rollout status -w deployment/people
+
+Dockerfile approach: https://github.com/vaibhavjainwiz/rhpam-cloud-enablement
 
 ### Test the application
 
@@ -193,6 +199,11 @@ Set the following environment variables (Fish shell way):
 
 ```sh
 set DOCKER_HOST unix:///run/user/(id -u)/podman/podman.sock
+```
+
+In case of problems you can try diabling RYUK
+
+```shell
 set TESTCONTAINERS_RYUK_DISABLED true
 ```
 
