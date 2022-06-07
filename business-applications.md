@@ -201,6 +201,32 @@ The `xml` file containing the `kie-server-state` configuration must include the 
   </containers>
 ```
 
+Registering custom tasks
+------------------------------------------------------------
+
+```xml
+<work-item-handler>
+  <resolver>spring</resolver>
+  <identifier>beanIdentifier</identifier>
+  <parameters/>
+  <name>MyWorkItem</name>
+</work-item-handler>
+```
+
+Use the annotation `org.springframework.stereotype.Component` class to automatically register work item handlers.
+
+Within a work item handler, add the annotation `@Component("<Name>")` before the declaration of the work item handler class. 
+
+For example: 
+
+```java
+@Component("MyWorkItem") 
+public class MyWorkItemWorkItemHandler extends AbstractLogOrThrowWorkItemHandler {
+}
+```
+
+[Registering custom tasks](https://access.redhat.com/documentation/en-us/red_hat_process_automation_manager/7.6/html/custom_tasks_and_work_item_handlers_in_business_central/registering-custom-tasks-proc-custom-tasks)
+
 Deploying in OpenShift
 ------------------------------------------------------------
 
