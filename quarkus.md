@@ -5,11 +5,13 @@ Create project
 ------------------------------------------------
 
 ```sh
-mvn io.quarkus:quarkus-maven-plugin:1.13.7.Final:create \
-    -DprojectGroupId=com.redhat.example \
-    -DprojectArtifactId=rest-service \
-    -DprojectVersion=1.0.0-SNAPSHOT \
-    -DclassName="com.redhat.example.MyResource"
+mvn com.redhat.quarkus.platform:quarkus-maven-plugin:2.2.5.Final-redhat-00007:create \
+    -DprojectGroupId=org.acme \
+    -DprojectArtifactId=getting-started \
+    -DplatformGroupId=com.redhat.quarkus.platform \
+    -DplatformVersion=2.2.5.Final-redhat-00007 \
+    -DclassName="org.acme.quickstart.GreetingResource" \
+    -Dpath="/hello"
 ```
 
 Run in dev

@@ -223,7 +223,7 @@ it is important for all Java plain execution:
 mvn archetype:generate \
 -DarchetypeGroupId=org.kie \
 -DarchetypeArtifactId=kie-kjar-archetype \
--DarchetypeVersion=7.48.0.Final-redhat-00006 \
+-DarchetypeVersion=7.59.0.Final-redhat-00009 \
 -Dversion=1.0.0-SNAPSHOT \
 -DgroupId=com.redhat.demo \
 -DartifactId=project-name
