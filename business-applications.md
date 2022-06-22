@@ -140,6 +140,12 @@ Enable Swagger UI
 
 Swagger document http://localhost:8090/rest/swagger.json
 
+Swagger UI:
+
+http://localhost:8090/rest/api-docs/?url=../swagger.json
+
+[Enabling Swagger Documentation](https://access.redhat.com/documentation/en-us/red_hat_process_automation_manager/7.12/html-single/integrating_red_hat_process_automation_manager_with_other_products_and_components.html#bus-app-swagger_business-applications)
+
 Business Central for monitoring
 ------------------------------------------------------------
 
