@@ -69,6 +69,28 @@ In the kjar:
 
 **Source:** KModuleRegisterableItemsFactory
 
+- In a SpringBoot context it's possible to delegate the WIH registration to the framework:
+
+  - Use a Spring bean identifier:
+
+    ```xml
+    <work-item-handler>
+        <resolver>spring</resolver>
+        <identifier>beanIdentifier</identifier>
+        <parameters/>
+        <name>MyWorkItem</name>
+    </work-item-handler>
+    ```
+
+  - Annotate the WIH class:
+
+    ```java
+    @Component("MyWorkItem")
+    public class MyWorkItemWorkItemHandler extends AbstractLogOrThrowWorkItemHandler {
+    ```
+
+Further info: [registering custom tasks](https://access.redhat.com/documentation/en-us/red_hat_process_automation_manager/7.12/html-single/developing_process_services_in_red_hat_process_automation_manager/index#registering-custom-tasks-proc-custom-tasks)
+
 ### Custom icons for WIH
 
 If you add the WIH in `WorkDefinition.wid` the icon should be included in the `global` folder of the project.
@@ -165,6 +187,17 @@ The value for Rest should be:
 ```java
 new org.jbpm.process.workitem.rest.RESTWorkItemHandler("username", "password")
 ```
+
+5. Add the dependency
+
+    ```xml
+        <dependency>
+            <groupId>org.jbpm</groupId>
+            <artifactId>jbpm-workitems-rest</artifactId>
+            <version>${version.org.kie}</version>
+            <scope>provided</scope>
+        </dependency>
+    ```
 
 ## Use the REST Service Task
 
