@@ -64,7 +64,7 @@ From version 7.x, to manage Document Collections (`org.jbpm.document.service.imp
     <marshalling-strategies>
         <marshalling-strategy>
             <resolver>mvel</resolver>
-            <identifier>new org.jbpm.document.marshalling.DocumentCollectionImplMarshallingStrategy(new org.jbpm.document.marshalling.DocumentMarshallingStrategy())</identifier>
+            <identifier>new org.jbpm.document.marshalling.DocumentCollectionImplMarshallingStrategy()</identifier>
         </marshalling-strategy>
     </marshalling-strategies>
 ```
