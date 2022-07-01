@@ -79,6 +79,22 @@ You need to add following configuration in the ~/m2/setting.xml
 
 Make sure this following Maven repo are also in the setting.xml
 
+## File system view
+
+In version 7, Business Central hide the view on the project repository.
+
+However, it's still possible to see the bare repository content following those steps:
+
+1. Open any resources
+
+2. In the left top corner you can spot a `>` symbol like in the following screenshot
+
+   ![arrow](imgs/bc-filesystem-view_01.png)
+
+3. Click on the arrow `>`, then on the **gear** and select **Repository View**
+
+   ![gear](imgs/bc-filesystem-view_02.png)
+
 ## User Group Management
 
 
