@@ -736,6 +736,10 @@ having count(*) > 1
 order by processId
 ```
 
+If the project relies on `PER_PROCESS_INSTANCE` strategy, when the process runtime starts it initializes all the timers in memory.
+This activity is onerous and can lead to double timer firing.
+
+To avoid this, set the following system property: `org.jbpm.rm.init.timer=false`
 
 References
 --------------------------------------------
