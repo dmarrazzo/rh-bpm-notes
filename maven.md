@@ -80,6 +80,55 @@ This is used to build the kjar package.
 		</plugins>
 	</build>
 
+## Create an empty project
+
+```sh
+mvn archetype:generate \
+	-DgroupId=com.redhat.example \
+	-DartifactId=emp-onboarding-model \
+	-DarchetypeArtifactId=maven-archetype-quickstart \
+	-DinteractiveMode=false
+```
+
+## Compilation setting (build)
+The following configuration set the **JDK level** and **exclude** unwanted files
+
+```xml
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+```
+
+Extra configuration to exclude a file pattern from compilation:
+
+```xml
+          <excludes>
+            <exclude>**/.*.java</exclude>
+          </excludes>
+```
+
+## Dependency Scope
+
+Dependency scope is used to limit the transitivity of a dependency, and also to affect the classpath used for various build tasks.
+
+There are 6 scopes available:
+
+- **compile**  
+This is the default scope, used if none is specified. Compile dependencies are available in all classpaths of a project. Furthermore, those dependencies are propagated to dependent projects.
+- **provided**  
+This is much like compile, but indicates you expect the JDK or a container to provide the dependency at runtime. For example, when building a web application for the Java Enterprise Edition, you would set the dependency on the Servlet API and related Java EE APIs to scope provided because the web container provides those classes. This scope is only available on the compilation and test classpath, and is not transitive.
+
+
+## Useful dependecies
 
 ### Add all the product libraries without the version information
 
@@ -301,54 +350,6 @@ System property:
 Configure the local repository in settings.xml:
 
 <localRepository>/opt/jboss/.m2/repository</localRepository>
-
-
-## Compilation setting (build)
-The following configuration set the **JDK level** and **exclude** unwanted files
-
-```xml
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <configuration>
-          <source>${maven.compiler.source}</source>
-          <target>${maven.compiler.target}</target>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-```
-
-Extra configuration to exclude a file pattern from compilation:
-
-```xml
-          <excludes>
-            <exclude>**/.*.java</exclude>
-          </excludes>
-```
-
-## Create an empty project
-
-```sh
-mvn archetype:generate \
-	-DgroupId=com.redhat.example \
-	-DartifactId=emp-onboarding-model \
-	-DarchetypeArtifactId=maven-archetype-quickstart \
-	-DinteractiveMode=false
-```
-
-## Dependency Scope
-
-Dependency scope is used to limit the transitivity of a dependency, and also to affect the classpath used for various build tasks.
-
-There are 6 scopes available:
-
-- **compile**  
-This is the default scope, used if none is specified. Compile dependencies are available in all classpaths of a project. Furthermore, those dependencies are propagated to dependent projects.
-- **provided**  
-This is much like compile, but indicates you expect the JDK or a container to provide the dependency at runtime. For example, when building a web application for the Java Enterprise Edition, you would set the dependency on the Servlet API and related Java EE APIs to scope provided because the web container provides those classes. This scope is only available on the compilation and test classpath, and is not transitive.
 
 ## Javadoc
 In Eclipse go to Windows-> Preferences-> Maven. Check the box that says "Download Artifact Javadoc."
