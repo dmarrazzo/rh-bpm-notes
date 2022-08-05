@@ -53,6 +53,20 @@ In order to discover the **kogito version** used in the quarkus project:
 mvn dependency:tree -Dincludes=org.kie.kogito:kogito-quarkus
 ```
 
+Generate SpringBoot project:
+
+```sh
+mvn archetype:generate \
+                            -DarchetypeGroupId=org.kie.kogito \
+                            -DarchetypeArtifactId=kogito-springboot-archetype \
+                            -DgroupId=com.redhat.example -DartifactId=kogito-example \
+                            -DarchetypeVersion=1.10.0.Final \
+                            -Dversion=1.0-SNAPSHOT \
+                            -Dstarters=decisions
+```
+
+In `pom.xml`, replace the _Kogito_ version with the latest supported `1.11.1.Final` (RHDM 7.12.1)
+
 Using PostgreSQL persistence 
 ---------------------------------------------------------
 
