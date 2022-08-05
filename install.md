@@ -27,7 +27,7 @@ From [Red Hat Product Downloads](https://access.redhat.com/downloads) site look 
 Uncompress EAP:
 
 ```
-unzip jboss-eap-7.3.0.zip
+unzip jboss-eap-7.4.0.zip
 ```
 
 Upgrade EAP:
@@ -37,8 +37,8 @@ Upgrade EAP:
 
 ### Install Business Central on EAP 7
 
-- Download **Red Hat Process Automation Manager 7.11 Business Central Deployable for EAP 7**.
-- Extract it in the parent folder of `jboss-eap-7.3`, some file of EAP will be replaced by the Business Central version.
+- Download **Red Hat Process Automation Manager 7.12 Business Central Deployable for EAP 7**.
+- Extract it in the parent folder of `jboss-eap-7.4`, some file of EAP will be replaced by the Business Central version.
 - If by mistake it was extracted in a different folder move the content in the EAP folder.
 - Add the user:
 
@@ -510,7 +510,7 @@ It's a standalone java program and distributed as a jar file in the package `rhp
 Launch it:
 
 ```bash
-java -jar rhpam-7.3-smart-router.jar
+java -jar rhpam-7.4-smart-router.jar
 ```
 
 In order to make aware the kieserver of the smart router  existence, you have to add this system property `org.kie.server.router` (it accept a comma separated list of endpoints).
