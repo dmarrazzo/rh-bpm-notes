@@ -15,9 +15,19 @@ For example in human task subject field:
 
     #{variable}
 
-## Variable
+## Get / Set Variable inside a Script Task
 
-    kcontext.setVariable("list",list);
+`kcontext` is available within the Script Task scope, it's an instance of `ProcessContext`
+
+See: [ProcessContext.java](https://github.com/kiegroup/droolsjbpm-knowledge/blob/main/kie-api/src/main/java/org/kie/api/runtime/process/ProcessContext.java)
+
+Set a variable:
+
+    kcontext.setVariable("customer", customer);
+
+Get variable:
+
+    result = (Boolean) kcontext.getVariable("result");
 
 ## On exit
 
