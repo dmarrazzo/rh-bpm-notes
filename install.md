@@ -7,10 +7,10 @@ Install and configure
 
 Check [RHPAM software prerequisites](https://access.redhat.com/articles/3405381)
 
-RHPAM 7.12 requires: 
+RHPAM 7.13 requires: 
 
 - JDK 11 (or 8)
-- EAP 7.4.2+
+- EAP 7.4.5+
 
 For coding:
 - Maven >= 3.6.3
@@ -54,7 +54,7 @@ Upgrade EAP:
 
 ### Install Kie Server on EAP 7
 
-- Download **Red Hat Process Automation Manager 7.11.0 Process Server for All Supported EE8 Containers**
+- Download **Red Hat Process Automation Manager 7.13.1 Process Server for All Supported EE8 Containers**
 - Extract it in the `<EAP_HOME>/standalone/deployments/`
 - Create an empty file named: `kie-server.war.dodeploy` 
   - Linux way: `touch kie-server.war.dodeploy`
