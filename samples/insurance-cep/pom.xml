@@ -8,7 +8,7 @@
 	<properties>
 		<root.name>insurance-cep</root.name>
 		<version.org.kie>6.4.0.Final-redhat-6</version.org.kie>
-		<version.org.drools>6.4.0.Final-redhat-6</version.org.drools>
+		<version.org.drools>7.69.0.Final</version.org.drools>
 		<version.org.jbpm>6.4.0.Final-redhat-6</version.org.jbpm>
 		<version.org.slf4j>1.7.12</version.org.slf4j>
         <junit.version>4.12</junit.version>
